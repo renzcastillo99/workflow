@@ -18,7 +18,7 @@ export default function HeroSection() {
           as="h1"
           className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw]"
         >
-          Hi, i&apos;m jack
+          Hi, I&apos;m RJ
         </FadeIn>
       </div>
 
@@ -43,7 +43,7 @@ export default function HeroSection() {
           className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
           style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
         >
-          a 3d creator driven by crafting striking and unforgettable projects
+          an automation specialist and data analyst driven by turning messy processes into clear, reliable systems
         </FadeIn>
         <FadeIn delay={0.5} y={20}>
           <ContactButton />

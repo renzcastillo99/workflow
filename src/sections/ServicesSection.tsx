@@ -3,33 +3,33 @@ import FadeIn from '../components/FadeIn';
 const SERVICES = [
   {
     number: '01',
-    name: '3D Modeling',
+    name: 'Process Automation',
     description:
-      'Creation of detailed objects, characters, or environments tailored to specific client needs, ideal for games, products, and visualizations.',
+      'Designing and building automated workflows that eliminate repetitive manual work, freeing up time for higher-value tasks.',
   },
   {
     number: '02',
-    name: 'Rendering',
+    name: 'Data Analysis',
     description:
-      'High-quality, photorealistic renders that showcase designs with custom lighting, textures, and materials to bring concepts to life.',
+      'Digging into raw data to uncover trends, patterns, and insights that support smarter, evidence-based business decisions.',
   },
   {
     number: '03',
-    name: 'Motion Design',
+    name: 'Dashboard Design',
     description:
-      'Dynamic animations and motion graphics that add energy and storytelling to brands, products, and digital experiences.',
+      'Building interactive dashboards and reports that turn complex datasets into clear, at-a-glance visuals for stakeholders.',
   },
   {
     number: '04',
-    name: 'Branding',
+    name: 'Workflow Integration',
     description:
-      'Crafting cohesive visual identities -- from logos to full brand systems -- that communicate a clear and memorable presence.',
+      'Connecting tools, apps, and platforms into seamless pipelines so data and tasks move automatically between systems.',
   },
   {
     number: '05',
-    name: 'Web Design',
+    name: 'Reporting & Insights',
     description:
-      'Designing clean, modern, and conversion-focused websites with attention to layout, typography, and user experience.',
+      'Delivering regular, accurate reports and actionable recommendations that keep teams aligned and moving forward.',
   },
 ];
 

@@ -12,7 +12,7 @@ const GROUP =
   'https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png';
 
 const ABOUT_TEXT =
-  "With more than five years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!";
+  "With more than five years of experience in automation and data analysis, i focus on streamlining workflows, building dashboards, and turning raw data into decisions people can act on, i truly enjoy working with businesses that want to work smarter, not harder. Let's build something incredible together!";
 
 export default function AboutSection() {
   return (
