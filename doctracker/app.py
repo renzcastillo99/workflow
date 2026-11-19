@@ -16,8 +16,8 @@ Run:
     python app.py
 
 Build the double-click version (on Windows, in a folder NOT synced by OneDrive):
-    pip install pyinstaller
-    pyinstaller --onedir --noconsole --name DocTracker app.py
+    python -m pip install pyinstaller
+    python -m PyInstaller --onedir --noconsole --name DocTracker app.py
     -> start dist\\DocTracker\\DocTracker.exe
 """
 

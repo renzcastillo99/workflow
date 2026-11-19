@@ -12,7 +12,7 @@ replace the copy in `C:\Users\rj.castillo\OneDrive - EGIS Group\Desktop\DocTrack
 Open **Command Prompt** in that folder (in File Explorer, click the address bar, type `cmd`, press Enter):
 
 ```bat
-pip install flask openpyxl
+python -m pip install flask openpyxl
 python app.py
 ```
 
@@ -56,8 +56,8 @@ Build **outside OneDrive**. Otherwise OneDrive tries to sync hundreds of build f
 mkdir C:\DocTrackerBuild
 copy "C:\Users\rj.castillo\OneDrive - EGIS Group\Desktop\DocTracker\app.py" C:\DocTrackerBuild\
 cd /d C:\DocTrackerBuild
-pip install pyinstaller
-pyinstaller --onedir --noconsole --name DocTracker app.py
+python -m pip install pyinstaller
+python -m PyInstaller --onedir --noconsole --name DocTracker app.py
 ```
 
 The app is the whole folder `C:\DocTrackerBuild\dist\DocTracker\`. Keep the `_internal`
