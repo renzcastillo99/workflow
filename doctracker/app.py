@@ -6,20 +6,34 @@ DocTracker DEMO - manual document tracking for one user on Windows.
   * Every write: backup to tracker_backup.xlsx first, then save. The workbook is
     opened only for the moment of reading or writing.
 
+  * Only one copy runs at a time. Starting it again just reopens the browser.
+  * When built without a console window (PyInstaller --noconsole), messages go to
+    Documents\\DocTrackerData\\doctracker_log.txt. To stop it: Task Manager >
+    DocTracker > End task (or restart the laptop).
+
 Run:
     pip install flask openpyxl
     python app.py
+
+Build the double-click version (on Windows, in a folder NOT synced by OneDrive):
+    pip install pyinstaller
+    pyinstaller --onedir --noconsole --name DocTracker app.py
+    -> start dist\\DocTracker\\DocTracker.exe
 """
 
 import datetime as dt
 import io
+import logging
 import os
 import re
 import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
+import time
+import urllib.request
 import uuid
 import webbrowser
 from pathlib import Path
@@ -58,8 +72,8 @@ SHEETS = {
     "Settings": ["Key", "Value"],
 }
 
-LOCKED_MSG = ("Close tracker.xlsx and try again. It is probably open in Excel, "
-              "so Windows will not let the app save it.")
+LOCKED_MSG = ("Close tracker.xlsx and try again. It is probably open in Excel (or OneDrive is "
+              "syncing it - then just wait a few seconds), so Windows will not let the app save it.")
 DATE_FMT = "yyyy-mm-dd"
 DATETIME_FMT = "yyyy-mm-dd hh:mm"
 
@@ -87,6 +101,8 @@ DATA_DIR = documents_folder() / "DocTrackerData"
 TRACKER = DATA_DIR / "tracker.xlsx"
 BACKUP = DATA_DIR / "tracker_backup.xlsx"
 PENDING = DATA_DIR / "_pending"   # uploaded files kept here until the Excel save succeeds
+LOG_FILE = DATA_DIR / "doctracker_log.txt"                   # used only when there is no console window
+URL_FILE = Path(tempfile.gettempdir()) / "DocTracker_url.txt"  # address of the copy that is running
 
 
 def default_settings() -> dict:
@@ -116,7 +132,8 @@ def read_wb():
     except FileNotFoundError:
         raise AppError(f"tracker.xlsx was not found in {DATA_DIR}. Restart the app to create a new one.")
     except PermissionError:
-        raise AppError("Windows would not let the app read tracker.xlsx. Close it in Excel and try again.")
+        raise AppError("Windows would not let the app read tracker.xlsx. Close it in Excel "
+                       "(or wait a few seconds if OneDrive is syncing it) and try again.")
     try:
         return load_workbook(io.BytesIO(data))
     except Exception as e:  # corrupt / not an xlsx
@@ -393,12 +410,22 @@ def storage_dir(settings) -> Path:
 
 
 def copy_into_storage(src: Path, settings, rel: str, created: list) -> None:
+    """Copy the file's contents only (some network drives refuse copied dates/attributes).
+    Copies to a temporary name first, so a failed copy never leaves a half-written file."""
     dest = storage_dir(settings) / rel
     dest.parent.mkdir(parents=True, exist_ok=True)
-    existed = dest.exists()
-    shutil.copy2(src, dest)
-    if not existed:
-        created.append(dest)
+    tmp = dest.with_name(dest.name + ".copying")
+    try:
+        shutil.copyfile(src, tmp)
+        if not dest.exists():
+            created.append(dest)
+        os.replace(tmp, dest)
+    finally:
+        try:
+            if tmp.exists():
+                tmp.unlink()
+        except OSError:
+            pass
 
 
 def os_open(path: Path, select=False):
@@ -770,7 +797,7 @@ def message_page(heading, errors, fix=None, recheck=False, code=200):
 
 @app.before_request
 def block_if_invalid():
-    if STARTUP_ERRORS and request.endpoint not in ("recheck", "open_excel", "static"):
+    if STARTUP_ERRORS and request.endpoint not in ("recheck", "open_excel", "ping", "static"):
         return message_page(
             "tracker.xlsx has a problem", STARTUP_ERRORS,
             fix=f"Open {TRACKER} in Excel, fix the sheet/column names listed above (row 1 of each sheet), "
@@ -786,6 +813,12 @@ def handle_app_error(e):
 @app.errorhandler(413)
 def too_large(_e):
     return message_page("File too large", [f"Files must be smaller than {CONFIG['MAX_UPLOAD_MB']} MB."], code=413)
+
+
+@app.get("/ping")
+def ping():
+    """Lets a second launch check that this copy is running."""
+    return "DocTracker"
 
 
 @app.post("/recheck")
@@ -1215,9 +1248,9 @@ def sample():
             refs.append(ref)
             rel = main_file_name(ref, subject)
             dest = storage / rel
+            created.append(dest)
             dest.write_bytes(make_pdf(["SAMPLE DOCUMENT - for demo only", "", f"Ref No: {ref}",
                                        f"Subject: {subject}", f"From: {sender}"]))
-            created.append(dest)
             final_status, final_dept = statuses[0], ""
             for m_ago, si, dname in moves:
                 dname = dname if (not dname or dname in depts) else (depts[0] if depts else "")
@@ -1271,8 +1304,83 @@ def find_free_port(start: int) -> int:
         return s.getsockname()[1]
 
 
+def log_to_file_if_hidden():
+    """With no console window (PyInstaller --noconsole) Python has nowhere to print.
+    Send messages and error details to a log file instead, so nothing is silently lost."""
+    if sys.stdout is not None and sys.stderr is not None:
+        return
+    try:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        f = open(LOG_FILE, "a", encoding="utf-8", buffering=1)
+    except OSError:
+        f = open(os.devnull, "w")
+    sys.stdout = sys.stdout or f
+    sys.stderr = sys.stderr or f
+    print(f"\n--- DocTracker started {dt.datetime.now():%Y-%m-%d %H:%M:%S} ---")
+
+
+def quiet_server():
+    """Hide Flask's technical start-up banner and per-click log lines. Errors are still shown."""
+    logging.getLogger("werkzeug").setLevel(logging.ERROR)
+    import flask.cli
+    flask.cli.show_server_banner = lambda *a, **k: None
+
+
+_MUTEX = None   # kept for the life of the program; Windows releases it when the program ends
+
+
+def claim_single_instance() -> bool:
+    """Windows only: True if this is the first copy of DocTracker for this user, False if one
+    is already running. Uses a named mutex (a system-wide 'occupied' sign), so even two quick
+    double-clicks cannot start two copies."""
+    global _MUTEX
+    if os.name != "nt":
+        return True
+    import ctypes
+    k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    k32.CreateMutexW.restype = ctypes.c_void_p
+    k32.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_wchar_p]
+    _MUTEX = k32.CreateMutexW(None, 0, "Local\\DocTrackerSingleInstance")
+    return not (_MUTEX and ctypes.get_last_error() == 183)   # 183 = ERROR_ALREADY_EXISTS
+
+
+def running_url() -> str | None:
+    """Address of a DocTracker copy that is running and answering, or None."""
+    try:
+        url = URL_FILE.read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if not url.startswith("http://127.0.0.1:"):
+        return None
+    try:   # ProxyHandler({}): never send this through a company proxy
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(url + "ping", timeout=2) as r:
+            return url if r.read() == b"DocTracker" else None
+    except Exception:
+        return None
+
+
 def main():
     global STARTUP_ERRORS
+    log_to_file_if_hidden()
+    quiet_server()
+
+    # Already running? Just reopen the browser and stop.
+    first = claim_single_instance()
+    url = running_url()
+    if not first and not url:
+        for _ in range(30):            # the other copy may still be starting up (max 15 s)
+            time.sleep(0.5)
+            url = running_url()
+            if url:
+                break
+    if url:
+        print(f"DocTracker is already running at {url} - opening the browser.")
+        webbrowser.open(url)
+        return
+    if not first:
+        print("Another DocTracker copy seems stuck (not answering). Starting a new one.")
+
     if not TRACKER.exists():
         try:
             create_tracker()
@@ -1286,6 +1394,10 @@ def main():
     clean_old_pending()
     port = find_free_port(CONFIG["START_PORT"])
     url = f"http://127.0.0.1:{port}/"
+    try:
+        URL_FILE.write_text(url, encoding="utf-8")
+    except OSError as e:
+        print(f"Could not write {URL_FILE} ({e}). A second launch may start a second copy.")
     print(f"DocTracker running at {url}  (press Ctrl+C to stop)")
     threading.Timer(1.0, lambda: webbrowser.open(url)).start()
     app.run(host="127.0.0.1", port=port, debug=False, use_reloader=False, threaded=True)
