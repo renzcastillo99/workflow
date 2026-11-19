@@ -61,8 +61,25 @@ python -m PyInstaller --onedir --noconsole --name DocTracker app.py
 ```
 
 The app is the whole folder `C:\DocTrackerBuild\dist\DocTracker\`. Keep the `_internal`
-folder next to `DocTracker.exe`, because the exe does not work without it. Right-click
-`DocTracker.exe` > **Show more options** > **Send to** > **Desktop (create shortcut)**.
+folder next to `DocTracker.exe`, because the exe does not work without it.
+
+**Where the data lives:** DocTracker keeps `tracker.xlsx`, its backup, the `Files` folder
+(the scanned PDFs) and the `Exports` folder **in the same folder as DocTracker.exe**. They are
+created the first time it starts.
+
+> ⚠️ **Rebuilding deletes `dist\DocTracker`, including tracker.xlsx and every PDF in it.**
+> PyInstaller asks *"...will be REMOVED! Continue? (y/N)"*. Answer **N** if real data is in there.
+> For daily use, copy the finished folder somewhere safe, so a rebuild can never touch it:
+>
+> 1. In File Explorer, copy `C:\DocTrackerBuild\dist\DocTracker` and paste it as `C:\DocTracker`.
+> 2. Use `C:\DocTracker\DocTracker.exe` from now on. Right-click it > **Show more options** >
+>    **Send to** > **Desktop (create shortcut)**.
+> 3. To update the app later: rebuild, then copy **only** `DocTracker.exe` and the `_internal`
+>    folder into `C:\DocTracker`, replacing the old ones. Leave tracker.xlsx, Files and Exports alone.
+>
+> Don't put the folder in `C:\Program Files`; Windows won't let the app save there. If you
+> move the whole folder later, it keeps working, and the links inside tracker.xlsx are updated
+> automatically the next time DocTracker starts.
 
 ### A7. Test the double-click version
 | Do this | Expected |
@@ -72,12 +89,12 @@ folder next to `DocTracker.exe`, because the exe does not work without it. Right
 | Double-click the shortcut twice quickly | Still only one DocTracker. Task Manager shows one **DocTracker** under background processes. (You may also see a second DocTracker.exe line under it; that is the helper PyInstaller adds and is normal.) |
 | Task Manager > DocTracker > **End task**, then double-click again | It starts fresh and your data is still there |
 
-If nothing happens on double-click, open `Documents\DocTrackerData\doctracker_log.txt`.
+If nothing happens on double-click, open `doctracker_log.txt` in the DocTracker folder.
 Any error is written there.
 
 **Company laptop note:** Windows SmartScreen or EGIS antivirus may warn about or block a
 new unsigned .exe. If so, click **More info > Run anyway** if allowed, or ask IT to allow
-`C:\DocTrackerBuild\dist\DocTracker\DocTracker.exe`.
+`C:\DocTracker\DocTracker.exe`.
 
 ---
 
@@ -100,5 +117,6 @@ Sit next to them and let **them** click. Tick each box. Write down anything that
 
 **Before handing over:** if you used **Load sample data** while testing, those six fake
 documents (marked "SAMPLE" in Notes) are in tracker.xlsx. To start clean: end DocTracker in
-Task Manager, then delete or rename the `Documents\DocTrackerData` folder. A fresh, empty
-one is created on the next start.
+Task Manager, then in the DocTracker folder delete (or move somewhere else) `tracker.xlsx`,
+`tracker_backup.xlsx`, `Files` and `Exports`. **Do not delete `DocTracker.exe` or `_internal`.**
+A fresh, empty tracker is created on the next start.

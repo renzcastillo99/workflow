@@ -2,13 +2,15 @@
 DocTracker DEMO - manual document tracking for one user on Windows.
 
   * Runs on http://127.0.0.1 only. No login. No background jobs, no folder watcher.
-  * The "database" is an Excel file: Documents\\DocTrackerData\\tracker.xlsx
+  * The "database" is an Excel file, tracker.xlsx, kept in the SAME FOLDER as DocTracker.exe
+    (or app.py), together with the Files and Exports folders. Move the whole folder and it
+    keeps working. Do not put it in C:\\Program Files (Windows will not let the app save there).
   * Every write: backup to tracker_backup.xlsx first, then save. The workbook is
     opened only for the moment of reading or writing.
 
   * Only one copy runs at a time. Starting it again just reopens the browser.
   * When built without a console window (PyInstaller --noconsole), messages go to
-    Documents\\DocTrackerData\\doctracker_log.txt. To stop it: Task Manager >
+    doctracker_log.txt in the same folder. To stop it: Task Manager >
     DocTracker > End task (or restart the laptop).
 
 Run:
@@ -18,6 +20,8 @@ Run:
 Build the double-click version (on Windows, in a folder NOT synced by OneDrive):
     python -m pip install pyinstaller
     python -m PyInstaller --onedir --noconsole --name DocTracker app.py
+    -> COPY the folder dist\\DocTracker to C:\\DocTracker and use it from there.
+       A rebuild DELETES dist\\DocTracker, including any tracker.xlsx and PDFs inside it.
     -> start dist\\DocTracker\\DocTracker.exe
 """
 
@@ -87,23 +91,14 @@ DATETIME_FMT = "yyyy-mm-dd hh:mm"
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-def documents_folder() -> Path:
-    """The user's real Documents folder (handles OneDrive / redirected folders on Windows)."""
-    if os.name == "nt":
-        try:
-            import winreg
-            key = r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as k:
-                value, _ = winreg.QueryValueEx(k, "Personal")
-            p = Path(os.path.expandvars(value))
-            if p.is_dir():
-                return p
-        except OSError:
-            pass
-    return Path.home() / "Documents"
+def app_folder() -> Path:
+    """The folder DocTracker.exe is in (or app.py, when run with Python). All data is kept here."""
+    if getattr(sys, "frozen", False):          # running as the PyInstaller .exe
+        return Path(sys.executable).resolve().parent
+    return Path(__file__).resolve().parent
 
 
-DATA_DIR = documents_folder() / "DocTrackerData"
+DATA_DIR = app_folder()
 TRACKER = DATA_DIR / "tracker.xlsx"
 BACKUP = DATA_DIR / "tracker_backup.xlsx"
 PENDING = DATA_DIR / "_pending"   # uploaded files kept here until the Excel save succeeds
@@ -113,8 +108,9 @@ URL_FILE = Path(tempfile.gettempdir()) / "DocTracker_url.txt"  # address of the 
 
 def default_settings() -> dict:
     return {
-        "storage_folder": str(DATA_DIR / "Files"),
-        "export_folder": str(DATA_DIR / "Exports"),
+        # Relative = inside the app folder, so moving the whole folder keeps everything working.
+        "storage_folder": "Files",
+        "export_folder": "Exports",
         "overdue_days": str(CONFIG["DEFAULT_OVERDUE_DAYS"]),
         "ref_format": CONFIG["DEFAULT_REF_FORMAT"],
     }
@@ -286,7 +282,7 @@ def create_tracker():
         wb["Settings"].append([k, v])
     wb.save(TRACKER)
     for k in ("storage_folder", "export_folder"):
-        Path(default_settings()[k]).mkdir(parents=True, exist_ok=True)
+        full_path(default_settings()[k]).mkdir(parents=True, exist_ok=True)
 
 
 def validate() -> list[str]:
@@ -309,12 +305,29 @@ def validate() -> list[str]:
     return errors
 
 
+def full_path(folder: str) -> Path:
+    """Folders in Settings may be relative to the app folder (e.g. "Files")."""
+    p = Path(folder)
+    return p if p.is_absolute() else DATA_DIR / p
+
+
+def stored_path(folder: str) -> str:
+    """How a folder is written to the Settings sheet: relative if it is inside the app folder."""
+    try:
+        rel = Path(folder).resolve().relative_to(DATA_DIR.resolve())
+        return rel.as_posix() if str(rel) != "." else "."
+    except (ValueError, OSError):
+        return folder
+
+
 def get_settings(wb) -> dict:
     s = default_settings()
     for r in sheet_rows(wb["Settings"]):
         k, v = text(r.get("Key")), text(r.get("Value"))
         if k and v:
             s[k] = v
+    for k in ("storage_folder", "export_folder"):
+        s[k] = str(full_path(s[k]))
     try:
         s["overdue_days"] = int(float(s["overdue_days"]))
     except ValueError:
@@ -391,6 +404,25 @@ def set_link(ws, row, header, settings, rel):
     else:
         c.hyperlink = None
         c.style = "Normal"
+
+
+def repoint_links(wb) -> int:
+    """Rewrite the Excel hyperlinks of every document for the current storage folder.
+    Returns how many links changed."""
+    st = get_settings(wb)
+    docs = wb["Documents"]
+    cm = colmap(docs)
+    changed = 0
+    for r in sheet_rows(docs):
+        for h in ("File Link", "Signed Copy Link"):
+            rel = text(r[h])
+            if rel:
+                c = docs.cell(r["_row"], cm[h])
+                want = resolve(st, rel).absolute().as_uri()
+                if not c.hyperlink or c.hyperlink.target != want:
+                    set_link(docs, r["_row"], h, st, rel)
+                    changed += 1
+    return changed
 
 
 def safe_part(s: str, n=40) -> str:
@@ -1216,7 +1248,7 @@ def settings_action(form) -> str:
         export = form.get("export_folder", "").strip('"')
         fmt = form.get("ref_format", "")
         if not storage or not Path(storage).is_absolute():
-            raise AppError("Storage folder must be a full path, e.g. D:\\DocTrackerData\\Files.")
+            raise AppError("Storage folder must be a full path, e.g. C:\\DocTracker\\Files or Z:\\Scans.")
         if not Path(storage).is_dir():
             raise AppError(f"Storage folder does not exist: {storage}. Check the drive letter, or create the folder first.")
         if not export or not Path(export).is_absolute():
@@ -1233,7 +1265,8 @@ def settings_action(form) -> str:
             raise AppError("Overdue days must be a whole number between 0 and 3650.")
         if err := check_ref_format(fmt):
             raise AppError(err)
-        new = {"storage_folder": storage, "export_folder": export, "overdue_days": days, "ref_format": fmt}
+        new = {"storage_folder": stored_path(storage), "export_folder": stored_path(export),
+               "overdue_days": days, "ref_format": fmt}
 
         def mutate(wb, created):
             ws = wb["Settings"]
@@ -1243,12 +1276,7 @@ def settings_action(form) -> str:
                     set_cell(ws, existing[k], "Value", v)
                 else:
                     append_row(ws, {"Key": k, "Value": v})
-            st = get_settings(wb)   # re-point every hyperlink at the (possibly new) storage folder
-            docs = wb["Documents"]
-            for r in sheet_rows(docs):
-                for h in ("File Link", "Signed Copy Link"):
-                    if text(r[h]):
-                        set_link(docs, r["_row"], h, st, text(r[h]))
+            repoint_links(wb)   # re-point every Excel hyperlink at the (possibly new) storage folder
         write_wb(mutate)
         return "Settings saved."
 
@@ -1433,6 +1461,14 @@ def main():
             STARTUP_ERRORS = [f"Could not create {TRACKER} ({e})."]
     if not STARTUP_ERRORS:
         STARTUP_ERRORS = validate()
+    if not STARTUP_ERRORS:   # the folder was moved? fix the clickable links in tracker.xlsx
+        try:
+            wb = read_wb()
+            if repoint_links(wb):
+                n = write_wb(lambda wb2, _created: repoint_links(wb2))
+                print(f"Updated {n} Excel link(s) to the current folder.")
+        except AppError as e:   # e.g. Excel has the file open: links get fixed next time
+            print("Could not update Excel links now:", e)
     for e in STARTUP_ERRORS:
         print("PROBLEM:", e)
     clean_old_pending()
