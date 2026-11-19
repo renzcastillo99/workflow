@@ -23,7 +23,7 @@ The browser should open on DocTracker. Click **Load sample data** on the Documen
 |---|---|
 | Click **Open file** on any row | The PDF opens in your PDF reader |
 | Click **Open folder** on the same row | File Explorer opens with that PDF **highlighted** |
-| Open a document, attach a signed copy, click **Open signed copy** | The signed file opens |
+| Open a document, set **Signed/Approved**, choose a signed copy in the box that appears, click **Save**, then **Open signed copy** | The signed file opens. In tracker.xlsx, **Signed Copy Link** is filled in and clickable |
 | Click **Open Excel file** | tracker.xlsx opens in Excel (leave it open for A4) |
 
 ### A4. Save while Excel has tracker.xlsx open
@@ -92,7 +92,7 @@ Sit next to them and let **them** click. Tick each box. Write down anything that
 | 3 | Click **Back to list** | The new document is at the top with status **Received** | ☐ |
 | 4 | Click **Open file**, then **Open folder** on that row | The PDF opens; then the folder opens with the file highlighted | ☐ |
 | 5 | Open the document, pick a department under **Route to department**, then click **Save** | Status becomes **Routed**, and a new line appears under **History** | ☐ |
-| 6 | Change the status to **Signed/Approved**, attach the signed scan with **Attach**, then click **Open signed copy** | The signed file opens | ☐ |
+| 6 | Change the status to **Signed/Approved** and click **Save** *without* a file. Then choose the signed scan in the **Signed copy** box that appears, click **Save**, then **Open signed copy** | First Save is refused ("must have its signed copy"). Second Save works, and the signed file opens. In tracker.xlsx the **Signed Copy Link** column is filled in | ☐ |
 | 7 | Set the status to **Completed** and click **Save** | The History shows all steps in order; the list shows "-" under Waiting | ☐ |
 | 8 | Type part of the subject in the **Search** box and click **Filter**, then try the status filter | Only matching documents show; **Clear** brings all back | ☐ |
 | 9 | Click **Open Excel file**, leave Excel open, change any status in the app and click **Save** | A clear "Close tracker.xlsx..." message appears; after closing Excel and clicking **Save** again, it saves | ☐ |

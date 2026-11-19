@@ -52,6 +52,9 @@ CONFIG = {
     "STATUS_NEW": "Received",       # set on upload
     "STATUS_ROUTED": "Routed",      # suggested when a department is picked while status is STATUS_NEW
     "STATUS_DONE": "Completed",     # no "waiting" count and never overdue
+    # A document can only be saved with one of these statuses once its signed copy is attached,
+    # so the "Signed Copy Link" column in tracker.xlsx is always filled for signed documents.
+    "STATUSES_NEED_SIGNED": ["Signed/Approved", "Completed"],
     "DEFAULT_DEPARTMENTS": ["Admin", "Finance", "HR", "Legal", "Records"],
     "DEFAULT_OVERDUE_DAYS": 7,
     "DEFAULT_REF_FORMAT": "DOC-{YYYY}-{SEQ:4}",
@@ -62,6 +65,9 @@ CONFIG = {
 for _k in ("STATUS_NEW", "STATUS_ROUTED", "STATUS_DONE"):
     if CONFIG[_k] not in CONFIG["STATUSES"]:
         sys.exit(f"CONFIG error: {_k} = {CONFIG[_k]!r} is not in CONFIG['STATUSES'].")
+for _s in CONFIG["STATUSES_NEED_SIGNED"]:
+    if _s not in CONFIG["STATUSES"]:
+        sys.exit(f"CONFIG error: STATUSES_NEED_SIGNED contains {_s!r}, which is not in CONFIG['STATUSES'].")
 
 # Exact sheet and column names (row 1 of each sheet).
 SHEETS = {
@@ -705,7 +711,7 @@ DETAIL = """
 </div>
 {% endif %}
 
-<form class="card" method="post" action="{{ url_for('save', ref=d.ref) }}">
+<form class="card" method="post" action="{{ url_for('save', ref=d.ref) }}" enctype="multipart/form-data">
   <h2>Update status / route</h2>
   <div class="row">
     <div><label>Status</label><select name="status" id="status">{% for s in statuses %}<option {{ 'selected' if s==form_status }}>{{ s }}</option>{% endfor %}</select></div>
@@ -715,6 +721,15 @@ DETAIL = """
     </select></div>
     <div style="align-self:flex-end"><button>Save</button></div>
   </div>
+  {% if not d.signed %}
+  <div id="signedbox" {{ '' if form_status in need_signed else 'hidden' }}>
+    <label>Signed copy <span class="late">(required for {{ need_signed|join(' and ') }})</span></label>
+    {% if pend.save %}<span class="msg warn" style="margin:0;padding:4px 8px">Kept: {{ pend.save[1] }}</span>{% endif %}
+    <input type="file" name="signed">
+    <input type="hidden" name="pending" value="{{ pend.save[0] if pend.save else '' }}">
+    <div class="muted">It is saved together with the status, and its link goes into the "Signed Copy Link" column in tracker.xlsx.</div>
+  </div>
+  {% endif %}
   <p class="muted" id="autonote" hidden>Status changed to "{{ routed }}" because you picked a department. You can change it back before saving.</p>
   <p class="muted">Each save adds a row to the History sheet. Nothing is overwritten.</p>
 </form>
@@ -729,6 +744,8 @@ DETAIL = """
   const st=document.getElementById('status'), dp=document.getElementById('dept'), note=document.getElementById('autonote');
   const NEW={{ new_status|tojson }}, ROUTED={{ routed|tojson }};
   dp.addEventListener('change',function(){ if(dp.value && st.value===NEW){ st.value=ROUTED; note.hidden=false; } });
+  const box=document.getElementById('signedbox'), NEED={{ need_signed|tojson }};
+  if(box){ st.addEventListener('change',function(){ box.hidden=!NEED.includes(st.value); }); }
 })();
 </script>
 """
@@ -969,7 +986,7 @@ def render_detail(ref, error=None, form_status=None, form_dept=None, pend=None,
     if d["dept"] and d["dept"] not in [x["name"] for x in dept_options]:
         dept_options.append({"name": d["dept"], "active": False})
     pend = pend or {}
-    pend = {"file": pend.get("file"), "signed": pend.get("signed")}
+    pend = {"file": pend.get("file"), "signed": pend.get("signed"), "save": pend.get("save")}
     return render(ref, DETAIL, d=d, error=error, statuses=CONFIG["STATUSES"],
                   form_status=form_status if form_status is not None else d["status"],
                   form_dept=form_dept if form_dept is not None else d["dept"],
@@ -977,7 +994,8 @@ def render_detail(ref, error=None, form_status=None, form_dept=None, pend=None,
                   file_ok=bool(fp and fp.is_file()), file_path=fp,
                   signed_ok=bool(sp and sp.is_file()), signed_path=sp,
                   pend=pend, relink_which=relink_which, relink_path=relink_path,
-                  new_status=CONFIG["STATUS_NEW"], routed=CONFIG["STATUS_ROUTED"])
+                  new_status=CONFIG["STATUS_NEW"], routed=CONFIG["STATUS_ROUTED"],
+                  need_signed=CONFIG["STATUSES_NEED_SIGNED"])
 
 
 @app.get("/doc/<ref>")
@@ -989,16 +1007,27 @@ def detail(ref):
 def save(ref):
     status = request.form.get("status", "")
     dept = request.form.get("dept", "").strip()
+    up, token = take_upload("signed", request.form.get("pending"))   # optional signed copy
+
+    def again(msg):   # show the error, keep what the user chose (including the file)
+        return render_detail(ref, msg, status, dept, pend={"save": (token, up.name)} if up else None)
+
     data = load_all()
     doc = find_doc(data, ref)
     if not doc:
+        drop_pending(token)
         return message_page("Not found", [f"Document {ref} was not found."], code=404)
     if status not in CONFIG["STATUSES"]:
-        return render_detail(ref, "Choose a valid status.", status, dept)
+        return again("Choose a valid status.")
     allowed = {x["name"] for x in data["depts"] if x["active"]} | {text(doc["Current Dept"])}
     if dept and dept not in allowed:
-        return render_detail(ref, f'"{dept}" is not an active department.', status, dept)
-    if status == text(doc["Status"]) and dept == text(doc["Current Dept"]):
+        return again(f'"{dept}" is not an active department.')
+    has_signed = bool(text(doc["Signed Copy Link"]))
+    if status in CONFIG["STATUSES_NEED_SIGNED"] and not has_signed and not up:
+        return again(f'A "{status}" document must have its signed copy. Choose the signed file under '
+                     f'"Signed copy", then click Save.')
+    changed = status != text(doc["Status"]) or dept != text(doc["Current Dept"])
+    if not changed and not up:
         flash("Nothing changed, so no History row was added.", "warn")
         return redirect(url_for("detail", ref=ref))
 
@@ -1007,16 +1036,24 @@ def save(ref):
         r = find_row(ws, ref)
         if not r:
             raise AppError(f"{ref} is no longer in tracker.xlsx.")
-        set_cell(ws, r, "Status", status)
-        set_cell(ws, r, "Current Dept", dept or None)
-        h = append_row(hist, {"Ref No": ref, "Status": status, "Dept": dept or None})
-        set_cell(hist, h, "Date", dt.datetime.now().replace(microsecond=0), DATETIME_FMT)
+        if up:   # signed copy + its Excel link are saved in the same step as the status
+            st = get_settings(wb)
+            rel = signed_file_name(ref, up.suffix.lower() or ".pdf")
+            copy_into_storage(up, st, rel, created)
+            set_link(ws, r, "Signed Copy Link", st, rel)
+        if changed:
+            set_cell(ws, r, "Status", status)
+            set_cell(ws, r, "Current Dept", dept or None)
+            h = append_row(hist, {"Ref No": ref, "Status": status, "Dept": dept or None})
+            set_cell(hist, h, "Date", dt.datetime.now().replace(microsecond=0), DATETIME_FMT)
 
     try:
         write_wb(mutate)
-    except AppError as e:
-        return render_detail(ref, str(e), status, dept)
-    flash(f"Saved: {status}" + (f", with {dept}." if dept else "."), "ok")
+    except (AppError, OSError) as e:
+        return again(str(e))
+    drop_pending(token)
+    msg = (f"Saved: {status}" + (f", with {dept}." if dept else ".")) if changed else "Saved."
+    flash(msg + (" Signed copy attached." if up else ""), "ok")
     return redirect(url_for("detail", ref=ref))
 
 
@@ -1261,6 +1298,13 @@ def sample():
                                      "Current Dept": final_dept or None, "Notes": "SAMPLE - fake demo document"})
             set_cell(docs_ws, r, "Date Received", dt.date.today() - dt.timedelta(days=ago), DATE_FMT)
             set_link(docs_ws, r, "File Link", st, rel)
+            if final_status in CONFIG["STATUSES_NEED_SIGNED"]:
+                srel = signed_file_name(ref, ".pdf")
+                sdest = storage / srel
+                created.append(sdest)
+                sdest.write_bytes(make_pdf(["SAMPLE SIGNED COPY - for demo only", "", f"Ref No: {ref}",
+                                            f"Subject: {subject}", "", "APPROVED"]))
+                set_link(docs_ws, r, "Signed Copy Link", st, srel)
 
     try:
         write_wb(mutate)
