@@ -1,0 +1,26 @@
+{
+  "name": "cafe-hr",
+  "version": "1.0.0",
+  "description": "Cafe HR - employees, attendance and leave",
+  "main": "main.js",
+  "author": "Cafe HR",
+  "private": true,
+  "scripts": {
+    "sync": "node scripts/sync.js",
+    "start": "npm run sync && electron .",
+    "dist": "npm run sync && electron-builder --win --x64 --publish never"
+  },
+  "build": {
+    "appId": "com.cafehr.app",
+    "productName": "Cafe HR",
+    "artifactName": "CafeHR-${version}-${target}.${ext}",
+    "directories": { "output": "dist" },
+    "files": ["main.js", "app/**", "icon.png"],
+    "win": { "target": ["nsis", "portable"], "icon": "icon.png" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  }
+}
