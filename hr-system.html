@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Café HR</title>
+<style>
+:root{
+  --accent:#F57C00; --brand:#C25400; --brand-dark:#9A4200; --ink:#2a1d10; --muted:#6b5a48;
+  --bg:#FFF8F0; --card:#ffffff; --line:#EADBC8;
+  --ok:#1B7A3A; --ok-bg:#E3F5E8; --late:#9A5B00; --late-bg:#FFEFCC;
+  --bad:#B3261E; --bad-bg:#FDE7E5; --leave:#1F5FA8; --leave-bg:#E1EDFB; --gray-bg:#EEE7DD;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;font-size:16px}
+[hidden]{display:none!important}
+header{background:var(--accent);color:#1f1300;padding:14px 16px}
+header h1{margin:0;font-size:1.35rem}
+header p{margin:2px 0 0;font-size:.9rem}
+.wrap{max-width:1000px;margin:0 auto;padding:0 12px 40px}
+#banner{background:var(--late-bg);color:#5c3700;border-bottom:2px solid var(--accent);padding:10px 16px;font-size:.92rem}
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}
+@media(min-width:640px){.summary{grid-template-columns:repeat(5,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:1.7rem;line-height:1.1}
+.stat span{font-size:.82rem;color:var(--muted)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.tabs button{flex:1 0 auto;min-height:44px;padding:8px 14px;border:1px solid var(--line);background:#fff;border-radius:10px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.filters{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
+@media(min-width:640px){.filters{grid-template-columns:2fr 1fr 1fr auto}}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid #cdb9a1;border-radius:8px;padding:10px;min-height:44px;width:100%}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid #ffb35c;outline-offset:1px}
+label{display:block;font-weight:600;font-size:.9rem;margin-bottom:3px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.card h2{margin:0 0 10px;font-size:1.1rem}
+.card h3{margin:14px 0 6px;font-size:1rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.row h2{margin:0}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
+.btn{min-height:44px;padding:8px 16px;border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover:not(:disabled){background:var(--brand-dark)}
+.btn.alt{background:#fff;color:var(--brand)}
+.btn.alt:hover:not(:disabled){background:#FFF0DF}
+.btn.danger{background:#fff;color:var(--bad);border-color:var(--bad)}
+.btn.danger:hover:not(:disabled){background:var(--bad-bg)}
+.btn.small{min-height:40px;padding:6px 12px;font-size:.92rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cards{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:700px){.cards{grid-template-columns:1fr 1fr}}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.item .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.item .name{font-weight:700;font-size:1.05rem}
+.item .meta{color:var(--muted);font-size:.9rem;word-break:break-word}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.b-present,.b-ok,.b-approved,.b-regular{background:var(--ok-bg);color:var(--ok)}
+.b-late,.b-pending,.b-dup,.b-probationary{background:var(--late-bg);color:var(--late)}
+.b-absent,.b-declined,.b-error,.b-resigned{background:var(--bad-bg);color:var(--bad)}
+.b-leave,.b-contractual{background:var(--leave-bg);color:var(--leave)}
+.b-wait{background:var(--gray-bg);color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:18px;background:#fff;border:1px dashed var(--line);border-radius:12px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#FFF0DF;white-space:nowrap}
+.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:.93rem}
+.msg.warn{background:var(--late-bg);color:#5c3700;border:1px solid #f1c46c}
+.msg.err{background:var(--bad-bg);color:#7d1913;border:1px solid #f0aaa5}
+.msg.good{background:var(--ok-bg);color:#14582a;border:1px solid #9fd5ae}
+.msg.info{background:var(--leave-bg);color:#16467d;border:1px solid #a9c8ee}
+.hint{color:var(--muted);font-size:.86rem;margin:4px 0 0}
+.drop{display:block;border:2px dashed var(--accent);border-radius:12px;padding:18px;text-align:center;background:#FFF3E3;cursor:pointer}
+.drop.over{background:#FFE2BD}
+.drop input{display:none}
+.mapgrid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:640px){.mapgrid{grid-template-columns:1fr 1fr 1fr}}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:92vw;background:#2a1d10;color:#fff;padding:12px 18px;border-radius:12px;z-index:60;font-size:.95rem;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+#toast.warn{background:#7a4a00}
+#toast.err{background:#8f1d17}
+.modal{position:fixed;inset:0;background:rgba(30,18,5,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.dialog{background:#fff;border-radius:14px;padding:18px;max-width:420px;width:100%}
+.dialog p{margin:0 0 14px;font-size:1.02rem}
+.dialog .actions{justify-content:flex-end;margin:0}
+.err-text{color:var(--bad);font-size:.88rem;margin-top:3px}
+</style>
+</head>
+<body>
+<header>
+  <h1>&#9749; Café HR</h1>
+  <p id="todayLabel"></p>
+</header>
+<div id="banner" hidden></div>
+
+<div class="wrap">
+  <section class="summary" id="summary" aria-label="Today's summary"></section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" data-tab="employees" aria-selected="true">Employees</button>
+    <button role="tab" data-tab="attendance" aria-selected="false">Attendance</button>
+    <button role="tab" data-tab="leave" aria-selected="false">Leave</button>
+    <button role="tab" data-tab="import" aria-selected="false">Import</button>
+    <button role="tab" data-tab="data" aria-selected="false">Backup</button>
+  </nav>
+
+  <div class="filters" id="filters">
+    <input type="search" id="q" placeholder="Search name, position, branch..." aria-label="Search">
+    <select id="fDept" aria-label="Filter by department or branch"></select>
+    <select id="fStatus" aria-label="Filter by employment status"></select>
+    <button class="btn alt" id="clearFilters" type="button">Clear</button>
+  </div>
+
+  <!-- EMPLOYEES -->
+  <section id="tab-employees">
+    <form class="card" id="empForm" novalidate>
+      <h2 id="empFormTitle">Add employee</h2>
+      <div class="grid two">
+        <div><label for="f_name">Name *</label><input id="f_name" autocomplete="off"><div class="err-text" id="f_name_err" hidden></div></div>
+        <div><label for="f_position">Position</label><input id="f_position" autocomplete="off"></div>
+        <div><label for="f_dept">Department / Branch</label><input id="f_dept" list="deptList" autocomplete="off"><datalist id="deptList"></datalist></div>
+        <div><label for="f_phone">Contact number</label><input id="f_phone" type="tel" autocomplete="off"></div>
+        <div><label for="f_email">Email</label><input id="f_email" type="email" autocomplete="off"><div class="err-text" id="f_email_err" hidden></div></div>
+        <div><label for="f_hired">Date hired</label><input id="f_hired" type="date"></div>
+        <div><label for="f_status">Employment status</label><select id="f_status"></select></div>
+        <div class="grid two" style="gap:10px">
+          <div><label for="f_vl">Vacation leave</label><input id="f_vl" type="number" min="0" step="0.5"></div>
+          <div><label for="f_sl">Sick leave</label><input id="f_sl" type="number" min="0" step="0.5"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" id="empSubmit">Add employee</button>
+        <button class="btn alt" type="button" id="empCancel" hidden>Cancel edit</button>
+      </div>
+    </form>
+    <div class="row">
+      <h2 id="empCount">Employees</h2>
+      <button class="btn alt small" data-action="exportEmployees" type="button">Export to CSV</button>
+    </div>
+    <div class="cards" id="empList"></div>
+  </section>
+
+  <!-- ATTENDANCE -->
+  <section id="tab-attendance" hidden>
+    <div class="card">
+      <h2>Work hours</h2>
+      <label for="workStart">Work starts at</label>
+      <input type="time" id="workStart" style="max-width:180px">
+      <p class="hint">Anyone who times in after this time is marked Late. Changing it does not change past records.</p>
+    </div>
+    <div class="row">
+      <h2 id="boardTitle">Today's board</h2>
+      <button class="btn alt small" data-action="exportAttendance" type="button">Export to CSV</button>
+    </div>
+    <div class="cards" id="board"></div>
+    <h2 style="margin-top:22px;font-size:1.1rem">Recent attendance records</h2>
+    <div id="attHist"></div>
+  </section>
+
+  <!-- LEAVE -->
+  <section id="tab-leave" hidden>
+    <form class="card" id="leaveForm" novalidate>
+      <h2>File a leave request</h2>
+      <div class="grid two">
+        <div><label for="l_emp">Employee</label><select id="l_emp"></select></div>
+        <div><label for="l_type">Leave type</label><select id="l_type"><option>Vacation</option><option>Sick</option><option>Emergency</option></select></div>
+        <div><label for="l_start">Start date</label><input type="date" id="l_start"></div>
+        <div><label for="l_end">End date</label><input type="date" id="l_end"></div>
+      </div>
+      <div style="margin-top:10px"><label for="l_reason">Reason</label><textarea id="l_reason"></textarea></div>
+      <div id="leaveInfo" class="msg info" hidden></div>
+      <div class="actions"><button class="btn" type="submit">File request</button></div>
+    </form>
+    <div class="row">
+      <h2>Leave requests</h2>
+      <button class="btn alt small" data-action="exportLeave" type="button">Export to CSV</button>
+    </div>
+    <div class="cards" id="leaveList"></div>
+  </section>
+
+  <!-- IMPORT -->
+  <section id="tab-import" hidden>
+    <div class="card">
+      <h2>Import from Excel</h2>
+      <p class="hint" style="margin-top:0">Already have your records in Excel? Upload the file and the app reads it right here in your browser. Nothing is sent anywhere. Salary and government ID columns are always ignored.</p>
+      <div class="grid two">
+        <div><label for="impType">What are you importing?</label>
+          <select id="impType"><option value="employees">Employees</option><option value="attendance">Attendance records</option></select></div>
+        <div><label>Need a starting point?</label>
+          <button type="button" class="btn alt" data-action="template">Download template (CSV)</button></div>
+      </div>
+      <label class="drop" id="drop" style="margin-top:12px" for="impFile">
+        <strong>Tap to choose a file</strong> or drop it here<br><span class="hint">.xlsx or .csv (old .xls files: re-save as .xlsx first)</span>
+        <input type="file" id="impFile" accept=".xlsx,.csv,.xls,.txt">
+      </label>
+      <div id="impError" class="msg err" hidden></div>
+      <div id="impSheetWrap" hidden style="margin-top:10px"><label for="impSheet">This workbook has several sheets. Which one should I read?</label><select id="impSheet"></select></div>
+    </div>
+
+    <div class="card" id="impStep2" hidden>
+      <h2>Match your columns</h2>
+      <div id="impSkipped" class="msg info" hidden></div>
+      <div class="mapgrid" id="impMap"></div>
+      <div class="grid two" style="margin-top:12px">
+        <div><label for="impDup">If a record already exists</label>
+          <select id="impDup"><option value="skip">Skip it (keep what I have)</option><option value="update">Update the existing record</option></select></div>
+        <div id="impDefaults" class="grid two" style="gap:10px">
+          <div><label for="impVL">Default vacation days</label><input type="number" id="impVL" min="0" step="0.5" value="10"></div>
+          <div><label for="impSL">Default sick days</label><input type="number" id="impSL" min="0" step="0.5" value="5"></div>
+        </div>
+      </div>
+      <p class="hint" id="impDefaultsHint">Defaults are used only when the file leaves the balance blank.</p>
+    </div>
+
+    <div class="card" id="impStep3" hidden>
+      <h2>Preview</h2>
+      <div id="impSummary"></div>
+      <div id="impPreview"></div>
+      <div id="impProblems"></div>
+      <div class="actions">
+        <button class="btn" type="button" id="impConfirm" data-action="impConfirm">Confirm import</button>
+        <button class="btn alt" type="button" data-action="impCancel">Cancel</button>
+      </div>
+    </div>
+    <div id="impResult"></div>
+    <div id="impUndo" class="card" hidden></div>
+  </section>
+
+  <!-- DATA -->
+  <section id="tab-data" hidden>
+    <div class="card">
+      <h2>Backup &amp; restore</h2>
+      <p class="hint" style="margin-top:0">Your data lives in this browser. If you clear your browser data it is gone, so download a backup now and then.</p>
+      <div class="actions">
+        <button class="btn" type="button" data-action="backup">Download backup (JSON)</button>
+        <label class="btn alt" style="display:inline-flex;align-items:center;margin:0;cursor:pointer" for="restoreFile">Restore from backup...</label>
+        <input type="file" id="restoreFile" accept=".json,application/json" style="display:none">
+      </div>
+    </div>
+    <div class="card">
+      <h2>Sample data</h2>
+      <p class="hint" style="margin-top:0">The app starts with 6 made-up employees so you can test. Clear them before importing your real file.</p>
+      <div class="actions">
+        <button class="btn alt" type="button" data-action="loadSample">Load sample data</button>
+        <button class="btn danger" type="button" data-action="clearAll">Clear all data</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal" id="modal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalMsg">
+    <p id="modalMsg"></p>
+    <div class="actions"><button class="btn alt" id="modalNo" type="button">Cancel</button><button class="btn" id="modalYes" type="button">Yes</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- constants ---------- */
+var KEY = "cafe_hr_v1";
+var DEFAULT_VL = 10, DEFAULT_SL = 5;
+var STATUSES = ["Probationary","Regular","Contractual","Resigned"];
+var LEAVE_TYPES = ["Vacation","Sick","Emergency"];
+var MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+var MONTH_LABELS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MAX_FILE = 10 * 1024 * 1024, MAX_ROWS = 5000;
+
+var state = null;
+var ui = { tab:"employees", editId:null, q:"", dept:"", est:"" };
+var imp = null;
+var lastDay = "";
+
+/* ---------- helpers ---------- */
+function $(s){ return document.querySelector(s); }
+function esc(v){ return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function str(v){ return v == null ? "" : String(v).trim(); }
+function numOr(v, d){ var n = parseFloat(v); return isFinite(n) && n >= 0 ? n : d; }
+function fmtNum(n){ return String(Math.round(n * 100) / 100); }
+// Local computer date/time (the browser's own clock, not UTC)
+function isoOf(d){ return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function today(){ return isoOf(new Date()); }
+function nowHM(){ var d = new Date(); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+function addDays(iso, n){ var p = iso.split("-"); var d = new Date(+p[0], +p[1] - 1, +p[2] + n); return isoOf(d); }
+function utcMs(iso){ var p = iso.split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+function validISO(s){ var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ""); if(!m) return false; var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])); return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3]; }
+function leaveDays(s, e){ if(!validISO(s) || !validISO(e) || e < s) return 0; return Math.round((utcMs(e) - utcMs(s)) / 864e5) + 1; }
+function fmtDate(iso){ if(!validISO(iso)) return iso || ""; var p = iso.split("-"); return MONTH_LABELS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0]; }
+function fmtTime(hm){ if(!hm) return "—"; var p = hm.split(":"); var h = +p[0]; return ((h % 12) || 12) + ":" + p[1] + " " + (h < 12 ? "AM" : "PM"); }
+
+/* ---------- storage (always in try/catch) ---------- */
+function showBanner(){
+  var b = $("#banner");
+  b.textContent = "Saving is blocked in this browser, so your changes will be lost when you close or refresh this page. You can still use the app. Download a backup from the Backup tab to keep your data.";
+  b.hidden = false;
+}
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); $("#banner").hidden = true; }
+  catch(e){ showBanner(); }
+}
+function load(){
+  try {
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var o = JSON.parse(raw); if(o && Array.isArray(o.employees)) return cleanState(o, true); }
+  } catch(e){ /* blocked or corrupt: start fresh */ }
+  return null;
+}
+
+/* ---------- normalizers shared by load / restore / import ---------- */
+function normStatus(v){
+  var s = str(v).toLowerCase(); if(!s) return null;
+  if(s.indexOf("prob") >= 0) return "Probationary";
+  if(s.indexOf("contract") >= 0) return "Contractual";
+  if(s.indexOf("resign") >= 0 || s.indexOf("separat") >= 0 || s.indexOf("terminat") >= 0 || s === "inactive") return "Resigned";
+  if(s.indexOf("reg") >= 0) return "Regular";
+  return null;
+}
+function parseDate(v){
+  var s = str(v); if(!s) return null;
+  var m;
+  if((m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})(?:$|[ T])/.exec(s))){ return mk(+m[1], +m[2], +m[3]); }
+  if((m = /^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:$|[ T])/.exec(s))){
+    var a = +m[1], b = +m[2], y = +m[3]; if(y < 100) y += 2000;
+    if(a > 12 && b <= 12) return mk(y, b, a);   // 25/03/2023 -> day first
+    return mk(y, a, b);                          // 03/25/2023 -> month first
+  }
+  if((m = /^([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})$/.exec(s))){ var mi = MONTHS.indexOf(m[1].slice(0,3).toLowerCase()); if(mi >= 0) return mk(+m[3], mi + 1, +m[2]); }
+  if((m = /^(\d{1,2})(?:st|nd|rd|th)?[\s\-]+([A-Za-z]{3,9})\.?,?[\s\-]+(\d{4})$/.exec(s))){ var mj = MONTHS.indexOf(m[2].slice(0,3).toLowerCase()); if(mj >= 0) return mk(+m[3], mj + 1, +m[1]); }
+  if(/^\d{5}(\.\d+)?$/.test(s)){ var n = Math.floor(parseFloat(s)); if(n >= 20000 && n <= 80000){ var d = new Date(Date.UTC(1899, 11, 30) + n * 864e5); return mk(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); } }
+  return null;
+  function mk(y, mo, d){ var iso = y + "-" + pad(mo) + "-" + pad(d); return validISO(iso) ? iso : null; }
+}
+function parseTime(v){
+  var s = str(v); if(!s) return null;
+  if(/^0?\.\d+$/.test(s)){ var mins = Math.round(parseFloat(s) * 1440); return pad(Math.floor(mins / 60) % 24) + ":" + pad(mins % 60); }
+  var m = /(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])\.?m?\.?\s*$/i.exec(s) || /(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?\s*()$/.exec(s);
+  var h, mi;
+  if(m){ h = +m[1]; mi = +m[2]; var ap = (m[3] || "").toLowerCase(); }
+  else { m = /^(\d{1,2})\s*([ap])\.?m\.?$/i.exec(s); if(!m) return null; h = +m[1]; mi = 0; ap = m[2].toLowerCase(); }
+  if(ap){ if(h < 1 || h > 12) return null; if(ap === "p" && h < 12) h += 12; if(ap === "a" && h === 12) h = 0; }
+  if(h > 23 || mi > 59) return null;
+  return pad(h) + ":" + pad(mi);
+}
+function cleanState(o, keepUndo){
+  var s = { employees:[], attendance:[], leaves:[], settings:{ workStart:"08:00" }, undo:null };
+  var ids = {}, empIds = {};
+  function newId(v){ var id = str(v); if(!id || ids[id]) id = uid() + Object.keys(ids).length; ids[id] = 1; return id; }
+  (Array.isArray(o.employees) ? o.employees : []).forEach(function(e){
+    if(!e || !str(e.name)) return;
+    var rec = { id:newId(e.id), name:str(e.name), position:str(e.position), dept:str(e.dept), phone:str(e.phone), email:str(e.email),
+      hired:parseDate(e.hired) || "", status:normStatus(e.status) || "Regular", vl:numOr(e.vl, DEFAULT_VL), sl:numOr(e.sl, DEFAULT_SL) };
+    empIds[rec.id] = 1; s.employees.push(rec);
+  });
+  (Array.isArray(o.attendance) ? o.attendance : []).forEach(function(a){
+    if(!a || !empIds[a.empId]) return;
+    var d = parseDate(a.date), ti = parseTime(a.timeIn); if(!d || !ti) return;
+    s.attendance.push({ id:newId(a.id), empId:a.empId, date:d, timeIn:ti, timeOut:parseTime(a.timeOut) || "", late:!!a.late });
+  });
+  (Array.isArray(o.leaves) ? o.leaves : []).forEach(function(l){
+    if(!l || !empIds[l.empId]) return;
+    var st = parseDate(l.start), en = parseDate(l.end); if(!st || !en || en < st) return;
+    s.leaves.push({ id:newId(l.id), empId:l.empId, type:LEAVE_TYPES.indexOf(l.type) >= 0 ? l.type : "Vacation", start:st, end:en,
+      days:leaveDays(st, en), reason:str(l.reason), status:["Pending","Approved","Declined"].indexOf(l.status) >= 0 ? l.status : "Pending", filed:str(l.filed) });
+  });
+  var ws = parseTime(o.settings && o.settings.workStart); if(ws) s.settings.workStart = ws;
+  if(keepUndo && o.undo && Array.isArray(o.undo.employees)){
+    var u = cleanState(o.undo, false); u.undo = undefined;
+    s.undo = { at:str(o.undo.at), label:str(o.undo.label), employees:u.employees, attendance:u.attendance, leaves:u.leaves };
+  }
+  return s;
+}
+
+/* ---------- sample data ---------- */
+function sampleState(){
+  var t = today();
+  var A = "Downtown Branch", B = "Riverside Branch";
+  function emp(i, name, pos, dept, status, hired, vl, sl){
+    return { id:"s" + i, name:name, position:pos, dept:dept, phone:"0917-000-000" + i, email:name.split(" ")[0].toLowerCase() + "@example.com", hired:hired, status:status, vl:vl, sl:sl };
+  }
+  var s = { employees:[
+    emp(1, "Lia Mercado", "Shift Supervisor", A, "Regular", "2022-03-14", 10, 5),
+    emp(2, "Paolo Navarro", "Barista", A, "Regular", "2023-06-01", 8, 4),
+    emp(3, "Bea Villanueva", "Cashier", B, "Probationary", "2026-08-17", 5, 5),
+    emp(4, "Carlo Mendoza", "Cook", B, "Regular", "2021-11-08", 7, 5),
+    emp(5, "Tessa Ramos", "Barista", B, "Contractual", "2026-02-02", 10, 3),
+    emp(6, "Miguel Aquino", "Cashier", A, "Resigned", "2022-09-19", 0, 2)
+  ], attendance:[], leaves:[], settings:{ workStart:"08:00" }, undo:null };
+  function att(n, emp, d, ti, to, late){ s.attendance.push({ id:"sa" + n, empId:emp, date:d, timeIn:ti, timeOut:to, late:late }); }
+  att(1, "s1", t, "07:52", "", false);
+  att(2, "s2", t, "08:14", "", true);
+  var y = addDays(t, -1);
+  att(3, "s1", y, "07:55", "17:03", false);
+  att(4, "s2", y, "08:20", "17:00", true);
+  att(5, "s3", y, "07:59", "17:01", false);
+  att(6, "s4", y, "08:05", "17:00", true);
+  s.leaves.push({ id:"sl1", empId:"s4", type:"Vacation", start:addDays(t, -1), end:addDays(t, 1), days:3, reason:"Family trip", status:"Approved", filed:addDays(t, -6) });
+  s.leaves.push({ id:"sl2", empId:"s3", type:"Sick", start:addDays(t, 1), end:addDays(t, 1), days:1, reason:"Dentist appointment", status:"Pending", filed:t });
+  s.leaves.push({ id:"sl3", empId:"s5", type:"Vacation", start:addDays(t, -20), end:addDays(t, -18), days:3, reason:"Short break", status:"Declined", filed:addDays(t, -25) });
+  return s;
+}
+
+/* ---------- queries ---------- */
+function empById(id){ for(var i = 0; i < state.employees.length; i++) if(state.employees[i].id === id) return state.employees[i]; return null; }
+function activeEmps(){ return state.employees.filter(function(e){ return e.status !== "Resigned"; }); }
+function attToday(id){ var t = today(); for(var i = 0; i < state.attendance.length; i++){ var a = state.attendance[i]; if(a.empId === id && a.date === t) return a; } return null; }
+function onLeaveToday(id){ var t = today(); return state.leaves.some(function(l){ return l.empId === id && l.status === "Approved" && l.start <= t && t <= l.end; }); }
+function statusToday(e){
+  var a = attToday(e.id);
+  if(onLeaveToday(e.id)) return { label:"On leave", cls:"leave", att:a };
+  if(a) return a.late ? { label:"Late", cls:"late", att:a } : { label:"Present", cls:"present", att:a };
+  if(nowHM() <= state.settings.workStart) return { label:"Not in yet", cls:"wait", att:null };
+  return { label:"Absent", cls:"absent", att:null };
+}
+function balOf(e, type){ return type === "Sick" ? e.sl : e.vl; }
+function balName(type){ return type === "Sick" ? "sick" : "vacation"; }
+function matches(e){
+  if(ui.q){ var q = ui.q.toLowerCase(); if([e.name, e.position, e.dept, e.email, e.phone].join(" ").toLowerCase().indexOf(q) < 0) return false; }
+  if(ui.dept && e.dept.toLowerCase() !== ui.dept.toLowerCase()) return false;
+  if(ui.est && e.status !== ui.est) return false;
+  return true;
+}
+
+/* ---------- UI utilities ---------- */
+var toastTimer = null;
+function toast(msg, kind){
+  var t = $("#toast"); t.textContent = msg; t.className = kind || ""; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.hidden = true; }, 4200);
+}
+function ask(msg, yes){
+  return new Promise(function(resolve){
+    var m = $("#modal"), y = $("#modalYes"), n = $("#modalNo");
+    $("#modalMsg").textContent = msg; y.textContent = yes || "Yes"; m.hidden = false; n.focus();
+    function done(v){ m.hidden = true; y.onclick = n.onclick = null; document.removeEventListener("keydown", key); resolve(v); }
+    function key(e){ if(e.key === "Escape") done(false); }
+    document.addEventListener("keydown", key);
+    y.onclick = function(){ done(true); }; n.onclick = function(){ done(false); };
+  });
+}
+function csvCell(v){
+  var s = String(v == null ? "" : v);
+  if(/^[=+@]/.test(s) || /^-[^0-9.]/.test(s)) s = "'" + s;   // stop spreadsheet formulas
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function download(name, text, type){
+  try {
+    var blob = new Blob([text], { type:type || "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  } catch(e){ toast("Sorry, the download did not work in this browser.", "err"); }
+}
+function toCSV(headers, rows){
+  return "﻿" + [headers].concat(rows).map(function(r){ return r.map(csvCell).join(","); }).join("\r\n") + "\r\n";
+}
+function setOptions(sel, items, keep){
+  var cur = keep ? sel.value : "";
+  sel.innerHTML = items.map(function(i){ return '<option value="' + esc(i.v) + '">' + esc(i.t) + "</option>"; }).join("");
+  if(keep && items.some(function(i){ return i.v === cur; })) sel.value = cur;
+}
+
+/* ---------- rendering ---------- */
+function renderAll(){
+  lastDay = today();
+  $("#todayLabel").textContent = "Today: " + fmtDate(lastDay) + "  ·  uses this computer's date and time";
+  renderSummary(); renderFilters(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveForm(); renderLeaveList(); renderUndo();
+  $("#workStart").value = state.settings.workStart;
+}
+function renderSummary(){
+  var act = activeEmps(), c = { Present:0, Late:0, "On leave":0 };
+  act.forEach(function(e){ var l = statusToday(e).label; if(c[l] != null) c[l]++; });
+  var pend = state.leaves.filter(function(l){ return l.status === "Pending"; }).length;
+  var items = [["Active employees", act.length], ["Present today", c.Present], ["Late today", c.Late], ["On leave today", c["On leave"]], ["Pending leave requests", pend]];
+  $("#summary").innerHTML = items.map(function(i){ return '<div class="stat"><b>' + i[1] + "</b><span>" + i[0] + "</span></div>"; }).join("");
+}
+function renderFilters(){
+  var depts = {}; state.employees.forEach(function(e){ if(e.dept) depts[e.dept.toLowerCase()] = e.dept; });
+  var names = Object.keys(depts).map(function(k){ return depts[k]; }).sort();
+  var opts = [{ v:"", t:"All departments / branches" }].concat(names.map(function(n){ return { v:n, t:n }; }));
+  if(ui.dept && !names.some(function(n){ return n.toLowerCase() === ui.dept.toLowerCase(); })) ui.dept = "";
+  setOptions($("#fDept"), opts, false); $("#fDept").value = ui.dept;
+  setOptions($("#fStatus"), [{ v:"", t:"All employment statuses" }].concat(STATUSES.map(function(s){ return { v:s, t:s }; })), false); $("#fStatus").value = ui.est;
+  $("#deptList").innerHTML = names.map(function(n){ return '<option value="' + esc(n) + '">'; }).join("");
+}
+function statusBadge(s){ return '<span class="badge b-' + s.toLowerCase() + '">' + esc(s) + "</span>"; }
+function renderEmployees(){
+  var list = state.employees.filter(matches);
+  $("#empCount").textContent = "Employees (" + list.length + (list.length !== state.employees.length ? " of " + state.employees.length : "") + ")";
+  if(!list.length){ $("#empList").innerHTML = '<div class="empty" style="grid-column:1/-1">' + (state.employees.length ? "No employees match your search or filters." : "No employees yet. Add one above, or import your Excel file from the Import tab.") + "</div>"; return; }
+  $("#empList").innerHTML = list.map(function(e){
+    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ") || "No position or branch") + "</div></div>" + statusBadge(e.status) + "</div>" +
+      '<div class="meta" style="margin-top:6px">' + (e.phone ? esc(e.phone) + "<br>" : "") + (e.email ? esc(e.email) + "<br>" : "") + (e.hired ? "Hired " + esc(fmtDate(e.hired)) + "<br>" : "") +
+      "Vacation leave: <b>" + fmtNum(e.vl) + "</b> · Sick leave: <b>" + fmtNum(e.sl) + "</b></div>" +
+      '<div class="actions"><button class="btn alt small" data-action="editEmp" data-id="' + esc(e.id) + '" type="button">Edit</button><button class="btn danger small" data-action="delEmp" data-id="' + esc(e.id) + '" type="button">Delete</button></div></div>';
+  }).join("");
+}
+function renderBoard(){
+  $("#boardTitle").textContent = "Today's board — " + fmtDate(today());
+  var list = activeEmps().filter(matches);
+  if(!list.length){ $("#board").innerHTML = '<div class="empty" style="grid-column:1/-1">' + (activeEmps().length ? "No one matches your search or filters." : "No active employees yet.") + "</div>"; return; }
+  $("#board").innerHTML = list.map(function(e){
+    var st = statusToday(e), a = st.att, leave = st.label === "On leave";
+    var inDis = leave || !!a, outDis = leave || !a || !!(a && a.timeOut);
+    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ")) + '</div></div><span class="badge b-' + st.cls + '">' + st.label + "</span></div>" +
+      '<div class="meta" style="margin-top:6px">Time in: <b>' + fmtTime(a && a.timeIn) + "</b> · Time out: <b>" + fmtTime(a && a.timeOut) + "</b></div>" +
+      '<div class="actions"><button class="btn small" data-action="timeIn" data-id="' + esc(e.id) + '" type="button"' + (inDis ? " disabled" : "") + '>Time in</button><button class="btn alt small" data-action="timeOut" data-id="' + esc(e.id) + '" type="button"' + (outDis ? " disabled" : "") + ">Time out</button></div></div>";
+  }).join("");
+}
+function renderHistory(){
+  var rows = state.attendance.filter(function(a){ var e = empById(a.empId); return e && matches(e); })
+    .sort(function(a, b){ return a.date === b.date ? (a.timeIn < b.timeIn ? 1 : -1) : (a.date < b.date ? 1 : -1); }).slice(0, 50);
+  if(!rows.length){ $("#attHist").innerHTML = '<div class="empty">No attendance records yet.</div>'; return; }
+  $("#attHist").innerHTML = '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Employee</th><th>In</th><th>Out</th><th>Result</th><th></th></tr></thead><tbody>' + rows.map(function(a){
+    var e = empById(a.empId);
+    return "<tr><td>" + esc(fmtDate(a.date)) + "</td><td>" + esc(e.name) + "</td><td>" + fmtTime(a.timeIn) + "</td><td>" + fmtTime(a.timeOut) + "</td><td>" + (a.late ? '<span class="badge b-late">Late</span>' : '<span class="badge b-present">On time</span>') +
+      '</td><td><button class="btn danger small" data-action="delAtt" data-id="' + esc(a.id) + '" type="button">Remove</button></td></tr>';
+  }).join("") + "</tbody></table></div>" + (state.attendance.length > 50 ? '<p class="hint">Showing the 50 most recent. Export to CSV for everything.</p>' : "");
+}
+function renderLeaveForm(){
+  setOptions($("#l_emp"), activeEmps().map(function(e){ return { v:e.id, t:e.name }; }), true);
+  updateLeaveInfo();
+}
+function updateLeaveInfo(){
+  var box = $("#leaveInfo"), e = empById($("#l_emp").value), type = $("#l_type").value;
+  var d = leaveDays($("#l_start").value, $("#l_end").value);
+  if(!e){ box.hidden = true; return; }
+  var txt = e.name + " has " + fmtNum(balOf(e, type)) + " " + balName(type) + " day(s) left" + (type === "Emergency" ? " (emergency leave uses the vacation balance)" : "") + ".";
+  if(d) txt += " This request is " + d + " day(s).";
+  box.textContent = txt; box.className = "msg " + (d && d > balOf(e, type) ? "warn" : "info"); box.hidden = false;
+}
+function renderLeaveList(){
+  var order = { Pending:0, Approved:1, Declined:2 };
+  var list = state.leaves.filter(function(l){ var e = empById(l.empId); return e && matches(e); })
+    .sort(function(a, b){ return order[a.status] - order[b.status] || (a.start < b.start ? 1 : -1); });
+  if(!list.length){ $("#leaveList").innerHTML = '<div class="empty" style="grid-column:1/-1">No leave requests yet.</div>'; return; }
+  $("#leaveList").innerHTML = list.map(function(l){
+    var e = empById(l.empId), pend = l.status === "Pending";
+    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc(l.type) + " leave · " + l.days + " day" + (l.days === 1 ? "" : "s") + (l.type === "Emergency" ? " (uses vacation balance)" : "") + "</div></div>" + statusBadge(l.status) + "</div>" +
+      '<div class="meta" style="margin-top:6px">' + esc(fmtDate(l.start)) + (l.end !== l.start ? " to " + esc(fmtDate(l.end)) : "") + (l.reason ? "<br>Reason: " + esc(l.reason) : "") + "</div>" +
+      (pend ? '<div class="actions"><button class="btn small" data-action="approve" data-id="' + esc(l.id) + '" type="button">Approve</button><button class="btn danger small" data-action="decline" data-id="' + esc(l.id) + '" type="button">Decline</button></div>' : "") + "</div>";
+  }).join("");
+}
+function renderUndo(){
+  var box = $("#impUndo");
+  if(!state.undo){ box.hidden = true; box.innerHTML = ""; return; }
+  box.hidden = false;
+  box.innerHTML = "<h2>Last import</h2><p style=\"margin:0 0 8px\">" + esc(state.undo.label) + "</p><button class=\"btn danger\" data-action=\"undoImport\" type=\"button\">Undo last import</button>";
+}
+
+/* ---------- employees ---------- */
+function resetEmpForm(){
+  ui.editId = null;
+  ["f_name","f_position","f_dept","f_phone","f_email","f_hired"].forEach(function(id){ $("#" + id).value = ""; });
+  $("#f_status").value = "Regular"; $("#f_vl").value = DEFAULT_VL; $("#f_sl").value = DEFAULT_SL;
+  $("#empFormTitle").textContent = "Add employee"; $("#empSubmit").textContent = "Add employee"; $("#empCancel").hidden = true;
+  $("#f_name_err").hidden = $("#f_email_err").hidden = true;
+}
+function submitEmp(ev){
+  ev.preventDefault();
+  var name = str($("#f_name").value), email = str($("#f_email").value), ok = true;
+  $("#f_name_err").hidden = $("#f_email_err").hidden = true;
+  if(!name){ $("#f_name_err").textContent = "Please enter the employee's name."; $("#f_name_err").hidden = false; ok = false; }
+  if(email && !/^\S+@\S+\.\S+$/.test(email)){ $("#f_email_err").textContent = "That email doesn't look right."; $("#f_email_err").hidden = false; ok = false; }
+  if(!ok){ (name ? $("#f_email") : $("#f_name")).focus(); return; }
+  var rec = { name:name, position:str($("#f_position").value), dept:str($("#f_dept").value), phone:str($("#f_phone").value), email:email,
+    hired:$("#f_hired").value || "", status:$("#f_status").value, vl:numOr($("#f_vl").value, 0), sl:numOr($("#f_sl").value, 0) };
+  if(ui.editId){ var e = empById(ui.editId); if(e) Object.keys(rec).forEach(function(k){ e[k] = rec[k]; }); toast("Saved changes to " + name + "."); }
+  else { rec.id = uid(); state.employees.push(rec); toast(name + " was added."); }
+  save(); resetEmpForm(); renderAll();
+}
+function editEmp(id){
+  var e = empById(id); if(!e) return;
+  ui.editId = id;
+  $("#f_name").value = e.name; $("#f_position").value = e.position; $("#f_dept").value = e.dept; $("#f_phone").value = e.phone; $("#f_email").value = e.email;
+  $("#f_hired").value = e.hired; $("#f_status").value = e.status; $("#f_vl").value = e.vl; $("#f_sl").value = e.sl;
+  $("#empFormTitle").textContent = "Edit employee"; $("#empSubmit").textContent = "Save changes"; $("#empCancel").hidden = false;
+  $("#empForm").scrollIntoView({ behavior:"smooth", block:"start" }); $("#f_name").focus();
+}
+function delEmp(id){
+  var e = empById(id); if(!e) return;
+  ask("Are you sure you want to delete " + e.name + "? Their attendance and leave records will be deleted too. This can't be undone.", "Yes, delete").then(function(yes){
+    if(!yes) return;
+    state.employees = state.employees.filter(function(x){ return x.id !== id; });
+    state.attendance = state.attendance.filter(function(a){ return a.empId !== id; });
+    state.leaves = state.leaves.filter(function(l){ return l.empId !== id; });
+    if(ui.editId === id) resetEmpForm();
+    save(); renderAll(); toast(e.name + " was deleted.");
+  });
+}
+
+/* ---------- attendance ---------- */
+function timeIn(id){
+  var e = empById(id); if(!e) return;
+  if(attToday(id)){ toast(e.name + " already timed in today.", "warn"); return; }
+  if(onLeaveToday(id)){ toast(e.name + " is on approved leave today.", "warn"); return; }
+  var hm = nowHM();
+  state.attendance.push({ id:uid(), empId:id, date:today(), timeIn:hm, timeOut:"", late:hm > state.settings.workStart });
+  save(); renderAll(); toast(e.name + " timed in at " + fmtTime(hm) + (hm > state.settings.workStart ? " (Late)." : "."));
+}
+function timeOut(id){
+  var e = empById(id); if(!e) return;
+  var a = attToday(id);
+  if(!a){ toast(e.name + " needs to time in first.", "warn"); return; }
+  if(a.timeOut){ toast(e.name + " already timed out today.", "warn"); return; }
+  a.timeOut = nowHM(); save(); renderAll(); toast(e.name + " timed out at " + fmtTime(a.timeOut) + ".");
+}
+
+/* ---------- leave ---------- */
+function submitLeave(ev){
+  ev.preventDefault();
+  var e = empById($("#l_emp").value), type = $("#l_type").value, s = $("#l_start").value, en = $("#l_end").value;
+  if(!e){ toast("Please add an active employee first.", "warn"); return; }
+  if(!validISO(s) || !validISO(en)){ toast("Please choose a start date and an end date.", "warn"); return; }
+  if(en < s){ toast("The end date can't be before the start date.", "warn"); return; }
+  var d = leaveDays(s, en), bal = balOf(e, type);
+  if(d > bal){ toast(e.name + " only has " + fmtNum(bal) + " " + balName(type) + " day(s) left, but this request needs " + d + ". Please shorten it.", "warn"); return; }
+  var clash = state.leaves.some(function(l){ return l.empId === e.id && l.status !== "Declined" && l.start <= en && s <= l.end; });
+  if(clash){ toast(e.name + " already has a pending or approved leave that overlaps these dates.", "warn"); return; }
+  state.leaves.push({ id:uid(), empId:e.id, type:type, start:s, end:en, days:d, reason:str($("#l_reason").value), status:"Pending", filed:today() });
+  save(); $("#l_reason").value = ""; renderAll(); toast("Leave request filed for " + e.name + ".");
+}
+function decide(id, approve){
+  var l = null; state.leaves.forEach(function(x){ if(x.id === id) l = x; });
+  if(!l || l.status !== "Pending"){ toast("This request was already decided.", "warn"); renderAll(); return; }
+  var e = empById(l.empId); if(!e) return;
+  if(approve){
+    var bal = balOf(e, l.type);
+    if(l.days > bal){ toast("Can't approve: " + e.name + " only has " + fmtNum(bal) + " " + balName(l.type) + " day(s) left, but this request needs " + l.days + ".", "warn"); return; }
+    if(l.type === "Sick") e.sl = bal - l.days; else e.vl = bal - l.days;
+    l.status = "Approved";
+  } else l.status = "Declined";
+  save(); renderAll(); toast("Request " + l.status.toLowerCase() + ".");
+}
+
+/* ---------- exports ---------- */
+function exportEmployees(){
+  download("employees-" + today() + ".csv", toCSV(["Name","Position","Department/Branch","Contact number","Email","Date hired","Employment status","Vacation leave balance","Sick leave balance"],
+    state.employees.map(function(e){ return [e.name, e.position, e.dept, e.phone, e.email, e.hired, e.status, e.vl, e.sl]; })));
+}
+function exportAttendance(){
+  download("attendance-" + today() + ".csv", toCSV(["Date","Employee","Department/Branch","Time in","Time out","Result"],
+    state.attendance.slice().sort(function(a, b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).map(function(a){ var e = empById(a.empId); return [a.date, e.name, e.dept, a.timeIn, a.timeOut, a.late ? "Late" : "On time"]; })));
+}
+function exportLeave(){
+  download("leave-" + today() + ".csv", toCSV(["Employee","Leave type","Start date","End date","Days","Reason","Status","Date filed"],
+    state.leaves.map(function(l){ var e = empById(l.empId); return [e.name, l.type, l.start, l.end, l.days, l.reason, l.status, l.filed]; })));
+}
+
+/* ---------- backup / restore ---------- */
+function backup(){ download("cafe-hr-backup-" + today() + ".json", JSON.stringify(state, null, 2), "application/json"); }
+function restore(file){
+  if(!file) return;
+  file.text().then(function(txt){
+    var o; try { o = JSON.parse(txt); } catch(e){ toast("That file isn't a valid backup.", "err"); return; }
+    if(!o || !Array.isArray(o.employees)){ toast("That file isn't a Café HR backup.", "err"); return; }
+    var s = cleanState(o, false);
+    ask("Restore this backup? It has " + s.employees.length + " employee(s) and will replace everything currently in the app.", "Yes, restore").then(function(yes){
+      if(!yes) return; state = s; save(); resetEmpForm(); renderAll(); toast("Backup restored.");
+    });
+  }).catch(function(){ toast("Could not read that file.", "err"); });
+}
+
+/* ---------- Excel / CSV reading (no libraries) ---------- */
+function inflateRaw(u8){
+  var ds = new DecompressionStream("deflate-raw");
+  return new Response(new Blob([u8]).stream().pipeThrough(ds)).arrayBuffer().then(function(b){ return new Uint8Array(b); });
+}
+function readZip(buf){
+  var dv = new DataView(buf), u8 = new Uint8Array(buf), eocd = -1, i;
+  for(i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 65557); i--){ if(dv.getUint32(i, true) === 0x06054b50){ eocd = i; break; } }
+  if(eocd < 0) throw new Error("zip");
+  var count = dv.getUint16(eocd + 10, true), p = dv.getUint32(eocd + 16, true), files = {};
+  for(var n = 0; n < count; n++){
+    if(p + 46 > buf.byteLength || dv.getUint32(p, true) !== 0x02014b50) throw new Error("zip");
+    var nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    var name = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nl));
+    files[name] = { method:dv.getUint16(p + 10, true), csize:dv.getUint32(p + 20, true), usize:dv.getUint32(p + 24, true), lo:dv.getUint32(p + 42, true) };
+    p += 46 + nl + el + cl;
+  }
+  return { files:files, text:function(name){
+    var f = files[name]; if(!f) return Promise.resolve(null);
+    if(f.usize > 80 * 1024 * 1024) return Promise.reject(new Error("big"));
+    var start = f.lo + 30 + dv.getUint16(f.lo + 26, true) + dv.getUint16(f.lo + 28, true);
+    var data = u8.subarray(start, start + f.csize);
+    var p2 = f.method === 0 ? Promise.resolve(data) : f.method === 8 ? inflateRaw(data) : Promise.reject(new Error("method"));
+    return p2.then(function(d){ return new TextDecoder("utf-8").decode(d); });
+  } };
+}
+function xml(text){
+  var d = new DOMParser().parseFromString(text, "application/xml");
+  if(d.getElementsByTagName("parsererror").length) throw new Error("xml");
+  return d;
+}
+function tags(node, name){ return Array.prototype.slice.call(node.getElementsByTagNameNS("*", name)); }
+function colIdx(ref){ var m = /^([A-Z]+)/i.exec(ref), n = 0; if(!m) return -1; m[1].toUpperCase().split("").forEach(function(c){ n = n * 26 + c.charCodeAt(0) - 64; }); return n - 1; }
+function isDateFmt(id, code){
+  if((id >= 14 && id <= 22) || (id >= 45 && id <= 47)) return true;
+  if(!code || /^general$/i.test(code)) return false;
+  return /[dmyhs]/i.test(code.replace(/"[^"]*"/g, "").replace(/\[[^\]]*\]/g, "").replace(/\\./g, ""));
+}
+function serialToStr(v){
+  var n = parseFloat(v); if(!isFinite(n)) return v;
+  var day = Math.floor(n), mins = Math.round((n - day) * 1440);
+  if(mins >= 1440){ day++; mins -= 1440; }
+  var hm = pad(Math.floor(mins / 60)) + ":" + pad(mins % 60);
+  if(day === 0) return hm;
+  var d = new Date(Date.UTC(1899, 11, 30) + day * 864e5);   // UTC parts on purpose: no timezone shift
+  var ds = d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate());
+  return mins ? ds + " " + hm : ds;
+}
+function readXlsx(buf){
+  var zip = readZip(buf), shared = [], dateXf = [], sheetList = [];
+  return zip.text("xl/workbook.xml").then(function(wbText){
+    if(!wbText) throw new Error("notxlsx");
+    var wb = xml(wbText);
+    return zip.text("xl/_rels/workbook.xml.rels").then(function(relText){
+      var rels = {}; if(relText) tags(xml(relText), "Relationship").forEach(function(r){ var t = r.getAttribute("Target") || ""; rels[r.getAttribute("Id")] = t.charAt(0) === "/" ? t.slice(1) : "xl/" + t; });
+      tags(wb, "sheet").forEach(function(s, i){
+        var rid = s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id") || s.getAttribute("r:id");
+        sheetList.push({ name:s.getAttribute("name") || ("Sheet" + (i + 1)), path:rels[rid] || ("xl/worksheets/sheet" + (i + 1) + ".xml") });
+      });
+      return zip.text("xl/sharedStrings.xml");
+    });
+  }).then(function(ssText){
+    if(ssText) tags(xml(ssText), "si").forEach(function(si){
+      shared.push(tags(si, "t").filter(function(t){ return !t.parentNode || t.parentNode.localName !== "rPh"; }).map(function(t){ return t.textContent; }).join(""));
+    });
+    return zip.text("xl/styles.xml");
+  }).then(function(stText){
+    if(stText){
+      var st = xml(stText), fmts = {};
+      tags(st, "numFmt").forEach(function(f){ fmts[f.getAttribute("numFmtId")] = f.getAttribute("formatCode"); });
+      var xfs = tags(st, "cellXfs")[0];
+      if(xfs) Array.prototype.slice.call(xfs.children).forEach(function(x){ var id = +x.getAttribute("numFmtId") || 0; dateXf.push(isDateFmt(id, fmts[id])); });
+    }
+    var out = [], chain = Promise.resolve();
+    sheetList.forEach(function(sh){
+      chain = chain.then(function(){ return zip.text(sh.path); }).then(function(t){
+        if(t == null) return; out.push({ name:sh.name, rows:parseSheet(xml(t), shared, dateXf) });
+      });
+    });
+    return chain.then(function(){ if(!out.length) throw new Error("nosheets"); return out; });
+  });
+}
+function parseSheet(doc, shared, dateXf){
+  var rows = [];
+  tags(doc, "row").forEach(function(r){
+    var ri = parseInt(r.getAttribute("r"), 10) - 1; if(!(ri >= 0)) ri = rows.length;
+    if(ri >= MAX_ROWS + 50) return;
+    var arr = [];
+    tags(r, "c").forEach(function(c){
+      var ref = c.getAttribute("r"), ci = ref ? colIdx(ref) : arr.length; if(ci < 0 || ci > 200) return;
+      var t = c.getAttribute("t"), s = c.getAttribute("s"), vEl = tags(c, "v")[0], v = vEl ? vEl.textContent : null, val = "";
+      if(t === "s") val = shared[parseInt(v, 10)] || "";
+      else if(t === "inlineStr") val = tags(c, "t").map(function(x){ return x.textContent; }).join("");
+      else if(t === "str") val = v || "";
+      else if(t === "b") val = v === "1" ? "TRUE" : "FALSE";
+      else if(t === "e") val = "";
+      else if(v != null && v !== "") val = dateXf[+s] ? serialToStr(v) : v;
+      arr[ci] = val;
+    });
+    for(var k = 0; k < arr.length; k++) if(arr[k] === undefined) arr[k] = "";
+    rows[ri] = arr;
+  });
+  for(var j = 0; j < rows.length; j++) if(!rows[j]) rows[j] = [];
+  return rows;
+}
+function parseCSV(text){
+  text = text.replace(/^﻿/, "");
+  var first = text.split(/\r?\n/)[0] || "", delim = ",", best = 0;
+  [",",";","\t"].forEach(function(d){ var c = first.split(d).length; if(c > best){ best = c; delim = d; } });
+  var rows = [], row = [], cell = "", q = false;
+  for(var i = 0; i < text.length; i++){
+    var ch = text.charAt(i);
+    if(q){ if(ch === '"'){ if(text.charAt(i + 1) === '"'){ cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if(ch === '"') q = true;
+    else if(ch === delim){ row.push(cell); cell = ""; }
+    else if(ch === "\n" || ch === "\r"){ if(ch === "\r" && text.charAt(i + 1) === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += ch;
+  }
+  if(cell !== "" || row.length){ row.push(cell); rows.push(row); }
+  return rows;
+}
+
+/* ---------- import flow ---------- */
+var EMP_FIELDS = [
+  { key:"name", label:"Name", req:true, alias:["name","fullname","employeename","employee","nameofemployee","staffname","staff"] },
+  { key:"position", label:"Position", alias:["position","jobtitle","title","role","designation","jobposition"] },
+  { key:"dept", label:"Department / Branch", alias:["departmentbranch","department","dept","branch","branchdepartment","location","store","outlet"] },
+  { key:"phone", label:"Contact number", alias:["contactnumber","contactno","contact","phone","phonenumber","mobile","mobilenumber","mobileno","cellphone","cellphonenumber","telephone"] },
+  { key:"email", label:"Email", alias:["email","emailaddress","emailadd","mail"] },
+  { key:"hired", label:"Date hired", alias:["datehired","hiredate","hired","dateofhire","datestarted","startdate","dateofhiring","datejoined"] },
+  { key:"status", label:"Employment status", alias:["employmentstatus","status","employeestatus","employmenttype"] },
+  { key:"vl", label:"Vacation leave balance", alias:["vacationleavebalance","vacationleave","vlbalance","vl","vacationbalance","vacation","vacationleaves"] },
+  { key:"sl", label:"Sick leave balance", alias:["sickleavebalance","sickleave","slbalance","sl","sickbalance","sick","sickleaves"] }
+];
+var ATT_FIELDS = [
+  { key:"name", label:"Employee name", req:true, alias:["name","employee","employeename","fullname","staffname","staff"] },
+  { key:"date", label:"Date", req:true, alias:["date","attendancedate","day","logdate","workdate"] },
+  { key:"timein", label:"Time in", req:true, alias:["timein","in","clockin","login","arrival","timeofarrival","timeinam"] },
+  { key:"timeout", label:"Time out", alias:["timeout","out","clockout","logout","departure","timeoutpm"] }
+];
+var BLOCKED = /salary|salaries|wage|basic pay|monthly pay|daily rate|pay ?rate|\bsss\b|phil ?health|pag-?ibig|\btin\b|tax id|\bgsis\b|\bumid\b|government|gov't|passport|bank account/i;
+function fieldsFor(type){ return type === "attendance" ? ATT_FIELDS : EMP_FIELDS; }
+function normKey(h){ return String(h).toLowerCase().replace(/[^a-z0-9]/g, ""); }
+function impError(msg){ var b = $("#impError"); b.textContent = msg; b.hidden = !msg; }
+function impReset(keepResult){
+  imp = null; ["#impStep2","#impStep3","#impSheetWrap"].forEach(function(s){ $(s).hidden = true; });
+  impError(""); if(!keepResult) $("#impResult").innerHTML = "";
+}
+function loadImportFile(file){
+  if(!file) return;
+  impReset(false);
+  var name = file.name || "", lower = name.toLowerCase();
+  if(file.size > MAX_FILE){ impError("That file is too big (over 10 MB). Please import a smaller file."); return; }
+  if(file.size === 0){ impError("That file is empty."); return; }
+  file.arrayBuffer().then(function(buf){
+    var head = new Uint8Array(buf.slice(0, 4));
+    var isZip = head[0] === 0x50 && head[1] === 0x4B, isOle = head[0] === 0xD0 && head[1] === 0xCF && head[2] === 0x11 && head[3] === 0xE0;
+    if(isOle){ impError("This looks like an old Excel file (.xls) or a password-protected file. Please open it in Excel, remove any password, then use Save As > Excel Workbook (.xlsx) or CSV and upload that."); return; }
+    if(lower.slice(-4) === ".xls"){ impError("Old .xls files are not supported. Please open it in Excel and use Save As > Excel Workbook (.xlsx) or CSV."); return; }
+    if(isZip){
+      if(typeof DecompressionStream === "undefined"){ impError("This browser can't open .xlsx files. Please use the latest Chrome, or save the file as CSV in Excel and upload that."); return; }
+      return readXlsx(buf).then(function(sheets){ startImport(name, sheets); });
+    }
+    if(lower.slice(-5) === ".xlsx"){ impError("I couldn't read that .xlsx file. It may be damaged. Try opening it in Excel and saving it again, or save it as CSV."); return; }
+    var text = new TextDecoder("utf-8").decode(buf);
+    if(text.indexOf("\u0000") >= 0){ impError("I couldn't read that file. Please upload a .xlsx or .csv file."); return; }
+    startImport(name, [{ name:"CSV", rows:parseCSV(text) }]);
+  }).catch(function(e){
+    impError("I couldn't read that file. It may be damaged or password-protected. Try saving it again from Excel as .xlsx or CSV.");
+  });
+}
+function startImport(name, sheets){
+  var usable = sheets.filter(function(s){ return s.rows.some(function(r){ return r.some(function(c){ return str(c) !== ""; }); }); });
+  if(!usable.length){ impError("I couldn't find any data in that file."); return; }
+  imp = { file:name, sheets:usable, sheetIdx:0, map:{}, results:[] };
+  if(usable.length > 1){
+    setOptions($("#impSheet"), usable.map(function(s, i){ return { v:String(i), t:s.name + " (" + s.rows.length + " rows)" }; }), false);
+    $("#impSheetWrap").hidden = false;
+  }
+  buildMapping();
+}
+function buildMapping(){
+  if(!imp) return;
+  var rows = imp.sheets[imp.sheetIdx].rows, type = $("#impType").value, fields = fieldsFor(type);
+  var hi = -1; for(var i = 0; i < rows.length; i++){ if(rows[i] && rows[i].some(function(c){ return str(c) !== ""; })){ hi = i; break; } }
+  imp.hdrIdx = hi; imp.rows = rows;
+  var headers = rows[hi] || [], cols = [], skipped = [];
+  headers.forEach(function(h, idx){
+    var t = str(h); if(!t) return;
+    if(BLOCKED.test(t)) skipped.push(t); else cols.push({ idx:idx, label:t, key:normKey(t) });
+  });
+  imp.cols = cols;
+  var used = {};
+  fields.forEach(function(f){
+    imp.map[f.key] = -1;
+    for(var c = 0; c < cols.length; c++){ if(!used[cols[c].idx] && f.alias.indexOf(cols[c].key) >= 0){ imp.map[f.key] = cols[c].idx; used[cols[c].idx] = 1; break; } }
+  });
+  $("#impMap").innerHTML = fields.map(function(f){
+    return '<div><label for="map_' + f.key + '">' + esc(f.label) + (f.req ? " *" : "") + '</label><select id="map_' + f.key + '" data-map="' + f.key + '"><option value="-1">— not in my file —</option>' +
+      cols.map(function(c){ return '<option value="' + c.idx + '"' + (imp.map[f.key] === c.idx ? " selected" : "") + ">" + esc(c.label) + "</option>"; }).join("") + "</select></div>";
+  }).join("");
+  var sk = $("#impSkipped");
+  if(skipped.length){ sk.textContent = "For privacy, I skipped these columns and did not read them: " + skipped.join(", ") + "."; sk.hidden = false; } else sk.hidden = true;
+  $("#impDefaults").hidden = $("#impDefaultsHint").hidden = type !== "employees";
+  $("#impStep2").hidden = false;
+  recompute();
+}
+function recompute(){
+  if(!imp) return;
+  var type = $("#impType").value, rows = imp.rows, res = [];
+  var defVL = numOr($("#impVL").value, DEFAULT_VL), defSL = numOr($("#impSL").value, DEFAULT_SL);
+  function get(r, key){ var i = imp.map[key]; return i >= 0 && r[i] != null ? str(r[i]) : ""; }
+  var seen = {};
+  if(type === "employees"){
+    var byEmail = {}, byName = {};
+    state.employees.forEach(function(e){ if(e.email) byEmail[e.email.toLowerCase()] = e; if(!byName[e.name.toLowerCase()]) byName[e.name.toLowerCase()] = e; });
+    for(var i = imp.hdrIdx + 1; i < rows.length && res.length < MAX_ROWS; i++){
+      var r = rows[i] || []; if(!r.some(function(c){ return str(c) !== ""; })) continue;
+      var errs = [], rec = { name:get(r, "name"), position:get(r, "position"), dept:get(r, "dept"), email:get(r, "email") }, v;
+      if(!rec.name) errs.push("Name is missing");
+      if(rec.email && !/^\S+@\S+\.\S+$/.test(rec.email)) errs.push('Email "' + rec.email + '" looks wrong');
+      var ph = get(r, "phone"); if(/^9\d{9}$/.test(ph)) ph = "0" + ph; rec.phone = ph;
+      if((v = get(r, "hired"))){ rec.hired = parseDate(v); if(!rec.hired) errs.push('Date hired "' + v + '" is not a valid date'); }
+      if((v = get(r, "status"))){ rec.status = normStatus(v); if(!rec.status) errs.push('Employment status "' + v + '" not recognized (use Probationary, Regular, Contractual or Resigned)'); }
+      if((v = get(r, "vl"))){ rec.vl = parseFloat(v); if(!(rec.vl >= 0)) errs.push('Vacation balance "' + v + '" is not a number'); }
+      if((v = get(r, "sl"))){ rec.sl = parseFloat(v); if(!(rec.sl >= 0)) errs.push('Sick balance "' + v + '" is not a number'); }
+      var item = { n:i + 1, rec:rec, cells:[rec.name, rec.position, rec.dept, rec.email, rec.hired ? fmtDate(rec.hired) : "", rec.status || "Regular", rec.vl != null ? fmtNum(rec.vl) : fmtNum(defVL), rec.sl != null ? fmtNum(rec.sl) : fmtNum(defSL)] };
+      if(errs.length){ item.status = "error"; item.msg = errs.join("; "); }
+      else {
+        var key = rec.email ? "e:" + rec.email.toLowerCase() : "n:" + rec.name.toLowerCase();
+        if(seen[key]){ item.status = "dup"; item.fileDup = true; item.msg = "Repeated in the file — skipped"; }
+        else {
+          seen[key] = 1;
+          var ex = rec.email ? byEmail[rec.email.toLowerCase()] : byName[rec.name.toLowerCase()];
+          if(ex){ item.status = "dup"; item.existingId = ex.id; item.msg = "Already in the system"; } else item.status = "ok";
+        }
+      }
+      res.push(item);
+    }
+    imp.heads = ["Name","Position","Branch","Email","Date hired","Status","VL","SL"];
+  } else {
+    var byNm = {}, existing = {};
+    state.employees.forEach(function(e){ var k = e.name.toLowerCase(); (byNm[k] = byNm[k] || []).push(e); });
+    state.attendance.forEach(function(a){ existing[a.empId + "|" + a.date] = a; });
+    for(var j = imp.hdrIdx + 1; j < rows.length && res.length < MAX_ROWS; j++){
+      var q = rows[j] || []; if(!q.some(function(c){ return str(c) !== ""; })) continue;
+      var er = [], nm = get(q, "name"), rd = get(q, "date"), rti = get(q, "timein"), rto = get(q, "timeout");
+      var d = parseDate(rd), ti = parseTime(rti), to = rto ? parseTime(rto) : "", emp = null;
+      if(!nm) er.push("Employee name is missing");
+      else { var list = byNm[nm.toLowerCase()] || []; if(!list.length) er.push('Employee "' + nm + '" was not found — import employees first'); else if(list.length > 1) er.push('More than one employee is named "' + nm + '"'); else emp = list[0]; }
+      if(!d) er.push(rd ? 'Date "' + rd + '" is not valid' : "Date is missing");
+      if(!ti) er.push(rti ? 'Time in "' + rti + '" is not valid' : "Time in is missing");
+      if(rto && !to) er.push('Time out "' + rto + '" is not valid');
+      if(ti && to && to < ti) er.push("Time out is earlier than time in");
+      var it = { n:j + 1, rec:{ emp:emp, date:d, timeIn:ti, timeOut:to || "" }, cells:[nm, d ? fmtDate(d) : rd, ti ? fmtTime(ti) : rti, to ? fmtTime(to) : rto] };
+      if(er.length){ it.status = "error"; it.msg = er.join("; "); }
+      else {
+        var k2 = emp.id + "|" + d;
+        if(seen[k2]){ it.status = "dup"; it.fileDup = true; it.msg = "Same employee and date repeated in the file — skipped"; }
+        else { seen[k2] = 1; if(existing[k2]){ it.status = "dup"; it.existingId = existing[k2].id; it.msg = "Already has a record for that day"; } else it.status = "ok"; }
+      }
+      res.push(it);
+    }
+    imp.heads = ["Employee","Date","Time in","Time out"];
+  }
+  imp.results = res; renderPreview();
+}
+function renderPreview(){
+  var res = imp.results, update = $("#impDup").value === "update";
+  var ok = 0, dup = 0, bad = 0;
+  res.forEach(function(r){ if(r.status === "ok") ok++; else if(r.status === "dup") dup++; else bad++; });
+  var willUpdate = update ? res.filter(function(r){ return r.status === "dup" && !r.fileDup; }).length : 0;
+  var total = res.length, word = $("#impType").value === "employees" ? "employee" : "attendance";
+  var reqMissing = fieldsFor($("#impType").value).filter(function(f){ return f.req && imp.map[f.key] < 0; });
+  $("#impStep3").hidden = false;
+  $("#impSummary").innerHTML = reqMissing.length
+    ? '<div class="msg warn">Please match the required column(s): ' + esc(reqMissing.map(function(f){ return f.label; }).join(", ")) + ".</div>"
+    : '<div class="msg info"><b>' + total + " row" + (total === 1 ? "" : "s") + " found.</b> " + ok + " ready to add · " + dup + " duplicate" + (dup === 1 ? "" : "s") + (update ? " (" + willUpdate + " will be updated)" : " (will be skipped)") + " · " + bad + " with problems (will be skipped).</div>";
+  $("#impConfirm").disabled = !!reqMissing.length || (ok + willUpdate) === 0;
+  if(!total){ $("#impPreview").innerHTML = '<div class="empty">No data rows were found under the header row.</div>'; $("#impProblems").innerHTML = ""; return; }
+  function badge(r){ return '<span class="badge b-' + r.status + '">' + (r.status === "ok" ? "Ready" : r.status === "dup" ? "Duplicate" : "Problem") + "</span>"; }
+  $("#impPreview").innerHTML = "<h3>First " + Math.min(10, total) + " rows</h3>" + '<div class="tablewrap"><table><thead><tr><th>Row</th><th>Result</th>' + imp.heads.map(function(h){ return "<th>" + esc(h) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    res.slice(0, 10).map(function(r){ return "<tr><td>" + r.n + "</td><td>" + badge(r) + "</td>" + r.cells.map(function(c){ return "<td>" + esc(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+  var probs = res.filter(function(r){ return r.status !== "ok"; });
+  $("#impProblems").innerHTML = probs.length ? "<h3>Rows that need attention (" + probs.length + ")</h3>" + '<div class="tablewrap"><table><thead><tr><th>Row</th><th>Result</th><th>What happened</th></tr></thead><tbody>' +
+    probs.slice(0, 100).map(function(r){ return "<tr><td>" + r.n + "</td><td>" + badge(r) + "</td><td>" + esc(r.msg) + "</td></tr>"; }).join("") + "</tbody></table></div>" + (probs.length > 100 ? '<p class="hint">Showing the first 100.</p>' : "") : "";
+}
+function applyImport(){
+  if(!imp) return;
+  var type = $("#impType").value, update = $("#impDup").value === "update", defVL = numOr($("#impVL").value, DEFAULT_VL), defSL = numOr($("#impSL").value, DEFAULT_SL);
+  var todo = imp.results.filter(function(r){ return r.status === "ok" || (r.status === "dup" && !r.fileDup && update); });
+  if(!todo.length){ toast("There is nothing to import.", "warn"); return; }
+  var snap = JSON.parse(JSON.stringify({ employees:state.employees, attendance:state.attendance, leaves:state.leaves }));
+  var added = 0, updated = 0;
+  try {
+    todo.forEach(function(r){
+      var rec = r.rec;
+      if(type === "employees"){
+        if(r.status === "ok"){
+          state.employees.push({ id:uid(), name:rec.name, position:rec.position, dept:rec.dept, phone:rec.phone, email:rec.email, hired:rec.hired || "", status:rec.status || "Regular", vl:rec.vl != null ? rec.vl : defVL, sl:rec.sl != null ? rec.sl : defSL }); added++;
+        } else {
+          var e = empById(r.existingId); if(!e) return;
+          ["name","position","dept","phone","email","hired","status","vl","sl"].forEach(function(k){ if(rec[k] !== undefined && rec[k] !== "" && rec[k] !== null) e[k] = rec[k]; }); updated++;
+        }
+      } else {
+        var late = rec.timeIn > state.settings.workStart;
+        if(r.status === "ok"){ state.attendance.push({ id:uid(), empId:rec.emp.id, date:rec.date, timeIn:rec.timeIn, timeOut:rec.timeOut, late:late }); added++; }
+        else { state.attendance.forEach(function(a){ if(a.id === r.existingId){ a.timeIn = rec.timeIn; a.timeOut = rec.timeOut || a.timeOut; a.late = late; } }); updated++; }
+      }
+    });
+  } catch(err){ state.employees = snap.employees; state.attendance = snap.attendance; state.leaves = snap.leaves; toast("Something went wrong, so nothing was imported.", "err"); return; }
+  var skipped = imp.results.length - added - updated;
+  var what = type === "employees" ? "employee" : "attendance record";
+  state.undo = { at:new Date().toISOString(), label:"Imported " + imp.file + " on " + fmtDate(today()) + " at " + fmtTime(nowHM()) + ": " + added + " " + what + "(s) added, " + updated + " updated.", employees:snap.employees, attendance:snap.attendance, leaves:snap.leaves };
+  save(); renderAll(); impReset(false);
+  $("#impResult").innerHTML = '<div class="msg good"><b>Import finished.</b> ' + added + " added, " + updated + " updated, " + skipped + " skipped.</div>";
+  toast("Import finished.");
+}
+function undoImport(){
+  if(!state.undo) return;
+  ask("Undo the last import? This puts your data back the way it was before that import. Anything you changed after the import will be lost.", "Yes, undo").then(function(yes){
+    if(!yes) return;
+    state.employees = state.undo.employees; state.attendance = state.undo.attendance; state.leaves = state.undo.leaves; state.undo = null;
+    if(ui.editId && !empById(ui.editId)) resetEmpForm();
+    save(); renderAll(); $("#impResult").innerHTML = ""; toast("The last import was undone.");
+  });
+}
+function template(){
+  var t = $("#impType").value;
+  if(t === "attendance") download("attendance-template.csv", toCSV(["Name","Date","Time in","Time out"], [["Juan Sample", today(), "07:55", "17:00"]]));
+  else download("employees-template.csv", toCSV(["Name","Position","Department/Branch","Contact number","Email","Date hired","Employment status","Vacation leave balance","Sick leave balance"], [["Juan Sample","Barista","Downtown Branch","09170000000","juan@example.com","2024-01-15","Regular","10","5"]]));
+}
+
+/* ---------- data tab ---------- */
+function loadSample(){
+  ask("Load the sample data? This replaces everything currently in the app.", "Yes, load sample").then(function(yes){
+    if(!yes) return; state = sampleState(); save(); resetEmpForm(); impReset(false); renderAll(); toast("Sample data loaded.");
+  });
+}
+function clearAll(){
+  ask("Clear ALL data (employees, attendance and leave)? Consider downloading a backup first. This can't be undone.", "Yes, clear everything").then(function(yes){
+    if(!yes) return; state = cleanState({ employees:[] }, false); save(); resetEmpForm(); impReset(false); renderAll(); toast("All data was cleared.");
+  });
+}
+
+/* ---------- tabs & events ---------- */
+function showTab(name){
+  ui.tab = name;
+  ["employees","attendance","leave","import","data"].forEach(function(t){ $("#tab-" + t).hidden = t !== name; });
+  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.setAttribute("aria-selected", b.getAttribute("data-tab") === name ? "true" : "false"); });
+  $("#filters").hidden = name === "import" || name === "data";
+  renderAll();
+}
+var actions = {
+  editEmp:editEmp, delEmp:delEmp, timeIn:timeIn, timeOut:timeOut,
+  approve:function(id){ decide(id, true); }, decline:function(id){ decide(id, false); },
+  delAtt:function(id){ ask("Remove this attendance record?", "Yes, remove").then(function(y){ if(y){ state.attendance = state.attendance.filter(function(a){ return a.id !== id; }); save(); renderAll(); } }); },
+  exportEmployees:exportEmployees, exportAttendance:exportAttendance, exportLeave:exportLeave,
+  backup:backup, loadSample:loadSample, clearAll:clearAll, template:template, impConfirm:applyImport, impCancel:function(){ impReset(false); }, undoImport:undoImport
+};
+function init(){
+  state = load();
+  if(!state){ state = sampleState(); save(); }
+  setOptions($("#f_status"), STATUSES.map(function(s){ return { v:s, t:s }; }), false);
+  resetEmpForm();
+  $("#l_start").value = $("#l_end").value = today();
+
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-action]"); if(b && actions[b.getAttribute("data-action")]) actions[b.getAttribute("data-action")](b.getAttribute("data-id"));
+    var t = e.target.closest("[data-tab]"); if(t) showTab(t.getAttribute("data-tab"));
+  });
+  $("#empForm").addEventListener("submit", submitEmp);
+  $("#empCancel").addEventListener("click", resetEmpForm);
+  $("#leaveForm").addEventListener("submit", submitLeave);
+  ["l_emp","l_type","l_start","l_end"].forEach(function(id){ $("#" + id).addEventListener("change", updateLeaveInfo); });
+  $("#l_start").addEventListener("change", function(){ if($("#l_end").value < $("#l_start").value) $("#l_end").value = $("#l_start").value; updateLeaveInfo(); });
+  $("#q").addEventListener("input", function(){ ui.q = this.value.trim(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveList(); });
+  $("#fDept").addEventListener("change", function(){ ui.dept = this.value; renderAll(); });
+  $("#fStatus").addEventListener("change", function(){ ui.est = this.value; renderAll(); });
+  $("#clearFilters").addEventListener("click", function(){ ui.q = ui.dept = ui.est = ""; $("#q").value = ""; renderAll(); });
+  $("#workStart").addEventListener("change", function(){ var v = parseTime(this.value); if(v){ state.settings.workStart = v; save(); renderAll(); toast("Work now starts at " + fmtTime(v) + "."); } });
+
+  $("#impFile").addEventListener("change", function(){ var f = this.files[0]; loadImportFile(f); this.value = ""; });
+  $("#impType").addEventListener("change", function(){ if(imp) buildMapping(); else $("#impDefaults").hidden = $("#impDefaultsHint").hidden = this.value !== "employees"; });
+  $("#impSheet").addEventListener("change", function(){ if(imp){ imp.sheetIdx = +this.value; buildMapping(); } });
+  $("#impMap").addEventListener("change", function(e){ var k = e.target.getAttribute("data-map"); if(k && imp){ imp.map[k] = +e.target.value; recompute(); } });
+  $("#impDup").addEventListener("change", function(){ if(imp) renderPreview(); });
+  $("#impVL").addEventListener("input", function(){ if(imp) recompute(); });
+  $("#impSL").addEventListener("input", function(){ if(imp) recompute(); });
+  var drop = $("#drop");
+  ["dragenter","dragover"].forEach(function(n){ drop.addEventListener(n, function(e){ e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(n){ drop.addEventListener(n, function(e){ e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function(e){ if(e.dataTransfer && e.dataTransfer.files[0]) loadImportFile(e.dataTransfer.files[0]); });
+  $("#restoreFile").addEventListener("change", function(){ var f = this.files[0]; restore(f); this.value = ""; });
+  // stop the browser from opening a file dropped outside the drop zone
+  ["dragover","drop"].forEach(function(n){ window.addEventListener(n, function(e){ if(!e.target.closest || !e.target.closest("#drop")) e.preventDefault(); }); });
+
+  showTab("employees");
+  setInterval(function(){ if(today() !== lastDay) renderAll(); else if(ui.tab === "attendance") { renderBoard(); renderSummary(); } }, 30000);
+}
+init();
+})();
+</script>
+</body>
+</html>
