@@ -37,3 +37,5 @@ See **`docs/PHASE2_MINI_PORTAL.md`** (feature tour, demo accounts, run steps, ev
 - `probes_metabase.py`, `probes_superset.py` were run **inline** during the session and saved afterwards as transcriptions; they were **not re-executed in saved form**. The JSON in `evidence/` is from the original runs.
 - `finalize_evidence.py` relabels a few rows (where my own test was wrong or a result is a gap/limitation rather than pass/fail). Every relabel carries a reason in its note.
 - Nothing here touches real or customer data. Read `docs/SECURITY_CONFIGURATION.md` Part A before using any real system.
+
+`portal/static/sdk.js` is a build of `@superset-ui/embedded-sdk` (Apache-2.0, © The Apache Software Foundation), included so you don't need Node to run the demo.

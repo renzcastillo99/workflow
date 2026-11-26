@@ -35,7 +35,7 @@ Created by `scripts/p2_03_keycloak.py` into **`docker/keycloak/demo_accounts.txt
 | `stranger.demo` | *not provisioned* | can sign in at the IdP but the **portal refuses** them |
 
 ## 3. Run it yourself
-**You need:** Docker Desktop (running, with at least 8 GB RAM given to it), Git, Python 3.10+, Node 18+, and free ports **8088, 8180, 9000, 15432**. On **Windows use WSL2 (Ubuntu)** and run everything inside it; plain PowerShell/Git Bash is not supported. First run downloads about 4 GB and takes roughly 10-20 minutes.
+**You need:** Docker Desktop (running, with at least 8 GB RAM given to it), Git, Python 3.10+, and free ports **8088, 8180, 9000, 15432**. On **Windows use WSL2 (Ubuntu)** and run everything inside it; plain PowerShell/Git Bash is not supported. First run downloads about 4 GB and takes roughly 10-20 minutes.
 Each step was run in this environment; the *whole sequence has not been executed from scratch on a clean machine*, so expect to fix small things.
 
 ```bash
@@ -66,13 +66,7 @@ $PY scripts/p2_02_superset.py                             # live dashboard, embe
 $PY scripts/p2_03_keycloak.py                             # login-server realm + demo accounts
 docker compose --env-file .env -f docker/keycloak.compose.yml up -d     # wait ~30 s
 
-# 7. build the Superset embed file once (needs Node)
-mkdir -p /tmp/sdk && cd /tmp/sdk && npm init -y >/dev/null && npm i @superset-ui/embedded-sdk esbuild
-echo "import { embedDashboard } from '@superset-ui/embedded-sdk'; window.mount = (o) => embedDashboard(o);" > entry.js
-npx esbuild entry.js --bundle --format=iife --outfile=<path-to-repo>/insightflow-feasibility/portal/static/sdk.js
-cd <path-to-repo>/insightflow-feasibility
-
-# 8. seed and start the portal
+# 7. seed and start the portal (the Superset embed file portal/static/sdk.js is already in the repo; no Node needed)
 (cd portal && .venv/bin/python seed.py && ./run.sh)
 $PY scripts/p2_samples.py                                 # upload test files -> data/samples/
 ```
