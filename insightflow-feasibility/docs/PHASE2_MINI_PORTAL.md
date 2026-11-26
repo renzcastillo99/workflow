@@ -35,31 +35,51 @@ Created by `scripts/p2_03_keycloak.py` into **`docker/keycloak/demo_accounts.txt
 | `stranger.demo` | *not provisioned* | can sign in at the IdP but the **portal refuses** them |
 
 ## 3. Run it yourself
-Needs Docker, Python 3.10+, Node 18+ (to build one JavaScript file) and a bash shell (macOS/Linux, or WSL/Git Bash on Windows).
-Each step below was run in this environment; the whole sequence **has not been executed from scratch on a clean machine**, so expect to fix small things.
+**You need:** Docker Desktop (running, with at least 8 GB RAM given to it), Git, Python 3.10+, Node 18+, and free ports **8088, 8180, 9000, 15432**. On **Windows use WSL2 (Ubuntu)** and run everything inside it; plain PowerShell/Git Bash is not supported. First run downloads about 4 GB and takes roughly 10-20 minutes.
+Each step was run in this environment; the *whole sequence has not been executed from scratch on a clean machine*, so expect to fix small things.
 
 ```bash
-cd insightflow-feasibility
+# 1. get the code
+git clone https://github.com/renzcastillo99/workflow.git && cd workflow
+git checkout claude/cool-johnson-hpr3fc && cd insightflow-feasibility
+
+# 2. Python environment (one venv used by the portal AND the setup scripts)
+python3 -m venv portal/.venv && portal/.venv/bin/pip install -r portal/requirements.txt
+export PY=$PWD/portal/.venv/bin/python
+
+# 3. local secrets (random, gitignored) and the shared Docker network
 docker network create ifnet
-./scripts/init_env.sh && ./scripts/p2_00_env.sh          # random local secrets -> .env (gitignored)
-python3 scripts/gen_data.py                               # synthetic data (about 230 MB, ~20 s)
+./scripts/init_env.sh && ./scripts/p2_00_env.sh
+
+# 4. synthetic data + database
+$PY scripts/gen_data.py                                   # about 230 MB, ~20 s
 docker compose --env-file .env -f docker/data.compose.yml up -d
-./scripts/load_data.sh                                    # loads the datasets + read-only DB role
-./scripts/ss_00_init.sh                                   # builds + starts Superset
-(cd scripts && python3 ss_01_setup.py && python3 ss_02_content.py)
-./scripts/p2_01_db.sh                                     # serving schema + ingest role + 20,000 live rows
-python3 scripts/p2_02_superset.py                         # live dashboard, embedding, token-only service account
-python3 scripts/p2_03_keycloak.py                         # login server realm + demo accounts
-docker compose --env-file .env -f docker/keycloak.compose.yml up -d
-python3 scripts/p2_samples.py                             # upload samples -> data/samples/
-cd portal && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-# build the Superset embed bundle once:
+./scripts/load_data.sh
+
+# 5. Superset (builds the image, initialises it, waits until it answers)
+./scripts/ss_00_init.sh
+(cd scripts && $PY ss_01_setup.py && $PY ss_02_content.py)
+
+# 6. the mini-portal pieces
+./scripts/p2_01_db.sh                                     # serving schema + 20,000 live rows
+$PY scripts/p2_02_superset.py                             # live dashboard, embedding, token-only service account
+$PY scripts/p2_03_keycloak.py                             # login-server realm + demo accounts
+docker compose --env-file .env -f docker/keycloak.compose.yml up -d     # wait ~30 s
+
+# 7. build the Superset embed file once (needs Node)
 mkdir -p /tmp/sdk && cd /tmp/sdk && npm init -y >/dev/null && npm i @superset-ui/embedded-sdk esbuild
 echo "import { embedDashboard } from '@superset-ui/embedded-sdk'; window.mount = (o) => embedDashboard(o);" > entry.js
-npx esbuild entry.js --bundle --format=iife --outfile=<repo>/insightflow-feasibility/portal/static/sdk.js
-cd <repo>/insightflow-feasibility/portal && .venv/bin/python seed.py && ./run.sh
+npx esbuild entry.js --bundle --format=iife --outfile=<path-to-repo>/insightflow-feasibility/portal/static/sdk.js
+cd <path-to-repo>/insightflow-feasibility
+
+# 8. seed and start the portal
+(cd portal && .venv/bin/python seed.py && ./run.sh)
+$PY scripts/p2_samples.py                                 # upload test files -> data/samples/
 ```
-Then open **http://127.0.0.1:9000**. Back to the starting state any time: `./scripts/p2_reset.sh`. Stop everything: `docker stop $(docker ps -q)` and `pkill -f "uvicorn app:app"`.
+**Then open `http://127.0.0.1:9000`** (use `127.0.0.1`, **not** `localhost` — the login and embedding settings are tied to it).
+**Sign in:** username e.g. `viewer.sales`; password is in `docker/keycloak/demo_accounts.txt`; for the 6-digit code run `$PY scripts/p2_totp.py viewer.sales` (or add the base32 secret from that file to an authenticator app). Codes can't be reused: if a login fails, wait for the next 30-second window.
+**Back to the starting state:** `./scripts/p2_reset.sh`. **Stop:** `pkill -f "uvicorn app:app"` and `docker stop $(docker ps -q)`.
+**If something fails:** `docker ps` (all of `if-data-pg`, `if-superset`, `if-keycloak` should be running), `docker logs if-superset`, and `portal/data/portal.log`. Docker Hub can rate-limit pulls (HTTP 429); wait a minute and re-run the step.
 
 ## 4. Test evidence (synthetic data; one VM; `evidence/`)
 | Suite | File | Result |
