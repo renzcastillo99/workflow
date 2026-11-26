@@ -122,7 +122,6 @@ details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8p
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button role="tab" data-tab="dashboard" aria-selected="true">Dashboard</button>
     <button role="tab" data-tab="employees" aria-selected="false">Employees</button>
-    <button role="tab" data-tab="attendance" aria-selected="false">Attendance</button>
     <button role="tab" data-tab="leave" aria-selected="false">Leave</button>
     <button role="tab" data-tab="import" aria-selected="false">Import</button>
     <button role="tab" data-tab="data" aria-selected="false">Settings</button>
@@ -167,24 +166,6 @@ details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8p
       <button class="btn alt small" data-action="exportEmployees" type="button">Export to CSV</button>
     </div>
     <div class="cards" id="empList"></div>
-  </section>
-
-  <!-- ATTENDANCE -->
-  <section id="tab-attendance" hidden>
-    <div class="card">
-      <h2>Work hours</h2>
-      <label for="workStart">Work starts at</label>
-      <input type="time" id="workStart" style="max-width:180px">
-      <p class="hint">Anyone who times in after this time is marked Late. Changing it does not change past records.</p>
-    </div>
-    <div class="row">
-      <h2 id="boardTitle">Today's board</h2>
-      <button class="btn alt small" data-action="exportAttendance" type="button">Export to CSV</button>
-    </div>
-    <p class="hint" style="margin:-4px 0 10px">Attendance records come from your imports (Excel file or SharePoint link). Use the Import tab to add new days.</p>
-    <div class="cards" id="board"></div>
-    <h2 style="margin-top:22px;font-size:1.1rem">Recent attendance records</h2>
-    <div id="attHist"></div>
   </section>
 
   <!-- LEAVE -->
@@ -268,6 +249,13 @@ details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8p
 
   <!-- DATA -->
   <section id="tab-data" hidden>
+    <div class="card">
+      <h2>Work hours</h2>
+      <label for="workStart">Work starts at</label>
+      <input type="time" id="workStart" style="max-width:180px">
+      <p class="hint">When you import attendance, anyone whose time in is after this time is marked Late. Changing it does not change records already imported.</p>
+      <div class="actions"><button class="btn alt small" data-action="exportAttendance" type="button">Export attendance records (CSV)</button></div>
+    </div>
     <div class="card">
       <h2>Leave policy</h2>
       <p class="hint" style="margin-top:0">Employees with 1 year of service or more get the yearly amount (it renews on each hire anniversary, with no carry-over). New hires earn a set amount for every completed month until their first anniversary.</p>
@@ -546,7 +534,7 @@ function setOptions(sel, items, keep){
 function renderAll(){
   lastDay = today();
   $("#todayLabel").textContent = "Today: " + fmtDate(lastDay) + "  ·  uses this computer's date and time";
-  renderSummary(); renderFilters(); renderDashboard(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveForm(); renderLeaveList(); renderUndo(); fillPolicy();
+  renderSummary(); renderFilters(); renderDashboard(); renderEmployees(); renderLeaveForm(); renderLeaveList(); renderUndo(); fillPolicy();
   $("#workStart").value = state.settings.workStart;
 }
 function renderSummary(){
@@ -580,26 +568,6 @@ function renderEmployees(){
       "Vacation leave: <b>" + fmtNum(li.vl) + "</b> · Sick leave: <b>" + fmtNum(li.sl) + "</b></div>" + (note ? '<div class="hint">' + esc(note) + "</div>" : "") +
       '<div class="actions"><button class="btn alt small" data-action="editEmp" data-id="' + esc(e.id) + '" type="button">Edit</button><button class="btn danger small" data-action="delEmp" data-id="' + esc(e.id) + '" type="button">Delete</button></div></div>';
   }).join("");
-}
-function renderBoard(){
-  $("#boardTitle").textContent = "Today's board — " + fmtDate(today());
-  var list = activeEmps().filter(matches);
-  if(!list.length){ $("#board").innerHTML = '<div class="empty" style="grid-column:1/-1">' + (activeEmps().length ? "No one matches your search or filters." : "No active employees yet.") + "</div>"; return; }
-  $("#board").innerHTML = list.map(function(e){
-    var st = statusToday(e), a = st.att;
-    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ")) + '</div></div><span class="badge b-' + st.cls + '">' + st.label + "</span></div>" +
-      '<div class="meta" style="margin-top:6px">Time in: <b>' + fmtTime(a && a.timeIn) + "</b> · Time out: <b>" + fmtTime(a && a.timeOut) + "</b></div></div>";
-  }).join("");
-}
-function renderHistory(){
-  var rows = state.attendance.filter(function(a){ var e = empById(a.empId); return e && matches(e); })
-    .sort(function(a, b){ return a.date === b.date ? (a.timeIn < b.timeIn ? 1 : -1) : (a.date < b.date ? 1 : -1); }).slice(0, 50);
-  if(!rows.length){ $("#attHist").innerHTML = '<div class="empty">No attendance records yet.</div>'; return; }
-  $("#attHist").innerHTML = '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Employee</th><th>In</th><th>Out</th><th>Result</th><th></th></tr></thead><tbody>' + rows.map(function(a){
-    var e = empById(a.empId);
-    return "<tr><td>" + esc(fmtDate(a.date)) + "</td><td>" + esc(e.name) + "</td><td>" + fmtTime(a.timeIn) + "</td><td>" + fmtTime(a.timeOut) + "</td><td>" + (a.late ? '<span class="badge b-late">Late</span>' : '<span class="badge b-present">On time</span>') +
-      '</td><td><button class="btn danger small" data-action="delAtt" data-id="' + esc(a.id) + '" type="button">Remove</button></td></tr>';
-  }).join("") + "</tbody></table></div>" + (state.attendance.length > 50 ? '<p class="hint">Showing the 50 most recent. Export to CSV for everything.</p>' : "");
 }
 function renderLeaveForm(){
   setOptions($("#l_emp"), activeEmps().map(function(e){ return { v:e.id, t:e.name }; }), true);
@@ -768,7 +736,6 @@ function delEmp(id){
 }
 
 /* ---------- attendance ---------- */
-// Attendance records now come from imports (Excel or SharePoint); there are no manual Time in / Time out buttons.
 
 /* ---------- leave ---------- */
 function submitLeave(ev){
@@ -1227,19 +1194,19 @@ function spSignIn(){
 /* ---------- data tab ---------- */
 function loadSample(){
   ask("Load the sample data? This replaces everything currently in the app.", "Yes, load sample").then(function(yes){
-    if(!yes) return; var pol = state.settings.policy; state = sampleState(); state.settings.policy = pol; save(); resetEmpForm(); impReset(false); renderAll(); toast("Sample data loaded.");
+    if(!yes) return; var keep = state.settings; state = sampleState(); state.settings = keep; save(); resetEmpForm(); impReset(false); renderAll(); toast("Sample data loaded.");
   });
 }
 function clearAll(){
   ask("Clear ALL data (employees, attendance and leave)? Consider downloading a backup first. This can't be undone.", "Yes, clear everything").then(function(yes){
-    if(!yes) return; state = cleanState({ employees:[], settings:{ policy:state.settings.policy } }, false); save(); resetEmpForm(); impReset(false); renderAll(); toast("All data was cleared.");
+    if(!yes) return; state = cleanState({ employees:[], settings:state.settings }, false); save(); resetEmpForm(); impReset(false); renderAll(); toast("All data was cleared.");
   });
 }
 
 /* ---------- tabs & events ---------- */
 function showTab(name){
   ui.tab = name;
-  ["dashboard","employees","attendance","leave","import","data"].forEach(function(t){ $("#tab-" + t).hidden = t !== name; });
+  ["dashboard","employees","leave","import","data"].forEach(function(t){ $("#tab-" + t).hidden = t !== name; });
   Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.setAttribute("aria-selected", b.getAttribute("data-tab") === name ? "true" : "false"); });
   $("#filters").hidden = name === "dashboard" || name === "import" || name === "data";
   renderAll();
@@ -1247,7 +1214,6 @@ function showTab(name){
 var actions = {
   editEmp:editEmp, delEmp:delEmp,
   approve:function(id){ decide(id, true); }, decline:function(id){ decide(id, false); },
-  delAtt:function(id){ ask("Remove this attendance record?", "Yes, remove").then(function(y){ if(y){ state.attendance = state.attendance.filter(function(a){ return a.id !== id; }); save(); renderAll(); } }); },
   exportEmployees:exportEmployees, exportAttendance:exportAttendance, exportLeave:exportLeave,
   backup:backup, loadSample:loadSample, clearAll:clearAll, spFetch:spFetch, spSignIn:spSignIn, template:template, impConfirm:applyImport, impCancel:function(){ impReset(false); }, undoImport:undoImport
 };
@@ -1267,7 +1233,7 @@ function init(){
   $("#leaveForm").addEventListener("submit", submitLeave);
   ["l_emp","l_type","l_start","l_end"].forEach(function(id){ $("#" + id).addEventListener("change", updateLeaveInfo); });
   $("#l_start").addEventListener("change", function(){ if($("#l_end").value < $("#l_start").value) $("#l_end").value = $("#l_start").value; updateLeaveInfo(); });
-  $("#q").addEventListener("input", function(){ ui.q = this.value.trim(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveList(); });
+  $("#q").addEventListener("input", function(){ ui.q = this.value.trim(); renderEmployees(); renderLeaveList(); });
   $("#fDept").addEventListener("change", function(){ ui.dept = this.value; renderAll(); });
   $("#fStatus").addEventListener("change", function(){ ui.est = this.value; renderAll(); });
   $("#clearFilters").addEventListener("click", function(){ ui.q = ui.dept = ui.est = ""; $("#q").value = ""; renderAll(); });
@@ -1293,7 +1259,7 @@ function init(){
   ["dragover","drop"].forEach(function(n){ window.addEventListener(n, function(e){ if(!e.target.closest || !e.target.closest("#drop")) e.preventDefault(); }); });
 
   showTab("dashboard");
-  setInterval(function(){ if(today() !== lastDay) renderAll(); else if(ui.tab === "attendance") { renderBoard(); renderSummary(); } }, 30000);
+  setInterval(function(){ if(today() !== lastDay) renderAll(); else if(ui.tab === "dashboard"){ renderSummary(); renderDashboard(); } }, 30000);
 }
 init();
 })();
