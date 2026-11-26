@@ -107,6 +107,19 @@ th{background:#EEF3D2;white-space:nowrap}
 .dl li{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line)}
 .dl li:last-child{border-bottom:0}
 details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8px}
+/* leave calendar & chips */
+.calgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;margin:8px 0}
+.cal{border-radius:6px;padding:3px 2px;text-align:center;min-height:44px;display:flex;flex-direction:column;justify-content:center;line-height:1.1}
+.cal small{font-size:.62rem;opacity:.85}
+.cal b{font-size:.95rem}
+.cal.l0{background:#EEF0E6;color:#5d625a}
+.cal.l1{background:#DDEA8F;color:#161616}
+.cal.l2{background:#ACCE00;color:#161616}
+.cal.l3{background:#6F8700;color:#fff}
+.cal.l4{background:#425200;color:#fff}
+.cal.wk{outline:1px dashed #b3baa5;outline-offset:-1px}
+.chips span{display:inline-block;background:#F4F5F0;border-radius:999px;padding:2px 10px;font-size:.78rem;margin:2px 4px 2px 0}
+.ok-text{color:#1B7A3A;font-weight:600}
 </style>
 </head>
 <body>
@@ -537,11 +550,22 @@ function renderAll(){
   renderSummary(); renderFilters(); renderDashboard(); renderEmployees(); renderLeaveForm(); renderLeaveList(); renderUndo(); fillPolicy();
   $("#workStart").value = state.settings.workStart;
 }
+// Attendance cards only appear when attendance has been imported in the last 30 days.
+function hasAttendance(){ var from = addDays(today(), -30); return state.attendance.some(function(a){ return a.date >= from && empById(a.empId); }); }
 function renderSummary(){
-  var act = activeEmps(), c = { Present:0, Late:0, "On leave":0 };
-  act.forEach(function(e){ var l = statusToday(e).label; if(c[l] != null) c[l]++; });
-  var pend = state.leaves.filter(function(l){ return l.status === "Pending"; }).length;
-  var items = [["Active employees", act.length], ["Present today", c.Present], ["Late today", c.Late], ["On leave today", c["On leave"]], ["Pending leave requests", pend]];
+  var act = activeEmps(), t = today(), pend = state.leaves.filter(function(l){ return l.status === "Pending"; }).length, items;
+  if(hasAttendance()){
+    var c = { "Present":0, "Late":0, "On leave":0 };
+    act.forEach(function(e){ var l = statusToday(e).label; if(c[l] != null) c[l]++; });
+    items = [["Active employees", act.length], ["Present today", c.Present], ["Late today", c.Late], ["On leave today", c["On leave"]], ["Pending leave requests", pend]];
+  } else {
+    var from = addDays(t, -90), n90 = 0, soon = 0;
+    act.forEach(function(e){
+      if(validISO(e.hired) && e.hired >= from && e.hired <= t) n90++;
+      var li = leaveInfo(e); if(li.first && li.next && utcMs(li.next) - utcMs(t) <= 60 * 864e5) soon++;
+    });
+    items = [["Active employees", act.length], ["On leave today", act.filter(function(e){ return onLeaveToday(e.id); }).length], ["Pending leave requests", pend], ["New hires (last 90 days)", n90], ["Reaching 1 year (next 60 days)", soon]];
+  }
   $("#summary").innerHTML = items.map(function(i){ return '<div class="stat"><b>' + i[1] + "</b><span>" + i[0] + "</span></div>"; }).join("");
 }
 function renderFilters(){
@@ -603,75 +627,184 @@ function renderUndo(){
 /* ---------- dashboard ---------- */
 function hbars(rows){
   var max = Math.max.apply(null, rows.map(function(r){ return r[1]; }).concat([1]));
-  return rows.map(function(r){ return '<div class="hrow"><span class="lbl" title="' + esc(r[0]) + '">' + esc(r[0]) + '</span><span class="track"><span class="fill" style="width:' + (r[1] / max * 100) + '%"></span></span><span class="val">' + r[1] + "</span></div>"; }).join("");
+  return rows.map(function(r){ return '<div class="hrow"><span class="lbl" title="' + esc(r[0]) + '">' + esc(r[0]) + '</span><span class="track"><span class="fill" style="width:' + Math.max(0, r[1] / max * 100) + '%"></span></span><span class="val">' + fmtNum(r[1]) + "</span></div>"; }).join("");
 }
 function rangeText(l){ return fmtDate(l.start) + (l.end !== l.start ? " to " + fmtDate(l.end) : ""); }
-function renderDashboard(){
-  var box = $("#dash"), t = today(), act = activeEmps();
-  if(!state.employees.length){ box.innerHTML = '<div class="empty">No employees yet. Add some on the Employees tab, or import your Excel file from the Import tab.</div>'; return; }
-  var c = { "Present":0, "Late":0, "On leave":0, "Absent":0, "Not in yet":0 };
-  act.forEach(function(e){ c[statusToday(e).label]++; });
-  var worked = c.Present + c.Late, expected = act.length - c["On leave"];
-  var rate = expected > 0 ? Math.round(worked / expected * 100) + "%" : "—";
-  var month = t.slice(0, 7), lateMonth = state.attendance.filter(function(a){ return a.late && a.date.slice(0, 7) === month; }).length;
-  var segs = [["Present", "#1B7A3A"], ["Late", "#C77700"], ["On leave", "#1F5FA8"], ["Absent", "#B3261E"], ["Not in yet", "#8D9484"]];
-  var bar = act.length ? '<div class="stackbar" role="img" aria-label="Today: ' + segs.map(function(g){ return c[g[0]] + " " + g[0].toLowerCase(); }).join(", ") + '">' +
-    segs.filter(function(g){ return c[g[0]] > 0; }).map(function(g){ return '<span style="flex:' + c[g[0]] + ";background:" + g[1] + '"></span>'; }).join("") + "</div>" : '<div class="empty">No active employees.</div>';
-  var legend = '<ul class="legend">' + segs.map(function(g){ return '<li><span class="sw" style="background:' + g[1] + '"></span>' + g[0] + " <b>" + c[g[0]] + "</b></li>"; }).join("") + "</ul>";
-
-  // last 14 days
-  var days = []; for(var i = 13; i >= 0; i--) days.push(addDays(t, -i));
-  var rows = days.map(function(d){ var on = 0, late = 0; state.attendance.forEach(function(a){ if(a.date === d && empById(a.empId)){ if(a.late) late++; else on++; } }); return { d:d, on:on, late:late }; });
+function legendHtml(items){ return '<ul class="legend">' + items.map(function(i){ return '<li><span class="sw" style="background:' + i[1] + '"></span>' + i[0] + (i[2] != null ? " <b>" + i[2] + "</b>" : "") + "</li>"; }).join("") + "</ul>"; }
+// Stacked column chart. rows: [{ l1, l2, bold, title, vals:[...] }], colors: one per series.
+function stackedChart(rows, colors, aria){
   var W = 600, H = 210, ml = 30, mr = 8, mt = 12, mb = 40, pw = W - ml - mr, ph = H - mt - mb;
-  var maxV = Math.max(1, Math.max.apply(null, rows.map(function(r){ return r.on + r.late; })));
+  var tot = function(r){ return r.vals.reduce(function(a, b){ return a + b; }, 0); };
+  var maxV = Math.max(1, Math.max.apply(null, rows.map(tot)));
   var band = pw / rows.length, bw = Math.min(26, band * 0.62), ticks = maxV > 1 ? [0, Math.round(maxV / 2), maxV] : [0, 1];
-  var svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="Attendance for the last 14 days, on time and late">';
+  var svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="' + esc(aria) + '">';
   ticks.forEach(function(v){ var y = mt + ph - v / maxV * ph; svg += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y + '" y2="' + y + '" stroke="#DDE0D4" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 3) + '" text-anchor="end" font-size="10" fill="#5d625a">' + v + "</text>"; });
   rows.forEach(function(r, k){
-    var x = ml + band * k + (band - bw) / 2, hOn = r.on / maxV * ph, hLate = r.late / maxV * ph, yOn = mt + ph - hOn, yLate = yOn - hLate - (r.on && r.late ? 2 : 0);
-    var p = r.d.split("-").map(Number), wd = new Date(p[0], p[1] - 1, p[2]).getDay(), isT = r.d === t;
-    svg += "<g><title>" + esc(fmtDate(r.d)) + ": " + r.on + " on time, " + r.late + " late</title>" +
-      (r.on ? '<rect x="' + x + '" y="' + yOn + '" width="' + bw + '" height="' + hOn + '" rx="3" fill="#1B7A3A"/>' : "") +
-      (r.late ? '<rect x="' + x + '" y="' + yLate + '" width="' + bw + '" height="' + hLate + '" rx="3" fill="#C77700"/>' : "") +
-      '<rect x="' + (ml + band * k) + '" y="' + mt + '" width="' + band + '" height="' + ph + '" fill="transparent"/>' +
-      '<text x="' + (x + bw / 2) + '" y="' + (H - 22) + '" text-anchor="middle" font-size="10" fill="#161616"' + (isT ? ' font-weight="700"' : "") + ">" + p[2] + "</text>" +
-      '<text x="' + (x + bw / 2) + '" y="' + (H - 9) + '" text-anchor="middle" font-size="9" fill="#5d625a">' + "SMTWTFS".charAt(wd) + "</text></g>";
+    var x = ml + band * k + (band - bw) / 2, y = mt + ph, g = "<g><title>" + esc(r.title) + "</title>";
+    r.vals.forEach(function(v, i){ if(v > 0){ var h = v / maxV * ph; y -= h; g += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="3" fill="' + colors[i] + '"/>'; y -= 2; } });
+    g += '<rect x="' + (ml + band * k) + '" y="' + mt + '" width="' + band + '" height="' + ph + '" fill="transparent"/>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (H - 22) + '" text-anchor="middle" font-size="10" fill="#161616"' + (r.bold ? ' font-weight="700"' : "") + ">" + esc(r.l1) + "</text>" +
+      '<text x="' + (x + bw / 2) + '" y="' + (H - 9) + '" text-anchor="middle" font-size="9" fill="#5d625a">' + esc(r.l2) + "</text></g>";
+    svg += g;
   });
-  svg += "</svg>";
-  var tbl = '<details><summary>View as a table</summary><div class="tablewrap"><table><thead><tr><th>Date</th><th>On time</th><th>Late</th></tr></thead><tbody>' +
-    rows.slice().reverse().map(function(r){ return "<tr><td>" + esc(fmtDate(r.d)) + "</td><td>" + r.on + "</td><td>" + r.late + "</td></tr>"; }).join("") + "</tbody></table></div></details>";
+  return svg + "</svg>";
+}
+function chartTable(rows, head, names){
+  return '<details><summary>View as a table</summary><div class="tablewrap"><table><thead><tr><th>' + esc(head) + "</th>" + names.map(function(n){ return "<th>" + esc(n) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    rows.slice().reverse().map(function(r){ return "<tr><td>" + esc(r.full) + "</td>" + r.vals.map(function(v){ return "<td>" + v + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div></details>";
+}
+function emptyBox(t){ return '<div class="empty">' + t + "</div>"; }
+function monthKeys(t, n){ var out = []; for(var i = n - 1; i >= 0; i--) out.push(addMonthsIso(t.slice(0, 7) + "-01", -i).slice(0, 7)); return out; }
+// Approved leave days per calendar month, split into vacation (incl. emergency) and sick.
+function leaveDaysByMonth(keys){
+  var m = {}; keys.forEach(function(k){ m[k] = { vac:0, sick:0 }; });
+  state.leaves.forEach(function(l){
+    if(l.status !== "Approved" || !empById(l.empId)) return;
+    var a = utcMs(l.start), b = utcMs(l.end);
+    for(var ms = a, n = 0; ms <= b && n < 400; ms += 864e5, n++){
+      var d = new Date(ms), k = d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1);
+      if(m[k]) { if(l.type === "Sick") m[k].sick++; else m[k].vac++; }
+    }
+  });
+  return m;
+}
 
-  // headcount
-  var byDept = {}; act.forEach(function(e){ var k = e.dept || "Unassigned"; byDept[k] = (byDept[k] || 0) + 1; });
-  var deptRows = Object.keys(byDept).map(function(k){ return [k, byDept[k]]; }).sort(function(a, b){ return b[1] - a[1] || (a[0] < b[0] ? -1 : 1); });
-  var statRows = STATUSES.map(function(st){ return [st, state.employees.filter(function(e){ return e.status === st; }).length]; });
-
-  // leave lists
+function todayCard(act, att, t){
+  var month = t.slice(0, 7), mk = leaveDaysByMonth([month])[month], monthLeave = mk.vac + mk.sick;
+  if(att){
+    var c = { "Present":0, "Late":0, "On leave":0, "Absent":0, "Not in yet":0 };
+    act.forEach(function(e){ c[statusToday(e).label]++; });
+    var worked = c.Present + c.Late, expected = act.length - c["On leave"];
+    var rate = expected > 0 ? Math.round(worked / expected * 100) + "%" : "—";
+    var lateMonth = state.attendance.filter(function(a){ return a.late && a.date.slice(0, 7) === month; }).length;
+    var segs = [["Present", "#1B7A3A"], ["Late", "#C77700"], ["On leave", "#1F5FA8"], ["Absent", "#B3261E"], ["Not in yet", "#8D9484"]];
+    var bar = act.length ? '<div class="stackbar" role="img" aria-label="Today: ' + segs.map(function(g){ return c[g[0]] + " " + g[0].toLowerCase(); }).join(", ") + '">' +
+      segs.filter(function(g){ return c[g[0]] > 0; }).map(function(g){ return '<span style="flex:' + c[g[0]] + ";background:" + g[1] + '"></span>'; }).join("") + "</div>" : emptyBox("No active employees.");
+    return '<div class="card span2"><h2>Today at a glance</h2>' + bar + legendHtml(segs.map(function(g){ return [g[0], g[1], c[g[0]]]; })) +
+      '<div class="kpis"><div><b>' + rate + "</b><span>Attendance rate today (excluding people on leave)</span></div><div><b>" + lateMonth + "</b><span>Late arrivals this month</span></div><div><b>" + monthLeave + "</b><span>Leave days this month</span></div></div></div>";
+  }
+  var onL = act.filter(function(e){ return onLeaveToday(e.id); }).length, avail = act.length - onL;
+  var bar2 = act.length ? '<div class="stackbar" role="img" aria-label="Today: ' + avail + " available, " + onL + ' on leave">' + (avail ? '<span style="flex:' + avail + ';background:#1B7A3A"></span>' : "") + (onL ? '<span style="flex:' + onL + ';background:#1F5FA8"></span>' : "") + "</div>" : emptyBox("No active employees.");
+  return '<div class="card span2"><h2>Today at a glance</h2>' + bar2 + legendHtml([["Available", "#1B7A3A", avail], ["On leave", "#1F5FA8", onL]]) +
+    '<div class="kpis"><div><b>' + (act.length ? Math.round(avail / act.length * 100) + "%" : "—") + "</b><span>Available today</span></div><div><b>" + monthLeave + "</b><span>Leave days taken this month</span></div></div></div>";
+}
+function attChartCard(t){
+  var rows = []; for(var i = 13; i >= 0; i--){
+    var d = addDays(t, -i), on = 0, late = 0, p = d.split("-").map(Number);
+    state.attendance.forEach(function(a){ if(a.date === d && empById(a.empId)){ if(a.late) late++; else on++; } });
+    rows.push({ l1:String(p[2]), l2:"SMTWTFS".charAt(new Date(p[0], p[1] - 1, p[2]).getDay()), bold:d === t, title:fmtDate(d) + ": " + on + " on time, " + late + " late", full:fmtDate(d), vals:[on, late] });
+  }
+  return '<div class="card span2"><h2>Attendance — last 14 days</h2>' + stackedChart(rows, ["#1B7A3A", "#C77700"], "Attendance for the last 14 days, on time and late") + legendHtml([["On time", "#1B7A3A"], ["Late", "#C77700"]]) + chartTable(rows, "Date", ["On time", "Late"]) + "</div>";
+}
+function lateCard(t){
+  var month = t.slice(0, 7), lateBy = {};
+  state.attendance.forEach(function(a){ if(a.late && a.date.slice(0, 7) === month && empById(a.empId)) lateBy[a.empId] = (lateBy[a.empId] || 0) + 1; });
+  var rows = Object.keys(lateBy).map(function(id){ return [empById(id).name, lateBy[id]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5);
+  return '<div class="card"><h2>Most late arrivals this month</h2>' + (rows.length ? hbars(rows) : emptyBox("No late arrivals this month.")) + "</div>";
+}
+function pendingCard(){
   var pend = state.leaves.filter(function(l){ return l.status === "Pending"; }).sort(function(a, b){ return a.start < b.start ? -1 : 1; });
-  var pendHtml = pend.length ? '<ul class="dl">' + pend.slice(0, 6).map(function(l){ var e = empById(l.empId);
-    return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + " · " + l.days + ' day(s)</div></div><div class="actions" style="margin:0"><button class="btn small" type="button" data-action="approve" data-id="' + esc(l.id) + '">Approve</button><button class="btn danger small" type="button" data-action="decline" data-id="' + esc(l.id) + '">Decline</button></div></li>'; }).join("") + "</ul>" + (pend.length > 6 ? '<p class="hint">+ ' + (pend.length - 6) + " more on the Leave tab.</p>" : "") : '<div class="empty">No pending requests.</div>';
+  return '<div class="card"><h2>Pending leave requests</h2>' + (pend.length ? '<ul class="dl">' + pend.slice(0, 6).map(function(l){ var e = empById(l.empId);
+    return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + " · " + l.days + ' day(s)</div></div><div class="actions" style="margin:0"><button class="btn small" type="button" data-action="approve" data-id="' + esc(l.id) + '">Approve</button><button class="btn danger small" type="button" data-action="decline" data-id="' + esc(l.id) + '">Decline</button></div></li>'; }).join("") + "</ul>" +
+    (pend.length > 6 ? '<p class="hint">+ ' + (pend.length - 6) + " more on the Leave tab.</p>" : "") : emptyBox("No pending requests.")) + "</div>";
+}
+function offCard(t){
   var end14 = addDays(t, 14);
   var off = state.leaves.filter(function(l){ return l.status === "Approved" && l.end >= t && l.start <= end14 && empById(l.empId); }).sort(function(a, b){ return a.start < b.start ? -1 : 1; });
-  var offHtml = off.length ? '<ul class="dl">' + off.map(function(l){ var e = empById(l.empId); return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + "</div></div>" + (l.start <= t ? '<span class="badge b-leave">Off today</span>' : "") + "</li>"; }).join("") + "</ul>" : '<div class="empty">No one is scheduled to be off.</div>';
-  var lateBy = {}; state.attendance.forEach(function(a){ if(a.late && a.date.slice(0, 7) === month && empById(a.empId)) lateBy[a.empId] = (lateBy[a.empId] || 0) + 1; });
-  var lateRows = Object.keys(lateBy).map(function(id){ return [empById(id).name, lateBy[id]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5);
+  return '<div class="card"><h2>Who is off (next 14 days)</h2>' + (off.length ? '<ul class="dl">' + off.map(function(l){ var e = empById(l.empId); return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + "</div></div>" + (l.start <= t ? '<span class="badge b-leave">Off today</span>' : "") + "</li>"; }).join("") + "</ul>" : emptyBox("No one is scheduled to be off.")) + "</div>";
+}
+function calendarCard(t, act){
+  var days = [], max = 0, peak = null, alerts = {}, size = {};
+  act.forEach(function(e){ var k = e.dept || "Unassigned"; size[k] = (size[k] || 0) + 1; });
+  for(var i = 0; i < 30; i++){
+    var d = addDays(t, i), offs = act.filter(function(e){ return state.leaves.some(function(l){ return l.empId === e.id && l.status === "Approved" && l.start <= d && d <= l.end; }); });
+    var byD = {}; offs.forEach(function(e){ var k = e.dept || "Unassigned"; byD[k] = (byD[k] || 0) + 1; });
+    Object.keys(byD).forEach(function(k){ if(size[k] >= 2 && byD[k] / size[k] >= 0.5 && !alerts[k]) alerts[k] = { d:d, n:byD[k], of:size[k] }; });
+    days.push({ d:d, n:offs.length, names:offs.map(function(e){ return e.name; }) });
+    if(offs.length > max) max = offs.length;
+    if(!peak || offs.length > peak.n) peak = { d:d, n:offs.length };
+  }
+  var cells = days.map(function(x, i){
+    var p = x.d.split("-").map(Number), wd = new Date(p[0], p[1] - 1, p[2]).getDay(), lvl = max ? Math.ceil(x.n / max * 4) : 0;
+    var label = (i === 0 || p[2] === 1) ? MONTH_LABELS[p[1] - 1] + " " + p[2] : String(p[2]);
+    return '<div class="cal l' + lvl + (wd === 0 || wd === 6 ? " wk" : "") + '" title="' + esc(fmtDate(x.d) + ": " + (x.n ? x.names.join(", ") : "no one off")) + '"><small>' + label + "</small><b>" + x.n + "</b></div>";
+  }).join("");
+  var al = Object.keys(alerts).slice(0, 3).map(function(k){ var a = alerts[k]; return '<div class="msg warn">Coverage: ' + esc(k) + " has " + a.n + " of " + a.of + " people off on " + esc(fmtDate(a.d)) + ".</div>"; }).join("");
+  return '<div class="card span2"><h2>Leave calendar — next 30 days</h2><div class="calgrid">' + cells + "</div>" +
+    '<p class="hint">The number is how many people are off that day. Darker means more. Dashed outline marks weekends.' + (peak && peak.n ? " Busiest day: " + esc(fmtDate(peak.d)) + " (" + peak.n + " off)." : " No approved leave in the next 30 days.") + "</p>" +
+    (al || '<p class="hint ok-text">No coverage gaps: no department has half or more of its people off.</p>') + "</div>";
+}
+function leaveMonthsCard(t){
+  var keys = monthKeys(t, 12), m = leaveDaysByMonth(keys), rows = keys.map(function(k, i){
+    var mi = +k.slice(5) - 1, v = m[k];
+    return { l1:MONTH_LABELS[mi], l2:(i === 0 || mi === 0) ? "'" + k.slice(2, 4) : "", bold:k === t.slice(0, 7), title:MONTH_LABELS[mi] + " " + k.slice(0, 4) + ": " + v.vac + " vacation, " + v.sick + " sick day(s)", full:MONTH_LABELS[mi] + " " + k.slice(0, 4), vals:[v.vac, v.sick] };
+  });
+  return '<div class="card span2"><h2>Leave days taken by month</h2>' + stackedChart(rows, ["#ACCE00", "#131212"], "Approved leave days per month, vacation and sick") +
+    legendHtml([["Vacation (incl. emergency)", "#ACCE00"], ["Sick", "#131212"]]) + chartTable(rows, "Month", ["Vacation", "Sick"]) + "</div>";
+}
+function deptCard(act){
+  var by = {}; act.forEach(function(e){ var k = e.dept || "Unassigned"; by[k] = (by[k] || 0) + 1; });
+  var rows = Object.keys(by).map(function(k){ return [k, by[k]]; }).sort(function(a, b){ return b[1] - a[1] || (a[0] < b[0] ? -1 : 1); });
+  return '<div class="card"><h2>Active employees by department</h2>' + (rows.length ? hbars(rows) : emptyBox("No active employees.")) + "</div>";
+}
+function statusCard(){
+  return '<div class="card"><h2>Employees by status</h2>' + hbars(STATUSES.map(function(st){ return [st, state.employees.filter(function(e){ return e.status === st; }).length]; })) + "</div>";
+}
+function balancesCard(act){
+  var tv = 0, ts = 0, rows = [];
+  act.forEach(function(e){ var li = leaveInfo(e); tv += Math.max(0, li.vl); ts += Math.max(0, li.sl); rows.push([e.name, li.vl]); });
+  var most = rows.slice().sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5), least = rows.slice().sort(function(a, b){ return a[1] - b[1]; }).slice(0, 5);
+  return '<div class="card"><h2>Leave balances</h2><div class="kpis"><div><b>' + fmtNum(tv) + "</b><span>Vacation days available (all staff)</span></div><div><b>" + fmtNum(ts) + "</b><span>Sick days available (all staff)</span></div></div>" +
+    (rows.length ? "<h3>Most vacation days left</h3>" + hbars(most) + "<h3>Fewest vacation days left</h3>" + hbars(least) : emptyBox("No active employees.")) + "</div>";
+}
+function watchCard(act, t){
   var low = [], soon = [];
   act.forEach(function(e){ var li = leaveInfo(e);
     if(li.first && li.next){ var dd = Math.round((utcMs(li.next) - utcMs(t)) / 864e5); if(dd <= 60) soon.push({ e:e, date:li.next, dd:dd }); }
     else if(li.vl <= 2 || li.sl <= 2) low.push({ e:e, li:li }); });
   soon.sort(function(a, b){ return a.dd - b.dd; });
-  var watch = "<h3 style=\"margin-top:0\">Low balance (2 days or less)</h3>" + (low.length ? '<ul class="dl">' + low.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">Vacation ' + fmtNum(x.li.vl) + " · Sick " + fmtNum(x.li.sl) + "</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>') +
-    "<h3>Reaching 1 year soon (next 60 days)</h3>" + (soon.length ? '<ul class="dl">' + soon.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">' + esc(fmtDate(x.date)) + " (in " + x.dd + " day" + (x.dd === 1 ? "" : "s") + ")</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>');
-
-  box.innerHTML = '<div class="dgrid">' +
-    '<div class="card span2"><h2>Today at a glance</h2>' + bar + legend + '<div class="kpis"><div><b>' + rate + "</b><span>Attendance rate today (excluding people on leave)</span></div><div><b>" + lateMonth + "</b><span>Late arrivals this month</span></div></div></div>" +
-    '<div class="card span2"><h2>Attendance — last 14 days</h2>' + svg + '<ul class="legend"><li><span class="sw" style="background:#1B7A3A"></span>On time</li><li><span class="sw" style="background:#C77700"></span>Late</li></ul>' + tbl + "</div>" +
-    '<div class="card"><h2>Active employees by department</h2>' + (deptRows.length ? hbars(deptRows) : '<div class="empty">No active employees.</div>') + "</div>" +
-    '<div class="card"><h2>Employees by status</h2>' + hbars(statRows) + "</div>" +
-    '<div class="card"><h2>Pending leave requests</h2>' + pendHtml + "</div>" +
-    '<div class="card"><h2>Who is off (next 14 days)</h2>' + offHtml + "</div>" +
-    '<div class="card"><h2>Most late arrivals this month</h2>' + (lateRows.length ? hbars(lateRows) : '<div class="empty">No late arrivals this month.</div>') + "</div>" +
-    '<div class="card"><h2>Leave watch</h2>' + watch + "</div></div>";
+  return '<div class="card"><h2>Leave watch</h2><h3 style="margin-top:0">Low balance (2 days or less)</h3>' + (low.length ? '<ul class="dl">' + low.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">Vacation ' + fmtNum(x.li.vl) + " · Sick " + fmtNum(x.li.sl) + "</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>') +
+    "<h3>Reaching 1 year soon (full leave starts)</h3>" + (soon.length ? '<ul class="dl">' + soon.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">' + esc(fmtDate(x.date)) + " (in " + x.dd + " day" + (x.dd === 1 ? "" : "s") + ")</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>') + "</div>";
+}
+function hiresCard(t){
+  var keys = monthKeys(t, 12), cnt = {}; keys.forEach(function(k){ cnt[k] = 0; });
+  state.employees.forEach(function(e){ if(validISO(e.hired) && cnt[e.hired.slice(0, 7)] != null) cnt[e.hired.slice(0, 7)]++; });
+  var rows = keys.map(function(k, i){ var mi = +k.slice(5) - 1; return { l1:MONTH_LABELS[mi], l2:(i === 0 || mi === 0) ? "'" + k.slice(2, 4) : "", bold:k === t.slice(0, 7), title:MONTH_LABELS[mi] + " " + k.slice(0, 4) + ": " + cnt[k] + " hired", full:MONTH_LABELS[mi] + " " + k.slice(0, 4), vals:[cnt[k]] }; });
+  var total = rows.reduce(function(a, r){ return a + r.vals[0]; }, 0);
+  return '<div class="card"><h2>Hires by month (last 12 months)</h2>' + (total ? stackedChart(rows, ["#ACCE00"], "Employees hired per month") + chartTable(rows, "Month", ["Hired"]) : emptyBox("No one was hired in the last 12 months.")) + "</div>";
+}
+function milestonesCard(act, t){
+  var ann = [], recent = [], end30 = addDays(t, 30), from30 = addDays(t, -30);
+  act.forEach(function(e){
+    var li = leaveInfo(e); if(!li.hired || !li.next) return;
+    if(li.next <= end30){ var yrs = Math.round(monthsBetween(li.hired, li.next) / 12); ann.push({ e:e, date:li.next, yrs:yrs }); }
+    if(li.hired >= from30 && li.hired <= t) recent.push(e);
+  });
+  ann.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  return '<div class="card"><h2>Milestones (next 30 days)</h2><h3 style="margin-top:0">Work anniversaries</h3>' + (ann.length ? '<ul class="dl">' + ann.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">' + x.yrs + " year" + (x.yrs === 1 ? " (full leave starts)" : "s") + " · " + esc(fmtDate(x.date)) + "</span></li>"; }).join("") + "</ul>" : '<p class="hint">None coming up.</p>') +
+    "<h3>Joined in the last 30 days</h3>" + (recent.length ? '<ul class="dl">' + recent.map(function(e){ return "<li><b>" + esc(e.name) + '</b><span class="meta">' + esc(fmtDate(e.hired)) + "</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>') + "</div>";
+}
+function dataCard(span2){
+  var gaps = [];
+  state.employees.forEach(function(e){
+    if(e.status === "Resigned") return;
+    var miss = []; if(!validISO(e.hired)) miss.push("date hired"); if(!e.email) miss.push("email"); if(!e.phone) miss.push("contact number"); if(!e.dept) miss.push("department"); if(!e.position) miss.push("position");
+    if(miss.length) gaps.push({ e:e, miss:miss });
+  });
+  return '<div class="card' + (span2 ? " span2" : "") + '"><h2>Data check</h2>' + (gaps.length
+    ? '<p class="hint" style="margin-top:0">' + gaps.length + " employee" + (gaps.length === 1 ? " has" : "s have") + " missing details. A missing date hired means leave can't be calculated properly.</p><ul class=\"dl\">" +
+      gaps.slice(0, 8).map(function(g){ return "<li><b>" + esc(g.e.name) + '</b><span class="chips">' + g.miss.map(function(m){ return "<span>" + esc(m) + "</span>"; }).join("") + "</span></li>"; }).join("") + "</ul>" + (gaps.length > 8 ? '<p class="hint">+ ' + (gaps.length - 8) + " more.</p>" : "")
+    : '<p class="ok-text" style="margin:0">All employee records are complete.</p>') + "</div>";
+}
+function renderDashboard(){
+  var box = $("#dash"), t = today(), act = activeEmps();
+  if(!state.employees.length){ box.innerHTML = emptyBox("No employees yet. Add some on the Employees tab, or import your Excel file from the Import tab."); return; }
+  var att = hasAttendance(), cards = [todayCard(act, att, t)];
+  if(att) cards.push(attChartCard(t));
+  cards.push(pendingCard(), offCard(t), calendarCard(t, act), leaveMonthsCard(t), deptCard(act), statusCard(), balancesCard(act), watchCard(act, t), hiresCard(t), milestonesCard(act, t));
+  if(att) cards.push(lateCard(t));
+  cards.push(dataCard(!att));
+  box.innerHTML = '<div class="dgrid">' + cards.join("") + "</div>";
 }
 function fillPolicy(){
   var P = state.settings.policy;
