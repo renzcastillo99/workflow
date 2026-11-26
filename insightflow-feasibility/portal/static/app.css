@@ -1,0 +1,46 @@
+/* InsightFlow BI design tokens (approved design system). Supplementary colours are the documented implementation defaults. */
+:root{--canvas:#F1F5F9;--surface:#FFFFFF;--nav:#14243A;--primary:#2563EB;--text:#0F172A;--border:#CBD5E1;--muted:#475569;--success:#047857;--warning:#92400E;--error:#B91C1C;--on-primary:#FFFFFF;--nav-text:#E2E8F0;--nav-muted:#94A3B8;--hover:#E8EEF6;--skeleton:#E2E8F0}
+:root[data-theme="dark"]{--canvas:#0F172A;--surface:#1E293B;--nav:#111827;--primary:#60A5FA;--text:#E2E8F0;--border:#334155;--muted:#94A3B8;--success:#34D399;--warning:#FBBF24;--error:#FCA5A5;--on-primary:#0F172A;--hover:#27364d;--skeleton:#334155}
+*{box-sizing:border-box}html{font-size:16px}
+body{margin:0;background:var(--canvas);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:1rem;line-height:1.5}
+h1{font-size:28px;line-height:1.25;margin:0 0 8px}h2{font-size:20px;margin:24px 0 8px}h3{font-size:16px;margin:16px 0 4px}
+p{margin:0 0 8px}small,label,th,.label{font-size:14px}.muted{color:var(--muted)}a{color:var(--primary)}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--primary);color:var(--on-primary);padding:8px 16px;border-radius:8px;z-index:100}.skip:focus{left:8px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;background:var(--nav);color:var(--nav-text);padding:16px 8px;flex:0 0 auto;transition:width .15s}
+.sidebar .brand{font-weight:700;font-size:20px;padding:8px 16px 16px;color:#fff;letter-spacing:.2px}
+.sidebar .brand small{display:block;font-weight:400;color:var(--nav-muted);font-size:14px}
+.sidebar nav a{display:flex;gap:8px;align-items:center;padding:8px 16px;margin:2px 0;border-radius:8px;color:var(--nav-text);text-decoration:none;font-size:14px}
+.sidebar nav a:hover{background:rgba(255,255,255,.08)}.sidebar nav a[aria-current="page"]{background:var(--primary);color:var(--on-primary);font-weight:600}
+.sidebar .grp{font-size:14px;color:var(--nav-muted);padding:16px 16px 4px}
+.show-sm{display:none}
+.sidebar.collapsed{width:64px}.sidebar.collapsed .brand small,.sidebar.collapsed .grp,.sidebar.collapsed .txt{display:none}.sidebar.collapsed .brand{font-size:14px;padding:8px 4px}
+.shell{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:8px;padding:8px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.topbar .sp{flex:1}.who{font-size:14px}.who b{font-weight:600}
+main{padding:24px;max-width:1280px;width:100%;margin:0 auto;outline:none}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.grid.kpi{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.kpi .n{font-size:28px;font-weight:700}.card h3{margin-top:0}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:14px;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--hover)}.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary);font-weight:600}.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{border-color:var(--error);color:var(--error)}.btn.sm{min-height:32px;padding:4px 8px}.btn[disabled]{opacity:.6;cursor:progress}
+input,select{font:inherit;font-size:16px;min-height:40px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);max-width:100%}
+label{display:block;margin:8px 0 4px;font-weight:600}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:end}.row>div{min-width:160px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.badge{display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:999px;font-size:14px;border:1px solid currentColor;white-space:nowrap}
+.badge-ok{color:var(--success)}.badge-warn{color:var(--warning)}.badge-err{color:var(--error)}.badge-info{color:var(--muted)}
+.banner{border:1px solid currentColor;border-radius:8px;padding:8px 16px;margin:0 0 16px;display:flex;gap:8px}.banner.ok{color:var(--success)}.banner.warn{color:var(--warning)}.banner.error{color:var(--error)}.banner span.t{color:var(--text)}
+.empty{text-align:center;padding:48px 16px;color:var(--muted)}
+.report-head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center;justify-content:space-between;margin-bottom:16px}
+#dash{min-height:720px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;position:relative}#dash iframe{width:100%;height:1100px;border:0;display:block}
+.skeleton{padding:24px;display:grid;gap:16px}.skeleton i{display:block;height:80px;border-radius:8px;background:linear-gradient(90deg,var(--skeleton),var(--hover),var(--skeleton));background-size:200% 100%;animation:sh 1.4s infinite}.skeleton i.tall{height:240px}
+@keyframes sh{to{background-position:-200% 0}}@media (prefers-reduced-motion:reduce){.skeleton i{animation:none}}
+.public{min-height:100vh;display:grid;place-items:center;padding:16px}.public .card{max-width:440px;width:100%;padding:32px}
+.public .brand{font-size:28px;font-weight:700;color:var(--primary);margin-bottom:4px}
+details summary{cursor:pointer;color:var(--primary)}code{background:var(--canvas);padding:1px 4px;border-radius:4px;font-size:14px}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}.seg button{border:0;border-radius:0;background:var(--surface);color:var(--text);min-height:40px;padding:8px 16px;font:inherit;font-size:14px;cursor:pointer}.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);font-weight:600}
+@media (max-width:860px){.show-sm{display:inline-flex}.sidebar .closebar{padding:0 8px 8px}.sidebar{position:fixed;inset:0 auto 0 0;z-index:50;transform:translateX(-100%);width:248px}.sidebar.open{transform:none}.sidebar.collapsed{width:248px}main{padding:16px}.topbar{padding:8px 16px}#dash{overflow-x:auto}#dash iframe{height:1400px;min-width:980px}.hide-sm{display:none}}
+@media (min-width:861px){#navtoggle-m{display:none}}

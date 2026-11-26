@@ -1,0 +1,514 @@
+[
+  {
+    "tc": "TC-05",
+    "check": "baseline: live table == independent Decimal expectation (20,000 rows)",
+    "status": "PASS",
+    "observed": "{\"n\":20000,\"rev\":\"502024723.25\",\"cost\":\"340060118.49\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:32Z"
+  },
+  {
+    "tc": "FUNC-03/04",
+    "check": "duplicate transaction_id: rejected with a clear message",
+    "status": "PASS",
+    "observed": "Not done. 1 of 20001 rows are invalid - file rejected, live data unchanged The live data was not changed. Data sources Upload a full snapshot. It is validated a",
+    "note": "",
+    "ts": "2026-11-26T03:05:33Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "duplicate transaction_id: LIVE DATA UNCHANGED (count + revenue + cost exact)",
+    "status": "PASS",
+    "observed": "{\"n\":20000,\"rev\":\"502024723.25\",\"cost\":\"340060118.49\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:33Z"
+  },
+  {
+    "tc": "FUNC-03/04",
+    "check": "wrong schema (missing column): rejected with a clear message",
+    "status": "PASS",
+    "observed": "Not done. Schema mismatch. Missing columns: ['cost']; unexpected columns: none. Required: ['transaction_id', 'date', 'branch', 'revenue', 'cost'] The live data ",
+    "note": "",
+    "ts": "2026-11-26T03:05:33Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "wrong schema (missing column): LIVE DATA UNCHANGED (count + revenue + cost exact)",
+    "status": "PASS",
+    "observed": "{\"n\":20000,\"rev\":\"502024723.25\",\"cost\":\"340060118.49\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:33Z"
+  },
+  {
+    "tc": "FUNC-03/04",
+    "check": "invalid values: rejected with a clear message",
+    "status": "PASS",
+    "observed": "Not done. 6 of 26 rows are invalid - file rejected, live data unchanged The live data was not changed. Data sources Upload a full snapshot. It is validated and ",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "invalid values: LIVE DATA UNCHANGED (count + revenue + cost exact)",
+    "status": "PASS",
+    "observed": "{\"n\":20000,\"rev\":\"502024723.25\",\"cost\":\"340060118.49\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-03/04",
+    "check": "malformed Excel file: rejected with a clear message",
+    "status": "PASS",
+    "observed": "Not done. Not a valid .xlsx workbook (BadZipFile) The live data was not changed. Data sources Upload a full snapshot. It is validated and reconciled in a stagin",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "malformed Excel file: LIVE DATA UNCHANGED (count + revenue + cost exact)",
+    "status": "PASS",
+    "observed": "{\"n\":20000,\"rev\":\"502024723.25\",\"cost\":\"340060118.49\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "staging area is empty after failed jobs (nothing left behind)",
+    "status": "PASS",
+    "observed": "staging tables=0",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"duplicate transaction_id\"",
+    "status": "PASS",
+    "observed": "duplicate transaction_id",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"missing (not coerced to 0)\"",
+    "status": "PASS",
+    "observed": "missing (not coerced to 0)",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"more than 2 decimal places\"",
+    "status": "PASS",
+    "observed": "more than 2 decimal places",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"is not a valid YYYY-MM-DD date\"",
+    "status": "PASS",
+    "observed": "is not a valid YYYY-MM-DD date",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"branch is missing\"",
+    "status": "PASS",
+    "observed": "branch is missing",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"is not a number\"",
+    "status": "PASS",
+    "observed": "is not a number",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"Schema mismatch\"",
+    "status": "PASS",
+    "observed": "Schema mismatch",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "rejected-row report contains: \"Not a valid .xlsx\"",
+    "status": "PASS",
+    "observed": "Not a valid .xlsx",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "UI-06",
+    "check": "refresh history marks failed files \"Rejected - live unchanged\" with line numbers",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:05:34Z"
+  },
+  {
+    "tc": "FUNC-11",
+    "check": "after 4 rejected uploads viewers STILL see the last verified numbers",
+    "status": "PASS",
+    "observed": "Revenue 502,024,723.25 Revenue Gross profit 161,964,604.76 Gross profit Margin W",
+    "note": "",
+    "ts": "2026-11-26T03:05:38Z"
+  },
+  {
+    "tc": "FUNC-04",
+    "check": "valid CSV (+5 rows) validated, reconciled and published",
+    "status": "PASS",
+    "observed": "Done. Published 20,005 rows. Reports now show the new data. Data sources Upload a full sna",
+    "note": "",
+    "ts": "2026-11-26T03:05:39Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "live table == independent expectation after publish (20,005 rows, exact cents)",
+    "status": "PASS",
+    "observed": "{\"n\":20005,\"rev\":\"502033123.85\",\"cost\":\"340065418.79\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:39Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "viewer report shows NEW revenue 502,033,123.85 (cache invalidated, no stale numbers)",
+    "status": "PASS",
+    "observed": "Revenue 502,033,123.85 Revenue Gross profit 161,967,705.06 Gross profit Margin 3",
+    "note": "",
+    "ts": "2026-11-26T03:05:40Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "Makati-scoped viewer shows NEW Makati revenue (scope still applied)",
+    "status": "PASS",
+    "observed": "Revenue 42,915,651.64 Revenue Gross profit 13,645,362.65 Gross profit Margin 31.",
+    "note": "",
+    "ts": "2026-11-26T03:05:42Z"
+  },
+  {
+    "tc": "FUNC-11",
+    "check": "report shows a fresh \"Last successful refresh\" timestamp",
+    "status": "PASS",
+    "observed": "Last successful refresh: 2026-11-26 03:05:39 UTC (just now)",
+    "note": "",
+    "ts": "2026-11-26T03:05:42Z"
+  },
+  {
+    "tc": "UI-06",
+    "check": "history shows Published job with row counts and reconciliation note",
+    "status": "PASS",
+    "observed": "20,005 rows validated, reconciled (count, revenue 502033123",
+    "note": "",
+    "ts": "2026-11-26T03:05:42Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "BI cache invalidated automatically by the service account",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:05:42Z"
+  },
+  {
+    "tc": "FUNC-03",
+    "check": "valid XLSX (+8 rows, numeric + date cells) validated and published",
+    "status": "PASS",
+    "observed": "Done. Published 20,008 rows. Reports now show the new data. Data sourc",
+    "note": "",
+    "ts": "2026-11-26T03:05:44Z"
+  },
+  {
+    "tc": "TC-05",
+    "check": "XLSX publish: live == independent Decimal expectation (no float drift)",
+    "status": "PASS",
+    "observed": "{\"n\":20008,\"rev\":\"502034154.04\",\"cost\":\"340065933.89\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:44Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "viewer shows revenue after XLSX publish",
+    "status": "PASS",
+    "observed": "Revenue 502,034,154.04 Revenue Gross profit 161,968,220.15 Gross profi",
+    "note": "",
+    "ts": "2026-11-26T03:05:45Z"
+  },
+  {
+    "tc": "TC-10",
+    "check": "bad file after a good publish: latest verified snapshot (v3) retained",
+    "status": "PASS",
+    "observed": "{\"n\":20008,\"rev\":\"502034154.04\",\"cost\":\"340065933.89\"}",
+    "note": "",
+    "ts": "2026-11-26T03:05:46Z"
+  },
+  {
+    "tc": "TC-10",
+    "check": "viewer still sees v3 + stale-data/warning banner is NOT shown while data is fresh",
+    "status": "PASS",
+    "observed": "Revenue 502,034,154.04 Revenue Gross profit 161,968,220.15 G",
+    "note": "",
+    "ts": "2026-11-26T03:05:49Z"
+  },
+  {
+    "tc": "TC-10",
+    "check": "report warns that the latest update did not publish",
+    "status": "PASS",
+    "observed": "Latest update did not publish. You are seeing the last verified data (refreshed just now). The failure is recorded in the refresh history for your administrator.",
+    "note": "",
+    "ts": "2026-11-26T03:05:49Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "ATOMIC publish: 866 concurrent BI reads during the swap saw only old or new snapshot",
+    "status": "PASS",
+    "observed": "{\"20008|502034154.04\":148,\"20005|502033123.85\":718} errors=0",
+    "note": "",
+    "ts": "2026-11-26T03:06:07Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "while the 500k-row job runs, the advisory lock is held",
+    "status": "PASS",
+    "observed": "true",
+    "note": "",
+    "ts": "2026-11-26T03:06:09Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "second refresh started during a running one is REFUSED (no overlap)",
+    "status": "PASS",
+    "observed": "Not done. Another refresh is already running - try again when it finishes Data sources Upload a full",
+    "note": "",
+    "ts": "2026-11-26T03:06:12Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "the first job still completes and publishes 500,000 rows (5.7s end-to-end)",
+    "status": "PASS",
+    "observed": "{\"n\":500000,\"rev\":\"12531175839.84\",\"cost\":\"8451105406.21\"}",
+    "note": "",
+    "ts": "2026-11-26T03:06:14Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "viewer shows the 500k-row dataset total after publish",
+    "status": "PASS",
+    "observed": "Revenue 12,531,175,839.84 Revenue Gross profit 4,080,070,433.63 Gross ",
+    "note": "",
+    "ts": "2026-11-26T03:06:19Z"
+  },
+  {
+    "tc": "UI-06",
+    "check": "history records the refused job as rejected with the reason",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:06:19Z"
+  },
+  {
+    "tc": "TC-09",
+    "check": "restore: re-uploading the small snapshot works after a large job",
+    "status": "PASS",
+    "observed": "{\"n\":20008,\"rev\":\"502034154.04\",\"cost\":\"340065933.89\"}",
+    "note": "",
+    "ts": "2026-11-26T03:06:20Z"
+  },
+  {
+    "tc": "FUNC-10",
+    "check": "staging empty at the end",
+    "status": "PASS",
+    "observed": "0",
+    "note": "",
+    "ts": "2026-11-26T03:06:20Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains login.success",
+    "status": "PASS",
+    "observed": "login.success",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains login.denied",
+    "status": "PASS",
+    "observed": "login.denied",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains report.view",
+    "status": "PASS",
+    "observed": "report.view",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains report.denied",
+    "status": "PASS",
+    "observed": "report.denied",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains token.denied",
+    "status": "PASS",
+    "observed": "token.denied",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains assignment.revoke",
+    "status": "PASS",
+    "observed": "assignment.revoke",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains user.deactivate",
+    "status": "PASS",
+    "observed": "user.deactivate",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains refresh.success",
+    "status": "PASS",
+    "observed": "refresh.success",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains refresh.rejected",
+    "status": "PASS",
+    "observed": "refresh.rejected",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains csrf.rejected",
+    "status": "PASS",
+    "observed": "csrf.rejected",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains session.expired",
+    "status": "PASS",
+    "observed": "session.expired",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit trail contains logout",
+    "status": "PASS",
+    "observed": "logout",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "UI-08",
+    "check": "audit filter by outcome=denied shows only denied events",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain DEMO_PASSWORD",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain SVC_PASSWORD",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain KC_CLIENT_SECRET",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain PORTAL_SESSION_SECRET",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain INGEST_PW",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain SS_ADMIN_PASSWORD",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain DATA_PG_RO_PASSWORD",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records do not contain SUPERSET_SECRET_KEY",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "audit/refresh records contain no JWT-like token or session id",
+    "status": "PASS",
+    "observed": "none",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  },
+  {
+    "tc": "FUNC-17",
+    "check": "portal server log contains no secrets or tokens",
+    "status": "PASS",
+    "observed": "not found",
+    "note": "",
+    "ts": "2026-11-26T03:06:21Z"
+  }
+]

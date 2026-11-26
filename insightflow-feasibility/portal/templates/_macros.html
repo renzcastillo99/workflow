@@ -1,0 +1,3 @@
+{% macro badge(kind, text) -%}<span class="badge badge-{{ kind }}"><span aria-hidden="true">{{ {'ok':'✓','warn':'⚠','err':'✕','info':'ℹ'}[kind] }}</span> {{ text }}</span>{%- endmacro %}
+{% macro csrf(token) -%}<input type="hidden" name="csrf_token" value="{{ token }}">{%- endmacro %}
+{% macro banner(kind, title, text) -%}<div class="banner {{ kind }}" role="{{ 'alert' if kind=='error' else 'status' }}"><span aria-hidden="true">{{ {'ok':'✓','warn':'⚠','error':'✕'}[kind] }}</span><span class="t"><b>{{ title }}</b> {{ text }}</span></div>{%- endmacro %}

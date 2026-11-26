@@ -5,7 +5,8 @@
   "bench_100k": 3,
   "bench_500k": 4,
   "bench_1m": 5,
-  "bench_5m": 6
+  "bench_5m": 6,
+  "live": 7
  },
  "charts": {
   "fixture": {
@@ -61,6 +62,15 @@
    "Trend": 40,
    "Branch": 41,
    "Table": 42
+  },
+  "live": {
+   "Revenue": 44,
+   "Gross profit": 45,
+   "Margin": 46,
+   "Transactions": 47,
+   "Trend": 48,
+   "Branch": 49,
+   "Table": 50
   }
  },
  "dashboards": {
@@ -69,7 +79,8 @@
   "bench_100k": 3,
   "bench_500k": 4,
   "bench_1m": 5,
-  "bench_5m": 6
+  "bench_5m": 6,
+  "live": 7
  },
  "roles": {
   "IF_SalesViewer": 6,

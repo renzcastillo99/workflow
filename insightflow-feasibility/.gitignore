@@ -9,3 +9,10 @@ __pycache__/
 *.pyc
 .venv/
 scripts/portal_proto/sdk.js
+docker/keycloak/realm/
+docker/keycloak/demo_accounts.txt
+portal/.venv/
+portal/data/
+portal/static/sdk.js
+docker/keycloak/.totp_raw.json
+data/samples/

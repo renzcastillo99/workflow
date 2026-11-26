@@ -1,0 +1,66 @@
+{
+ "v0": {
+  "all": {
+   "rows": 20000,
+   "revenue": "502024723.25",
+   "gross_profit": "161964604.76",
+   "margin": "0.322623"
+  },
+  "Makati": {
+   "rows": 1715,
+   "revenue": "42911451.14",
+   "gross_profit": "13643962.40",
+   "margin": "0.317956"
+  },
+  "revenue_fmt": "502,024,723.25",
+  "makati_revenue_fmt": "42,911,451.14"
+ },
+ "v2": {
+  "all": {
+   "rows": 20005,
+   "revenue": "502033123.85",
+   "gross_profit": "161967705.06",
+   "margin": "0.322624"
+  },
+  "Makati": {
+   "rows": 1718,
+   "revenue": "42915651.64",
+   "gross_profit": "13645362.65",
+   "margin": "0.317958"
+  },
+  "revenue_fmt": "502,033,123.85",
+  "makati_revenue_fmt": "42,915,651.64"
+ },
+ "v3": {
+  "all": {
+   "rows": 20008,
+   "revenue": "502034154.04",
+   "gross_profit": "161968220.15",
+   "margin": "0.322624"
+  },
+  "Makati": {
+   "rows": 1719,
+   "revenue": "42915661.64",
+   "gross_profit": "13645367.65",
+   "margin": "0.317958"
+  },
+  "revenue_fmt": "502,034,154.04",
+  "makati_revenue_fmt": "42,915,661.64"
+ },
+ "big": {
+  "all": {
+   "rows": 500000,
+   "revenue": "12531175839.84",
+   "gross_profit": "4080070433.63",
+   "margin": "0.325594"
+  },
+  "Makati": {
+   "rows": 41419,
+   "revenue": "1038093389.83",
+   "gross_profit": "337116826.84",
+   "margin": "0.324746"
+  },
+  "revenue_fmt": "12,531,175,839.84",
+  "makati_revenue_fmt": "1,038,093,389.83"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "reports": {
+  "sales-live": {
+   "title": "Sales report (live data)",
+   "uuid": "3ed079fd-e6c1-4eda-b8ba-64117348441b",
+   "dashboard_id": 7,
+   "dataset_id": 7,
+   "live": true
+  },
+  "finance-check": {
+   "title": "Finance zero-revenue check",
+   "uuid": "f93ec826-cdc7-409e-8aec-51a339ca631f",
+   "dashboard_id": 2,
+   "dataset_id": 2,
+   "live": false
+  },
+  "large-1m": {
+   "title": "Large dataset (1M rows)",
+   "uuid": "7178cd91-f342-4817-8c73-b8800d5e8c51",
+   "dashboard_id": 5,
+   "dataset_id": 5,
+   "live": false
+  }
+ }
+}

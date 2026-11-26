@@ -1,0 +1,4 @@
+const { chromium } = require('playwright'); const L = require('./e2e_lib.cjs');
+(async () => { const b = await chromium.launch(); const c = await b.newContext({ viewport: { width: 390, height: 844 } }); const p = await c.newPage(); await L.login(p, 'viewer.sales'); await p.goto(L.PORTAL + '/reports/sales-live'); await L.frameHas(p, '502,0'); await p.waitForTimeout(3000);
+  const hs = await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth); const inner = await p.evaluate(() => { const d = document.getElementById('dash'); return d.scrollWidth > d.clientWidth; });
+  console.log('page-level horizontal scroll:', hs, '| report scrolls inside its own frame:', inner); await p.screenshot({ path: '../evidence/screenshots/p2_mobile_report.png' }); await b.close(); })();

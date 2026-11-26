@@ -2,7 +2,7 @@
 
 | Evidence file | PASS | FAIL | Other flagged (GAP/LIMITATION/LEAK-REPRODUCED/INFO/INCONCLUSIVE) | Total |
 |---|---:|---:|---|---:|
-| at_rest_and_audit.json | 13 | 0 | INFO:2, LIMITATION:2 | 17 |
+| at_rest_and_audit.json | 13 | 0 | INFO:2, LIMITATION:1 | 16 |
 | metabase_embedding.json | 17 | 0 | LIMITATION:5 | 22 |
 | metabase_functional.json | 10 | 0 | - | 10 |
 | metabase_login_throttle.json | 4 | 0 | - | 4 |
@@ -11,10 +11,13 @@
 | metabase_security_hardened.json | 15 | 0 | - | 15 |
 | metabase_security_revocation.json | 7 | 0 | - | 7 |
 | metabase_session_expiry.json | 2 | 0 | LIMITATION:1 | 3 |
+| p2_e2e_access.json | 93 | 0 | INCONCLUSIVE:1, INFO:2 | 96 |
+| p2_e2e_data.json | 64 | 0 | - | 64 |
+| p2_e2e_idp_lockout.json | 2 | 0 | - | 2 |
 | source_verification.json | 18 | 0 | - | 18 |
 | superset_embedding.json | 21 | 0 | INCONCLUSIVE:2, INFO:3 | 26 |
 | superset_functional.json | 10 | 0 | - | 10 |
-| superset_misc_security.json | 10 | 0 | GAP:4 | 14 |
+| superset_misc_security.json | 12 | 0 | GAP:8 | 20 |
 | superset_security_baseline.json | 13 | 0 | - | 13 |
 | superset_security_hardened.json | 22 | 0 | - | 22 |
 | superset_security_revocation.json | 9 | 0 | - | 9 |

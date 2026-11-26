@@ -1,11 +1,12 @@
-# InsightFlow BI — Phase 1 feasibility prototype
+# InsightFlow BI — feasibility (Phase 1) + mini testable portal (Phase 2)
 
 Evaluates **Metabase OSS** vs **Apache Superset** against the approved spec, using **synthetic data only**.
 **Start with** `docs/FEASIBILITY_REPORT.md` (verdict, evidence, recommended architecture), then `docs/SECURITY_CONFIGURATION.md` and `docs/MICROSOFT_ENTRA_AND_FREE_STACK.md` (Microsoft login + free stack).
-This is *not* the InsightFlow portal — no portal, ingestion or refresh code exists yet.
+**Phase 2 (`portal/`, `docs/PHASE2_MINI_PORTAL.md`) is a clickable MINI portal** (login with MFA, assigned reports, row-scoped embedded dashboards, data upload with atomic publish, user management, audit log, light/dark). It is a mini demo on synthetic data, **not** the full application.
 
 ```
-docs/        FEASIBILITY_REPORT.md · SECURITY_CONFIGURATION.md
+portal/      mini portal (FastAPI): app.py, ingest.py, superset.py, templates/, static/   (run with portal/run.sh)
+docs/        FEASIBILITY_REPORT.md · SECURITY_CONFIGURATION.md · MICROSOFT_ENTRA_AND_FREE_STACK.md · PHASE2_MINI_PORTAL.md
 evidence/    JSON results per test + SUMMARY.md + screenshots/   (this is the proof; read SUMMARY.md first)
 docker/      data.compose.yml · metabase.compose.yml · superset.compose.yml · superset/{Dockerfile,superset_config.py}
 scripts/     data generation, loaders, per-engine tests, benchmark harness, mini portal prototype (portal_proto/)
@@ -27,6 +28,9 @@ Metabase OSS (`cd scripts`): `docker compose --env-file ../.env -f ../docker/met
 Superset (`cd scripts`): `./ss_00_init.sh` → `ss_01_setup.py` → `ss_02_content.py` → `ss_03_functional.py` → `ss_04_security.py baseline | harden | hardened | revocation` → `ss_06_embedding.py` → `ss_07_bench.py`.
 Embedded-in-browser demo: `python3 portal_proto/server.py` (needs the SDK bundle `portal_proto/sdk.js`, built with esbuild from `@superset-ui/embedded-sdk`).
 Finally `python3 finalize_evidence.py` normalises statuses and regenerates `evidence/SUMMARY.md`.
+
+## Phase 2 quick start
+See **`docs/PHASE2_MINI_PORTAL.md`** (feature tour, demo accounts, run steps, evidence, bugs found, limits). Reset to the starting state: `./scripts/p2_reset.sh`. Tests: `node scripts/p2_e2e_a.cjs && node scripts/p2_e2e_b.cjs && node scripts/p2_e2e_c.cjs`.
 
 ## Honesty notes
 - Run on a single 4 vCPU VM, loopback network, HTTP only. Performance figures are indicative, not guarantees.

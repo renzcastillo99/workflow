@@ -142,14 +142,5 @@
     "status": "LIMITATION",
     "note": "With static embedding every viewer is anonymous to Metabase; the portal must write the 'who viewed what' audit trail",
     "ts": "2026-11-26T00:10:01+00:00"
-  },
-  {
-    "tc": "TC-12",
-    "check": "Metabase attributes embedded-dashboard query executions to a user",
-    "expected": "executor_id populated",
-    "observed": "query_execution: embedded-dashboard 1737 rows, ALL executor_id NULL (embedded-csv/xlsx/json-download also NULL); only direct logged-in API use is attributed",
-    "status": "LIMITATION",
-    "note": "With static embedding every viewer is anonymous to Metabase; the portal must write the 'who viewed what' audit trail",
-    "ts": "2026-11-26T00:10:01+00:00"
   }
 ]

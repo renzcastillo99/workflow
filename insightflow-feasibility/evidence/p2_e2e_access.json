@@ -1,0 +1,770 @@
+[
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET / -> 303",
+    "status": "PASS",
+    "observed": "303 -> /signin",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /reports -> 303",
+    "status": "PASS",
+    "observed": "303 -> /signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /reports/sales-live -> 303",
+    "status": "PASS",
+    "observed": "303 -> /signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /admin/users -> 303",
+    "status": "PASS",
+    "observed": "303 -> /signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /admin/audit -> 303",
+    "status": "PASS",
+    "observed": "303 -> /signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /api/reports/sales-live/guest-token -> 401",
+    "status": "PASS",
+    "observed": "401",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /docs -> 404",
+    "status": "PASS",
+    "observed": "404",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous GET /openapi.json -> 404",
+    "status": "PASS",
+    "observed": "404",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "anonymous POST /admin/data/upload denied",
+    "status": "PASS",
+    "observed": "303",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "security headers present (CSP, nosniff, DENY, referrer, no-store)",
+    "status": "PASS",
+    "observed": "csp=default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self...",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "CSP has no 'unsafe-inline'/'unsafe-eval'",
+    "status": "PASS",
+    "observed": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src http://127.0.0.1:8088; connect-src 'self'; base-uri 'none'; form-action 'self' http://127.0.0.1:8180; frame-ancestors 'none'",
+    "note": "",
+    "ts": "2026-11-26T03:02:56Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "IdP: wrong password rejected, no portal session",
+    "status": "PASS",
+    "observed": "INSIGHTFLOW Sign in to your account Username or email Invalid username or password. Password Sign In",
+    "note": "",
+    "ts": "2026-11-26T03:02:58Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "IdP: correct password but WRONG TOTP code rejected (MFA enforced)",
+    "status": "PASS",
+    "observed": "INSIGHTFLOW Sign In Username or email One-time code Invalid authenticator code. Sign In",
+    "note": "",
+    "ts": "2026-11-26T03:02:59Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "IdP-authenticated but NOT provisioned in portal -> denied, no session",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/signin?reason=denied",
+    "note": "",
+    "ts": "2026-11-26T03:03:01Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "sales viewer overview lists ONLY assigned report",
+    "status": "PASS",
+    "observed": ", Sam Sales. Your reports Sales report (live data) Revenue, gross profit, margin and transaction count from the live dataset. Updated by data uploads.",
+    "note": "",
+    "ts": "2026-11-26T03:03:02Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "viewer sees no administration menu",
+    "status": "PASS",
+    "observed": "nav has no admin links",
+    "note": "",
+    "ts": "2026-11-26T03:03:03Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "library lists only assigned report (no unauthorized titles)",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:03:03Z"
+  },
+  {
+    "tc": "TC-05",
+    "check": "embedded report (all branches) shows independent revenue 502,024,723.25",
+    "status": "PASS",
+    "observed": "944 ms; Revenue 502,024,723.25 Revenue Gross profit 161,964,604.76 Gross profit Margin 32.26% Margin Transactions 20,0",
+    "note": "",
+    "ts": "2026-11-26T03:03:04Z"
+  },
+  {
+    "tc": "TC-05",
+    "check": "margin KPI shown as a percentage (waits for the card to render)",
+    "status": "PASS",
+    "observed": "32.26%",
+    "note": "",
+    "ts": "2026-11-26T03:03:04Z"
+  },
+  {
+    "tc": "FUNC-11",
+    "check": "report page shows \"Last successful refresh\" + scope",
+    "status": "PASS",
+    "observed": "Last successful refresh: 2026-11-26 03:02:53 UTC (just now)",
+    "note": "",
+    "ts": "2026-11-26T03:03:07Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "light theme canvas = #F1F5F9",
+    "status": "PASS",
+    "observed": "rgb(241, 245, 249)",
+    "note": "",
+    "ts": "2026-11-26T03:03:07Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "dark theme canvas = #0F172A",
+    "status": "PASS",
+    "observed": "rgb(15, 23, 42)",
+    "note": "",
+    "ts": "2026-11-26T03:03:07Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "dark preference persists after reload",
+    "status": "PASS",
+    "observed": "rgb(15, 23, 42)",
+    "note": "",
+    "ts": "2026-11-26T03:03:07Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "dark preference persists across pages",
+    "status": "PASS",
+    "observed": "rgb(15, 23, 42)",
+    "note": "",
+    "ts": "2026-11-26T03:03:07Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: text/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "17.85",
+    "note": "#0F172A on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: muted/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "7.58",
+    "note": "#475569 on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: text/canvas >= 4.5:1",
+    "status": "PASS",
+    "observed": "16.30",
+    "note": "#0F172A on #F1F5F9",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: button text/primary >= 4.5:1",
+    "status": "PASS",
+    "observed": "5.17",
+    "note": "#FFFFFF on #2563EB",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: link primary/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "5.17",
+    "note": "#2563EB on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: success/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "5.48",
+    "note": "#047857 on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: warning/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "7.09",
+    "note": "#92400E on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: error/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "6.47",
+    "note": "#B91C1C on #FFFFFF",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: nav text/nav >= 4.5:1",
+    "status": "PASS",
+    "observed": "12.68",
+    "note": "#E2E8F0 on #14243A",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast light: nav muted/nav >= 4.5:1",
+    "status": "PASS",
+    "observed": "6.10",
+    "note": "#94A3B8 on #14243A",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: text/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "11.87",
+    "note": "#E2E8F0 on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: muted/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "5.71",
+    "note": "#94A3B8 on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: text/canvas >= 4.5:1",
+    "status": "PASS",
+    "observed": "14.48",
+    "note": "#E2E8F0 on #0F172A",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: button text/primary >= 4.5:1",
+    "status": "PASS",
+    "observed": "7.02",
+    "note": "#0F172A on #60A5FA",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: link primary/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "5.75",
+    "note": "#60A5FA on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: success/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "7.61",
+    "note": "#34D399 on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: warning/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "8.76",
+    "note": "#FBBF24 on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: error/surface >= 4.5:1",
+    "status": "PASS",
+    "observed": "7.71",
+    "note": "#FCA5A5 on #1E293B",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: nav text/nav >= 4.5:1",
+    "status": "PASS",
+    "observed": "14.39",
+    "note": "#E2E8F0 on #111827",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-14",
+    "check": "contrast dark: nav muted/nav >= 4.5:1",
+    "status": "PASS",
+    "observed": "6.92",
+    "note": "#94A3B8 on #111827",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "direct URL to UNASSIGNED report -> 403 Permission denied page",
+    "status": "PASS",
+    "observed": "403 InsightFlow BI Permission denied You don't have access to this page or report. If you thin",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "NON-EXISTENT report gives the same 403 (no existence leak)",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "API guest-token for UNASSIGNED report -> 403, no token",
+    "status": "PASS",
+    "observed": "403 {\"error\":\"denied\"}",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "API guest-token for another unassigned report -> 403",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "cross-site request for a guest token refused even for an ASSIGNED report",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-13",
+    "check": "viewer blocked from /admin/users",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-13",
+    "check": "viewer blocked from /admin/audit",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-13",
+    "check": "viewer blocked from /admin/data",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "FUNC-13",
+    "check": "viewer blocked from /admin/refresh",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:11Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "Makati-scoped viewer sees ONLY Makati revenue 42,911,451.14",
+    "status": "PASS",
+    "observed": "Revenue 42,911,451.14 Revenue Gross profit 13,643,962.40 Gross profit Margin 31.80% Margin Transacti",
+    "note": "",
+    "ts": "2026-11-26T03:03:14Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "scope badge shown to the viewer",
+    "status": "PASS",
+    "observed": "Scope: Makati",
+    "note": "",
+    "ts": "2026-11-26T03:03:16Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: Makati token queried DIRECTLY at Superset returns only Makati total",
+    "status": "PASS",
+    "observed": "200 revenue=42911451.14",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: Makati token + filter branch=Cebu -> no Cebu data (bypass attempt)",
+    "status": "PASS",
+    "observed": "200 [{\"revenue\":null}]",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-16",
+    "check": "token-level: Makati token cannot read another report's dataset",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: guest cannot list other dashboards",
+    "status": "PASS",
+    "observed": "[\"Sales report - live\"]",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: guest token on /api/v1/security/users/ denied",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: guest token on /api/v1/database/ denied",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token-level: guest token on /api/v1/sqllab/execute/ denied",
+    "status": "INCONCLUSIVE",
+    "observed": "400",
+    "note": "CSRF 400 masks the authz decision; covered by the guest-role permission inspection (Phase 1)",
+    "ts": "2026-11-26T03:03:17Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "provisioned viewer with NO assignment: empty state, default-deny",
+    "status": "PASS",
+    "observed": "me, Nico Nobody. Your reports No reports assigned yet You're signed in, but you haven't been given access to any report.",
+    "note": "",
+    "ts": "2026-11-26T03:03:18Z"
+  },
+  {
+    "tc": "FUNC-08",
+    "check": "unassigned viewer direct URL -> 403",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:18Z"
+  },
+  {
+    "tc": "UI-02",
+    "check": "admin overview shows operational summary",
+    "status": "PASS",
+    "observed": "t logs Account ⚙ Settings ⇤ Collapse Ada Admin · admin ◐ Theme Sign out Overview Welcome, Ada Admin. Operational summary Active users 4 Viewers with no report 1",
+    "note": "",
+    "ts": "2026-11-26T03:03:19Z"
+  },
+  {
+    "tc": "UI-07",
+    "check": "user management lists users, roles and per-report scope",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:03:19Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "CSRF: admin POST without form token -> rejected",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:19Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "CSRF: admin POST with forged token -> rejected",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:19Z"
+  },
+  {
+    "tc": "FUNC-12",
+    "check": "before revoke: Makati viewer opens Large dataset",
+    "status": "PASS",
+    "observed": "200",
+    "note": "",
+    "ts": "2026-11-26T03:03:20Z"
+  },
+  {
+    "tc": "FUNC-12",
+    "check": "after revoke: SAME live session now denied (655 ms)",
+    "status": "PASS",
+    "observed": "403",
+    "note": "",
+    "ts": "2026-11-26T03:03:20Z"
+  },
+  {
+    "tc": "FUNC-12",
+    "check": "revoked report disappears from library",
+    "status": "PASS",
+    "observed": "ok",
+    "note": "",
+    "ts": "2026-11-26T03:03:21Z"
+  },
+  {
+    "tc": "FUNC-12",
+    "check": "assign via UI restores access (scope Makati)",
+    "status": "PASS",
+    "observed": "200",
+    "note": "",
+    "ts": "2026-11-26T03:03:22Z"
+  },
+  {
+    "tc": "TC-11",
+    "check": "deactivated user's live session ended immediately (625 ms)",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:03:22Z"
+  },
+  {
+    "tc": "TC-11",
+    "check": "replaying the deactivated user's old session cookie -> rejected",
+    "status": "PASS",
+    "observed": "303",
+    "note": "",
+    "ts": "2026-11-26T03:03:22Z"
+  },
+  {
+    "tc": "TC-11",
+    "check": "deactivated user cannot sign in again (IdP ok, portal denies)",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/signin?reason=denied",
+    "note": "",
+    "ts": "2026-11-26T03:03:24Z"
+  },
+  {
+    "tc": "TC-11",
+    "check": "KNOWN WINDOW: an already-issued guest token still works until its 5-minute expiry",
+    "status": "INFO",
+    "observed": "HTTP 200",
+    "note": "revocation window = guest-token TTL (300 s); keep short",
+    "ts": "2026-11-26T03:03:24Z"
+  },
+  {
+    "tc": "TC-11",
+    "check": "re-activated user can sign in again",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/",
+    "note": "",
+    "ts": "2026-11-26T03:03:26Z"
+  },
+  {
+    "tc": "FUNC-12",
+    "check": "admin adds a user (sees nothing until assigned)",
+    "status": "PASS",
+    "observed": "added",
+    "note": "",
+    "ts": "2026-11-26T03:03:27Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "idle session (3 h inactive; limit 30 min) rejected server-side",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/signin?reason=expired",
+    "note": "",
+    "ts": "2026-11-26T03:03:27Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "sign out ends the session and returns to sign-in",
+    "status": "PASS",
+    "observed": "http://127.0.0.1:9000/signin?reason=signedout",
+    "note": "",
+    "ts": "2026-11-26T03:03:32Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "old cookie after sign-out is useless (server-side session deleted)",
+    "status": "PASS",
+    "observed": "303",
+    "note": "",
+    "ts": "2026-11-26T03:03:32Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "first Tab stop is the \"Skip to content\" link, and it becomes visible",
+    "status": "PASS",
+    "observed": "{\"t\":\"Skip to content\",\"ow\":3,\"os\":\"solid\",\"lx\":8,\"body\":false}",
+    "note": "",
+    "ts": "2026-11-26T03:04:01Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "every keyboard stop (9) has a visible focus ring (>=2px) and there are enough stops",
+    "status": "PASS",
+    "observed": "stops: Skip to content | ⌂Overview | ▦Assigned reports | ⚙Settings | ⇤ Collapse | ◐ Theme | Sign out | Sales report (live data) | Open report",
+    "note": "",
+    "ts": "2026-11-26T03:04:01Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px: no horizontal scroll on /",
+    "status": "PASS",
+    "observed": "fits",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px: no horizontal scroll on /reports",
+    "status": "PASS",
+    "observed": "fits",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px: no horizontal scroll on /settings",
+    "status": "PASS",
+    "observed": "fits",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile: menu button opens the navigation",
+    "status": "PASS",
+    "observed": "true",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile: the open menu can be closed (Close menu button)",
+    "status": "PASS",
+    "observed": "true",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile: Escape closes the menu (keyboard)",
+    "status": "PASS",
+    "observed": "true",
+    "note": "",
+    "ts": "2026-11-26T03:04:31Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile: report page fits width (page-level)",
+    "status": "PASS",
+    "observed": "fits",
+    "note": "",
+    "ts": "2026-11-26T03:04:38Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile: embedded Superset layout usable? (visual check required)",
+    "status": "INFO",
+    "observed": "Phase 1 found Superset grid squeezed at 390px: see screenshot p2_mobile_report.png",
+    "note": "known limitation: needs a single-column dashboard layout",
+    "ts": "2026-11-26T03:04:38Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px admin: no page-level horizontal scroll on /admin/users",
+    "status": "PASS",
+    "observed": "fits (tables scroll inside their own wrapper)",
+    "note": "",
+    "ts": "2026-11-26T03:04:39Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px admin: no page-level horizontal scroll on /admin/audit",
+    "status": "PASS",
+    "observed": "fits (tables scroll inside their own wrapper)",
+    "note": "",
+    "ts": "2026-11-26T03:04:39Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px admin: no page-level horizontal scroll on /admin/data",
+    "status": "PASS",
+    "observed": "fits (tables scroll inside their own wrapper)",
+    "note": "",
+    "ts": "2026-11-26T03:04:39Z"
+  },
+  {
+    "tc": "TC-15",
+    "check": "mobile 390px admin: no page-level horizontal scroll on /admin/refresh",
+    "status": "PASS",
+    "observed": "fits (tables scroll inside their own wrapper)",
+    "note": "",
+    "ts": "2026-11-26T03:04:39Z"
+  },
+  {
+    "tc": "TC-07",
+    "check": "no CSP violations reported in the browser console across all pages",
+    "status": "PASS",
+    "observed": "none",
+    "note": "",
+    "ts": "2026-11-26T03:04:39Z"
+  }
+]

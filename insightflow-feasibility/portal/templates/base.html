@@ -1,0 +1,34 @@
+{% from "_macros.html" import banner, csrf %}<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}{% endblock %} · InsightFlow BI</title><link rel="stylesheet" href="/static/app.css"><script src="/static/theme.js"></script></head>
+<body class="app"><a class="skip" href="#main">Skip to content</a>
+<aside id="sidebar" class="sidebar" aria-label="Sidebar">
+  <div class="closebar show-sm"><button class="btn sm" id="navclose" type="button" aria-controls="sidebar">✕ Close menu</button></div>
+  <div class="brand">InsightFlow BI<small>Private Business Intelligence Portal</small></div>
+  <nav aria-label="Primary">
+    <a href="/" {% if path=='/' %}aria-current="page"{% endif %}><span aria-hidden="true">⌂</span><span class="txt">Overview</span></a>
+    <a href="/reports" {% if path.startswith('/reports') %}aria-current="page"{% endif %}><span aria-hidden="true">▦</span><span class="txt">Assigned reports</span></a>
+    {% if user.role=='admin' %}<div class="grp">Administration</div>
+    <a href="/admin/data" {% if path=='/admin/data' %}aria-current="page"{% endif %}><span aria-hidden="true">⇪</span><span class="txt">Data sources</span></a>
+    <a href="/admin/refresh" {% if path=='/admin/refresh' %}aria-current="page"{% endif %}><span aria-hidden="true">↻</span><span class="txt">Refresh history</span></a>
+    <a href="/admin/users" {% if path=='/admin/users' %}aria-current="page"{% endif %}><span aria-hidden="true">☺</span><span class="txt">User management</span></a>
+    <a href="/admin/audit" {% if path=='/admin/audit' %}aria-current="page"{% endif %}><span aria-hidden="true">☰</span><span class="txt">Audit logs</span></a>{% endif %}
+    <div class="grp">Account</div>
+    <a href="/settings" {% if path=='/settings' %}aria-current="page"{% endif %}><span aria-hidden="true">⚙</span><span class="txt">Settings</span></a>
+  </nav>
+</aside>
+<div class="shell">
+<header class="topbar">
+  <button class="btn sm" id="navtoggle-m" aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">☰ Menu</button>
+  <button class="btn sm hide-sm" id="collapse" aria-controls="sidebar" aria-expanded="true" aria-label="Collapse sidebar">⇤ Collapse</button>
+  <span class="sp"></span>
+  <span class="who hide-sm"><b>{{ user.name }}</b> · {{ user.role }}</span>
+  <button class="btn sm" id="theme-toggle" aria-label="Switch between light and dark theme">◐ Theme</button>
+  <form method="post" action="/logout">{{ csrf(user.csrf) }}<button class="btn sm" type="submit">Sign out</button></form>
+</header>
+<main id="main" tabindex="-1">
+{% if flash %}{{ banner('ok' if flash[0]=='ok' else 'error', 'Done.' if flash[0]=='ok' else 'Not done.', flash[1]) }}{% endif %}
+{% block content %}{% endblock %}
+</main></div>
+<script src="/static/app.js" defer></script>{% block scripts %}{% endblock %}
+</body></html>

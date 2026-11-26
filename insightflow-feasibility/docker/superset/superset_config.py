@@ -11,7 +11,10 @@ GUEST_TOKEN_JWT_EXP_SECONDS = 300                                     # short-li
 GUEST_TOKEN_JWT_ALGO = "HS256"
 # --- caching (Redis) ---
 CACHE_CONFIG = {"CACHE_TYPE": "RedisCache", "CACHE_DEFAULT_TIMEOUT": 300, "CACHE_KEY_PREFIX": "sscache_", "CACHE_REDIS_URL": "redis://ss-redis:6379/0"}
-DATA_CACHE_CONFIG = {**CACHE_CONFIG, "CACHE_KEY_PREFIX": "ssdata_", "CACHE_REDIS_URL": "redis://ss-redis:6379/1"}
+STORE_CACHE_KEYS_IN_METADATA_DB = True   # REQUIRED for /api/v1/cachekey/invalidate to work (default False => invalidate silently does nothing; verified)
+# /api/v1/cachekey/invalidate deletes through cache_manager.cache (CACHE_CONFIG) only; chart data lives in DATA_CACHE_CONFIG.
+# They MUST share the same Redis DB + key prefix or invalidation silently misses the data (verified).
+DATA_CACHE_CONFIG = dict(CACHE_CONFIG)
 # --- session / hardening ---
 PERMANENT_SESSION_LIFETIME = timedelta(minutes=int(os.environ.get("SS_SESSION_MINUTES", "480")))
 SESSION_COOKIE_HTTPONLY = True

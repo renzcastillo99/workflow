@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% from "_macros.html" import badge, banner, csrf %}{% block title %}Data sources{% endblock %}
+{% block content %}
+<h1>Data sources</h1><p class="muted">Upload a full snapshot. It is validated and reconciled in a staging area, then published in one step. If anything fails, the last verified data stays live.</p>
+<div class="grid"><div class="card"><h3>Live dataset</h3>{% if live %}<p><b>{{ '{:,}'.format(live.rows) }}</b> transactions · {{ live['from'] }} to {{ live.to }}</p><p>Revenue <b>{{ '{:,.2f}'.format(live.revenue) }}</b><br>Cost <b>{{ '{:,.2f}'.format(live.cost) }}</b></p>
+{% if fresh.last_ok %}<p>{{ badge('warn' if fresh.stale else 'ok', 'Stale' if fresh.stale else 'Fresh') }} last successful refresh {{ fresh.last_ok.finished_at|ts }} ({{ fresh.last_ok.finished_at|age }})</p>{% endif %}{% else %}<p>{{ badge('err','Unavailable') }}</p>{% endif %}</div>
+<div class="card"><h3>Upload snapshot</h3>
+<form method="post" action="/admin/data/upload" enctype="multipart/form-data" data-busy>{{ csrf(user.csrf) }}<label for="f">CSV or Excel (.xlsx) file</label><input id="f" name="file" type="file" accept=".csv,.xlsx" required><p><button class="btn primary" type="submit">Validate and publish</button></p></form>
+<p class="muted"><small>Only one refresh can run at a time.</small></p></div></div>
+{% if last and last.status in ('rejected','failed') %}<h2>Last attempt</h2>{{ banner('error', 'Not published.', last.message ~ ' The live data was not changed.') }}
+<p><a href="/admin/refresh">See rejected rows in refresh history</a></p>{% endif %}
+<h2>Data contract</h2><div class="card"><p>Columns (exact names): {% for c in required %}<code>{{ c }}</code> {% endfor %}</p><ul>
+<li><code>transaction_id</code> unique and not empty (duplicates are rejected).</li><li><code>date</code> as <code>YYYY-MM-DD</code>.</li><li><code>revenue</code>, <code>cost</code>: decimals with at most 2 decimal places. Missing values are <b>rejected</b>, never turned into 0.</li>
+<li>Any invalid row rejects the whole file (strict mode). The report lists the rows and the reason.</li><li>After loading, row count and totals are re-checked against the file before publishing.</li></ul></div>
+{% endblock %}

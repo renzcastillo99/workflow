@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% from "_macros.html" import badge, banner %}{% block title %}Overview{% endblock %}
+{% block content %}
+<h1>Overview</h1><p class="muted">Welcome, {{ user.name }}.</p>
+{% if ops %}<h2>Operational summary</h2>
+<div class="grid kpi">
+ <div class="card kpi"><div class="label muted">Active users</div><div class="n">{{ ops.users }}</div></div>
+ <div class="card kpi"><div class="label muted">Viewers with no report</div><div class="n">{{ ops.no_assign }}</div></div>
+ <div class="card kpi"><div class="label muted">Rejected/failed refreshes (7 d)</div><div class="n">{{ ops.bad_jobs }}</div></div>
+ <div class="card kpi"><div class="label muted">Denied events (24 h)</div><div class="n">{{ ops.denied }}</div></div>
+</div>
+<p>{% if fresh.last_ok %}Data: {{ badge('warn' if fresh.stale else 'ok', 'Stale' if fresh.stale else 'Fresh') }} last successful refresh {{ fresh.last_ok.finished_at|age }}.{% else %}{{ badge('err','No successful refresh yet') }}{% endif %}
+{% if fresh.last_bad %} {{ badge('warn','Last attempt did not publish') }} <a href="/admin/refresh">see why</a>{% endif %}</p>{% endif %}
+<h2>Your reports</h2>
+{% if not reports %}<div class="card empty"><h3>No reports assigned yet</h3><p>You're signed in, but you haven't been given access to any report. Ask your administrator.</p></div>
+{% else %}<div class="grid">{% for r in reports %}<div class="card"><h3><a href="/reports/{{ r.id }}">{{ r.title }}</a></h3><p class="muted">{{ r.description }}</p>
+<p>{{ badge('info', 'Scope: ' ~ (r.branch_scope or 'all branches')) }}</p>
+<p class="muted"><small>{% if r.live %}{% if fresh.last_ok %}{{ badge('warn' if fresh.stale else 'ok', 'Stale data' if fresh.stale else 'Fresh') }} updated {{ fresh.last_ok.finished_at|age }}{% else %}{{ badge('err','Not yet loaded') }}{% endif %}{% else %}Static dataset{% endif %}</small></p>
+<a class="btn primary sm" href="/reports/{{ r.id }}">Open report</a></div>{% endfor %}</div>{% endif %}
+{% endblock %}

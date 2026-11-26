@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% from "_macros.html" import badge %}{% block title %}Refresh history{% endblock %}
+{% block content %}
+<h1>Refresh history</h1>
+<p>{% if fresh.last_ok %}Last successful refresh: <b>{{ fresh.last_ok.finished_at|ts }}</b> ({{ fresh.last_ok.finished_at|age }}). {{ badge('warn' if fresh.stale else 'ok', 'Stale' if fresh.stale else 'Fresh') }}{% else %}{{ badge('err','No successful refresh') }}{% endif %}</p>
+<p class="muted">Failed and rejected jobs never change live data. To retry, fix the file and upload it again from <a href="/admin/data">Data sources</a>.</p>
+<div class="tablewrap"><table><thead><tr><th>Started</th><th>Source</th><th>Status</th><th>Rows read</th><th>Rows published</th><th>Result</th><th>By</th></tr></thead><tbody>
+{% for j in jobs %}<tr><td>{{ j.started_at|ts }}</td><td>{{ j.source_name }}</td>
+<td>{% if j.status=='success' %}{{ badge('ok','Published') }}{% elif j.status=='rejected' %}{{ badge('warn','Rejected - live unchanged') }}{% elif j.status=='running' %}{{ badge('info','Running') }}{% else %}{{ badge('err','Failed - live unchanged') }}{% endif %}</td>
+<td>{{ j.rows_read if j.rows_read is not none else '' }}</td><td>{{ j.rows_published if j.rows_published is not none else '' }}</td>
+<td>{{ j.message }}{% if j.rejected %}<details><summary>{{ j.rejected|length }} rejected row(s) shown</summary><ul>{% for x in j.rejected %}<li>line {{ x.line }}: {{ x.reason }}</li>{% endfor %}</ul></details>{% endif %}</td><td>{{ j.triggered_by }}</td></tr>
+{% else %}<tr><td colspan="7" class="empty">No refresh jobs yet.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

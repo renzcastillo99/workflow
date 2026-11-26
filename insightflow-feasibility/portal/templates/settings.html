@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf %}{% block title %}Settings{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+<div class="grid"><div class="card"><h2>Appearance</h2><p>Your choice is remembered on this device.</p>
+<div class="seg" role="group" aria-label="Theme"><button type="button" data-theme-set="light" aria-pressed="true">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></div></div>
+<div class="card"><h2>Account</h2><p><b>{{ user.name }}</b><br>{{ user.email }}<br>Role: {{ user.role }}</p>
+<p class="muted"><small>Sessions end after {{ idle }} minutes of inactivity or {{ absolute // 60 }} hours in total. Sign-in and multi-factor authentication are handled by your organisation's identity provider.</small></p>
+<form method="post" action="/logout">{{ csrf(user.csrf) }}<button class="btn" type="submit">Sign out</button></form></div></div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% from "_macros.html" import badge, banner %}{% block title %}{{ r.title }}{% endblock %}
+{% block content %}
+<div class="report-head"><div><h1>{{ r.title }}</h1><p class="muted">{{ r.description }}</p></div>
+<div>{{ badge('info', 'Scope: ' ~ (r.branch_scope or 'all branches')) }}
+{% if fresh %}{% if fresh.last_ok %}<br>{{ badge('warn' if fresh.stale else 'ok', 'Stale data' if fresh.stale else 'Fresh') }} Last successful refresh: <b>{{ fresh.last_ok.finished_at|ts }}</b> ({{ fresh.last_ok.finished_at|age }}){% else %}<br>{{ badge('err','Not yet loaded') }}{% endif %}{% endif %}</div></div>
+{% if fresh and fresh.stale and fresh.last_ok %}{{ banner('warn','Data may be out of date.','The last successful refresh was ' ~ (fresh.last_ok.finished_at|age) ~ '. Ask your administrator to refresh it.') }}{% endif %}
+{% if fresh and fresh.last_bad %}{{ banner('warn','Latest update did not publish.','You are seeing the last verified data (refreshed ' ~ (fresh.last_ok.finished_at|age if fresh.last_ok else 'earlier') ~ '). The failure is recorded in the refresh history for your administrator.') }}{% endif %}
+<div id="dash-state"></div>
+<div class="skeleton" id="dash-skel" aria-hidden="true"><i></i><i class="tall"></i><i class="tall"></i></div>
+<div id="dash" data-rid="{{ r.id }}" data-uuid="{{ r.dashboard_uuid }}" data-superset="{{ superset_url }}" aria-label="Interactive report"></div>
+<p class="muted"><small>Figures come from the verified dataset and are limited to the scope shown above. Export is disabled.</small></p>
+{% endblock %}
+{% block scripts %}<script src="/static/sdk.js"></script><script src="/static/report.js"></script>{% endblock %}

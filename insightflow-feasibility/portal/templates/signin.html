@@ -1,0 +1,9 @@
+{% from "_macros.html" import banner %}<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in · InsightFlow BI</title><link rel="stylesheet" href="/static/app.css"><script src="/static/theme.js"></script></head>
+<body><main class="public" id="main"><div class="card">
+<div class="brand">InsightFlow BI</div><p class="muted">Business intelligence. Within reach.</p>
+<h1>Sign in</h1>
+{% if message %}{{ banner('ok' if kind=='signedout' else 'warn' if kind=='expired' else 'error', '', message) }}{% endif %}
+<p>Use your organisation account. Multi-factor authentication is handled by your identity provider.</p>
+<p><a class="btn primary" href="/login">Sign in with your organisation account</a></p>
+<p class="muted"><small>Private portal. Access is limited to people your administrator has authorised.</small></p>
+</div></main></body></html>

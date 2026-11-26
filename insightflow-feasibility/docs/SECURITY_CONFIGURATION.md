@@ -132,3 +132,13 @@ Re-run these and attach the evidence (the repo's scripts already do the first fi
 
 ## Part E — If Metabase is chosen instead (hardening delta)
 Its defaults are **open** (**[VERIFIED LEAK]**: any new user could read all dashboards, run raw SQL, create content). Before use: set `All Users` collections to *none* and data access to *view-data unrestricted + create-queries no + download none* (script: `mb_04_security.py harden`), set `MB_ENCRYPTION_SECRET_KEY`, `MB_SESSION_SECRET_KEY`, `MAX_SESSION_AGE`; always set a short `exp` on embed tokens in **epoch seconds**; assume a 60 s expiry leeway; block export paths at the proxy; and remember embedded views are anonymous in Metabase's own logs.
+
+---
+## Part F — Verified additions from the Phase 2 mini portal (see `PHASE2_MINI_PORTAL.md`)
+- **[VERIFIED]** Portal-owned authorization (default-deny, pre-provisioned users), server-side sessions with idle/absolute timeouts, deactivation deletes sessions, CSRF tokens on every form, cross-site token requests refused, strict CSP (no inline script/style), `X-Frame-Options: DENY`, `nosniff`.
+- **[VERIFIED]** Identity-provider lockout (Keycloak: 5 failures → temporary lock; correct password then refused) and TOTP MFA required at sign-in. Re-use of a TOTP code is rejected.
+- **[VERIFIED]** Token-only Superset service account (can mint guest tokens and invalidate cache; users/databases/dashboards/SQL Lab → 403).
+- **[VERIFIED]** Embedding needs the portal to send a `Referer` (use `Referrer-Policy: strict-origin-when-cross-origin`, not `same-origin`) and Superset's frame-ancestors allow-list.
+- **[VERIFIED]** To make "refresh → viewers see new data" true you need `STORE_CACHE_KEYS_IN_METADATA_DB=True` **and** `DATA_CACHE_CONFIG` sharing the general cache's Redis DB/prefix; otherwise `/api/v1/cachekey/invalidate` returns 201 and does nothing.
+- **[VERIFIED]** Audit, job history and server logs contained none of 8 secrets, no JWT-like strings and no session ids.
+- **[NOT VERIFIED]** MFA claim from Entra; HTTPS; proxy rate limiting; vulnerability scan; backup/restore.

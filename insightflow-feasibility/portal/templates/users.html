@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% from "_macros.html" import badge, csrf %}{% block title %}User management{% endblock %}
+{% block content %}
+<h1>User management</h1><p class="muted">People can sign in only if listed here. Signing in at your identity provider is not enough on its own. New users see nothing until you assign a report.</p>
+<h2>Add a user</h2>
+<form method="post" action="/admin/users/add" class="card">{{ csrf(csrf_token if csrf_token is defined else user.csrf) }}
+<div class="row"><div><label for="n">Name</label><input id="n" name="name" required maxlength="80"></div><div><label for="e">E-mail (as in the identity provider)</label><input id="e" name="email" type="email" required></div>
+<div><label for="r">Role</label><select id="r" name="role"><option value="viewer">Viewer</option><option value="admin">Administrator</option></select></div><div><button class="btn primary" type="submit">Add user</button></div></div></form>
+<h2>Users and report access</h2>
+<div class="tablewrap"><table><thead><tr><th>User</th><th>Role</th><th>Status</th><th>Report access</th><th>Actions</th></tr></thead><tbody>
+{% for x in users %}<tr><td><b>{{ x.name }}</b><br><span class="muted">{{ x.email }}</span><br><small class="muted">{% if x.oid %}identity bound · last sign-in {{ x.last_login|age }}{% else %}not signed in yet{% endif %}</small></td>
+<td>{{ x.role }}</td><td>{{ badge('ok','Active') if x.active else badge('err','Deactivated') }}</td>
+<td>{% if x.role=='admin' %}<span class="muted">All reports (administrator)</span>{% else %}{% for a in x.assign %}<form method="post" action="/admin/unassign" data-confirm="Revoke access to this report?">{{ csrf(user.csrf) }}<input type="hidden" name="user_id" value="{{ x.id }}"><input type="hidden" name="report_id" value="{{ a.report_id }}">{{ a.title }} · {{ badge('info', a.branch_scope or 'all branches') }} <button class="btn sm danger" type="submit">Revoke</button></form>{% else %}<span class="muted">None</span>{% endfor %}
+<form method="post" action="/admin/assign" class="row">{{ csrf(user.csrf) }}<input type="hidden" name="user_id" value="{{ x.id }}"><div><label for="rp{{ x.id }}">Report</label><select id="rp{{ x.id }}" name="report_id">{% for r in reports %}<option value="{{ r.id }}">{{ r.title }}</option>{% endfor %}</select></div>
+<div><label for="sc{{ x.id }}">Branch scope</label><select id="sc{{ x.id }}" name="scope"><option value="">All branches</option>{% for b in branches %}<option>{{ b }}</option>{% endfor %}</select></div><div><button class="btn sm" type="submit">Assign</button></div></form>{% endif %}</td>
+<td>{% if x.id != user.id %}<form method="post" action="/admin/users/{{ x.id }}/active" {% if x.active %}data-confirm="Deactivate {{ x.name }}? Their portal sessions end immediately."{% endif %}>{{ csrf(user.csrf) }}<input type="hidden" name="active" value="{{ 0 if x.active else 1 }}"><button class="btn sm {{ 'danger' if x.active }}" type="submit">{{ 'Deactivate' if x.active else 'Re-activate' }}</button></form>
+<form method="post" action="/admin/users/{{ x.id }}/role">{{ csrf(user.csrf) }}<input type="hidden" name="role" value="{{ 'viewer' if x.role=='admin' else 'admin' }}"><button class="btn sm" type="submit">Make {{ 'viewer' if x.role=='admin' else 'admin' }}</button></form>{% else %}<span class="muted">(you)</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="muted"><small>Revoking access blocks new report opens at once and ends portal sessions on deactivation. A report that is already open keeps its data for up to 5 minutes (the guest-token lifetime).</small></p>
+{% endblock %}

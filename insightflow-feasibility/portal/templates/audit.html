@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% from "_macros.html" import badge %}{% block title %}Audit logs{% endblock %}
+{% block content %}
+<h1>Audit logs</h1><p class="muted">Sign-ins, report views, administrative changes and refresh outcomes. Secrets and tokens are never recorded.</p>
+<form method="get" class="row"><div><label for="q">Search</label><input id="q" name="q" value="{{ q }}" placeholder="person, action or target"></div>
+<div><label for="o">Outcome</label><select id="o" name="outcome"><option value="">All</option>{% for o in ['ok','denied','error'] %}<option value="{{ o }}" {% if outcome==o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></div><div><button class="btn" type="submit">Filter</button></div></form>
+<div class="tablewrap"><table><thead><tr><th>Time</th><th>Who</th><th>Action</th><th>Target</th><th>Outcome</th><th>Detail</th></tr></thead><tbody>
+{% for e in events %}<tr><td>{{ e.ts|ts }}</td><td>{{ e.actor }}</td><td><code>{{ e.action }}</code></td><td>{{ e.target }}</td><td>{{ badge('ok','ok') if e.outcome=='ok' else badge('warn','denied') if e.outcome=='denied' else badge('err','error') }}</td><td>{{ e.detail }}</td></tr>
+{% else %}<tr><td colspan="6" class="empty">No events match.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

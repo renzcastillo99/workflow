@@ -1,0 +1,18 @@
+[
+  {
+    "tc": "TC-06",
+    "check": "wrong passwords are rejected (7 attempts) and never create a session",
+    "status": "PASS",
+    "observed": "Invalid username or password. | Invalid username or password. | Invalid username or password. | Invalid username or password. | Invalid username or password. | Invalid username or password. | Invalid username or password.",
+    "note": "",
+    "ts": "2026-11-26T03:06:27Z"
+  },
+  {
+    "tc": "TC-06",
+    "check": "after repeated failures even the CORRECT password is refused (account temporarily locked at the IdP)",
+    "status": "PASS",
+    "observed": "INSIGHTFLOW Sign in to your account Username or email Invalid username or password. Password Sign In",
+    "note": "",
+    "ts": "2026-11-26T03:06:29Z"
+  }
+]
