@@ -26,7 +26,7 @@ docker compose --env-file .env -f docker/data.compose.yml up -d
 Metabase OSS (`cd scripts`): `docker compose --env-file ../.env -f ../docker/metabase.compose.yml up -d` → `mb_01_setup.py` → `mb_02_content.py` → `mb_03_functional.py` → `mb_04_security.py baseline | harden | hardened | revocation` → `mb_05_embedding.py` → `mb_06_bench.py`.
 
 Superset (`cd scripts`): `./ss_00_init.sh` → `ss_01_setup.py` → `ss_02_content.py` → `ss_03_functional.py` → `ss_04_security.py baseline | harden | hardened | revocation` → `ss_06_embedding.py` → `ss_07_bench.py`.
-Embedded-in-browser demo: `python3 portal_proto/server.py` (needs the SDK bundle `portal_proto/sdk.js`, built with esbuild from `@superset-ui/embedded-sdk`).
+Embedded-in-browser demo: `python3 portal_proto/server.py` (the SDK bundle `portal_proto/sdk.js` is included).
 Finally `python3 finalize_evidence.py` normalises statuses and regenerates `evidence/SUMMARY.md`.
 
 ## Phase 2 quick start
