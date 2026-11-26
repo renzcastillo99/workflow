@@ -181,6 +181,7 @@ details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8p
       <h2 id="boardTitle">Today's board</h2>
       <button class="btn alt small" data-action="exportAttendance" type="button">Export to CSV</button>
     </div>
+    <p class="hint" style="margin:-4px 0 10px">Attendance records come from your imports (Excel file or SharePoint link). Use the Import tab to add new days.</p>
     <div class="cards" id="board"></div>
     <h2 style="margin-top:22px;font-size:1.1rem">Recent attendance records</h2>
     <div id="attHist"></div>
@@ -585,11 +586,9 @@ function renderBoard(){
   var list = activeEmps().filter(matches);
   if(!list.length){ $("#board").innerHTML = '<div class="empty" style="grid-column:1/-1">' + (activeEmps().length ? "No one matches your search or filters." : "No active employees yet.") + "</div>"; return; }
   $("#board").innerHTML = list.map(function(e){
-    var st = statusToday(e), a = st.att, leave = st.label === "On leave";
-    var inDis = leave || !!a, outDis = leave || !a || !!(a && a.timeOut);
+    var st = statusToday(e), a = st.att;
     return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ")) + '</div></div><span class="badge b-' + st.cls + '">' + st.label + "</span></div>" +
-      '<div class="meta" style="margin-top:6px">Time in: <b>' + fmtTime(a && a.timeIn) + "</b> · Time out: <b>" + fmtTime(a && a.timeOut) + "</b></div>" +
-      '<div class="actions"><button class="btn small" data-action="timeIn" data-id="' + esc(e.id) + '" type="button"' + (inDis ? " disabled" : "") + '>Time in</button><button class="btn alt small" data-action="timeOut" data-id="' + esc(e.id) + '" type="button"' + (outDis ? " disabled" : "") + ">Time out</button></div></div>";
+      '<div class="meta" style="margin-top:6px">Time in: <b>' + fmtTime(a && a.timeIn) + "</b> · Time out: <b>" + fmtTime(a && a.timeOut) + "</b></div></div>";
   }).join("");
 }
 function renderHistory(){
@@ -769,21 +768,7 @@ function delEmp(id){
 }
 
 /* ---------- attendance ---------- */
-function timeIn(id){
-  var e = empById(id); if(!e) return;
-  if(attToday(id)){ toast(e.name + " already timed in today.", "warn"); return; }
-  if(onLeaveToday(id)){ toast(e.name + " is on approved leave today.", "warn"); return; }
-  var hm = nowHM();
-  state.attendance.push({ id:uid(), empId:id, date:today(), timeIn:hm, timeOut:"", late:hm > state.settings.workStart });
-  save(); renderAll(); toast(e.name + " timed in at " + fmtTime(hm) + (hm > state.settings.workStart ? " (Late)." : "."));
-}
-function timeOut(id){
-  var e = empById(id); if(!e) return;
-  var a = attToday(id);
-  if(!a){ toast(e.name + " needs to time in first.", "warn"); return; }
-  if(a.timeOut){ toast(e.name + " already timed out today.", "warn"); return; }
-  a.timeOut = nowHM(); save(); renderAll(); toast(e.name + " timed out at " + fmtTime(a.timeOut) + ".");
-}
+// Attendance records now come from imports (Excel or SharePoint); there are no manual Time in / Time out buttons.
 
 /* ---------- leave ---------- */
 function submitLeave(ev){
@@ -1260,7 +1245,7 @@ function showTab(name){
   renderAll();
 }
 var actions = {
-  editEmp:editEmp, delEmp:delEmp, timeIn:timeIn, timeOut:timeOut,
+  editEmp:editEmp, delEmp:delEmp,
   approve:function(id){ decide(id, true); }, decline:function(id){ decide(id, false); },
   delAtt:function(id){ ask("Remove this attendance record?", "Yes, remove").then(function(y){ if(y){ state.attendance = state.attendance.filter(function(a){ return a.id !== id; }); save(); renderAll(); } }); },
   exportEmployees:exportEmployees, exportAttendance:exportAttendance, exportLeave:exportLeave,
