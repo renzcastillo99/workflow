@@ -1,7 +1,7 @@
 # InsightFlow BI — Phase 1 feasibility prototype
 
 Evaluates **Metabase OSS** vs **Apache Superset** against the approved spec, using **synthetic data only**.
-**Start with** `docs/FEASIBILITY_REPORT.md` (verdict, evidence, recommended architecture), then `docs/SECURITY_CONFIGURATION.md`.
+**Start with** `docs/FEASIBILITY_REPORT.md` (verdict, evidence, recommended architecture), then `docs/SECURITY_CONFIGURATION.md` and `docs/MICROSOFT_ENTRA_AND_FREE_STACK.md` (Microsoft login + free stack).
 This is *not* the InsightFlow portal — no portal, ingestion or refresh code exists yet.
 
 ```

@@ -214,7 +214,7 @@ Phase 2 build order I'd propose (each gated by its test case): ① synthetic sta
 
 ## 9. Not done / open risks (don't read past these)
 
-1. **No real IdP tested.** FUNC-07 is unproven end to end.
+1. **No real IdP tested.** FUNC-07 is unproven end to end. Owner chose **Microsoft Entra**; free-tier login design and limits are in `MICROSOFT_ENTRA_AND_FREE_STACK.md` (still untested against a real tenant).
 2. **Superset concurrency** (20 simultaneous viewers) is the weakest measured result; needs tuning and a re-test on separate load-generator hardware.
 3. **Superset mobile** layout and **chart palette / Inter bundling** are unresolved.
 4. **Superset login throttling** gap — proxy mitigation designed, not built or tested.
