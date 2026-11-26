@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Café HR</title>
+<title>EGIS HR</title>
 <style>
 :root{
-  --accent:#F57C00; --brand:#C25400; --brand-dark:#9A4200; --ink:#2a1d10; --muted:#6b5a48;
-  --bg:#FFF8F0; --card:#ffffff; --line:#EADBC8;
+  --accent:#ACCE00; --brand:#ACCE00; --brand-dark:#97B600; --ink:#161616; --muted:#5d625a;
+  --bg:#F4F5F0; --card:#ffffff; --line:#DDE0D4;
   --ok:#1B7A3A; --ok-bg:#E3F5E8; --late:#9A5B00; --late-bg:#FFEFCC;
   --bad:#B3261E; --bad-bg:#FDE7E5; --leave:#1F5FA8; --leave-bg:#E1EDFB; --gray-bg:#EEE7DD;
 }
@@ -15,9 +15,10 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;font-size:16px}
 [hidden]{display:none!important}
-header{background:var(--accent);color:#1f1300;padding:14px 16px}
-header h1{margin:0;font-size:1.35rem}
-header p{margin:2px 0 0;font-size:.9rem}
+header{background:#131212;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:14px;border-bottom:4px solid var(--accent)}
+header img{height:44px;width:auto;display:block}
+header h1{margin:0;font-size:1.1rem;font-weight:600}
+header p{margin:2px 0 0;font-size:.82rem;color:#c9ccc0}
 .wrap{max-width:1000px;margin:0 auto;padding:0 12px 40px}
 #banner{background:var(--late-bg);color:#5c3700;border-bottom:2px solid var(--accent);padding:10px 16px;font-size:.92rem}
 .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}
@@ -27,12 +28,12 @@ header p{margin:2px 0 0;font-size:.9rem}
 .stat span{font-size:.82rem;color:var(--muted)}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
 .tabs button{flex:1 0 auto;min-height:44px;padding:8px 14px;border:1px solid var(--line);background:#fff;border-radius:10px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer}
-.tabs button[aria-selected="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.tabs button[aria-selected="true"]{background:#131212;color:var(--accent);border-color:#131212}
 .filters{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
 @media(min-width:640px){.filters{grid-template-columns:2fr 1fr 1fr auto}}
-input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid #cdb9a1;border-radius:8px;padding:10px;min-height:44px;width:100%}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid #b3baa5;border-radius:8px;padding:10px;min-height:44px;width:100%}
 textarea{min-height:70px;resize:vertical}
-input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid #ffb35c;outline-offset:1px}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid #7c9500;outline-offset:1px}
 label{display:block;font-weight:600;font-size:.9rem;margin-bottom:3px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
 .card h2{margin:0 0 10px;font-size:1.1rem}
@@ -41,10 +42,10 @@ label{display:block;font-weight:600;font-size:.9rem;margin-bottom:3px}
 .row h2{margin:0}
 .grid{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
-.btn{min-height:44px;padding:8px 16px;border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+.btn{min-height:44px;padding:8px 16px;border:1px solid var(--brand);background:var(--brand);color:#111;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
 .btn:hover:not(:disabled){background:var(--brand-dark)}
-.btn.alt{background:#fff;color:var(--brand)}
-.btn.alt:hover:not(:disabled){background:#FFF0DF}
+.btn.alt{background:#fff;color:#111;border-color:#8f9684}
+.btn.alt:hover:not(:disabled){background:#EEF3D2}
 .btn.danger{background:#fff;color:var(--bad);border-color:var(--bad)}
 .btn.danger:hover:not(:disabled){background:var(--bad-bg)}
 .btn.small{min-height:40px;padding:6px 12px;font-size:.92rem}
@@ -66,15 +67,15 @@ label{display:block;font-weight:600;font-size:.9rem;margin-bottom:3px}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
 table{border-collapse:collapse;width:100%;font-size:.88rem}
 th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{background:#FFF0DF;white-space:nowrap}
+th{background:#EEF3D2;white-space:nowrap}
 .msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:.93rem}
 .msg.warn{background:var(--late-bg);color:#5c3700;border:1px solid #f1c46c}
 .msg.err{background:var(--bad-bg);color:#7d1913;border:1px solid #f0aaa5}
 .msg.good{background:var(--ok-bg);color:#14582a;border:1px solid #9fd5ae}
 .msg.info{background:var(--leave-bg);color:#16467d;border:1px solid #a9c8ee}
 .hint{color:var(--muted);font-size:.86rem;margin:4px 0 0}
-.drop{display:block;border:2px dashed var(--accent);border-radius:12px;padding:18px;text-align:center;background:#FFF3E3;cursor:pointer}
-.drop.over{background:#FFE2BD}
+.drop{display:block;border:2px dashed var(--accent);border-radius:12px;padding:18px;text-align:center;background:#F4F8DC;cursor:pointer}
+.drop.over{background:#E6F0A8}
 .drop input{display:none}
 .mapgrid{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:640px){.mapgrid{grid-template-columns:1fr 1fr 1fr}}
@@ -86,12 +87,32 @@ th{background:#FFF0DF;white-space:nowrap}
 .dialog p{margin:0 0 14px;font-size:1.02rem}
 .dialog .actions{justify-content:flex-end;margin:0}
 .err-text{color:var(--bad);font-size:.88rem;margin-top:3px}
+/* dashboard */
+.dgrid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:800px){.dgrid{grid-template-columns:1fr 1fr}.span2{grid-column:1/-1}}
+.dgrid .card{margin:0}
+.stackbar{display:flex;gap:2px;height:24px;border-radius:6px;overflow:hidden;margin:6px 0 10px}
+.legend{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin:6px 0;padding:0;font-size:.9rem}
+.legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.kpis{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.kpis div{background:#F4F5F0;border-radius:10px;padding:8px 14px}
+.kpis b{display:block;font-size:1.4rem;line-height:1.15}
+.kpis span{font-size:.8rem;color:var(--muted)}
+.hrow{display:grid;grid-template-columns:minmax(80px,38%) 1fr 32px;gap:8px;align-items:center;margin:7px 0;font-size:.92rem}
+.hrow .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hrow .track{background:#EEF0E6;border-radius:5px;height:16px;display:block}
+.hrow .fill{background:var(--accent);height:100%;border-radius:0 5px 5px 0;display:block}
+.hrow .val{font-weight:700;text-align:right}
+.dl{list-style:none;margin:0;padding:0}
+.dl li{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line)}
+.dl li:last-child{border-bottom:0}
+details summary{cursor:pointer;color:var(--muted);font-size:.88rem;margin-top:8px}
 </style>
 </head>
 <body>
 <header>
-  <h1>&#9749; Café HR</h1>
-  <p id="todayLabel"></p>
+  <img src="data:image/png;base64,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" alt="EGIS" width="99" height="44">
+  <div><h1>HR System</h1><p id="todayLabel"></p></div>
 </header>
 <div id="banner" hidden></div>
 
@@ -99,11 +120,12 @@ th{background:#FFF0DF;white-space:nowrap}
   <section class="summary" id="summary" aria-label="Today's summary"></section>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
-    <button role="tab" data-tab="employees" aria-selected="true">Employees</button>
+    <button role="tab" data-tab="dashboard" aria-selected="true">Dashboard</button>
+    <button role="tab" data-tab="employees" aria-selected="false">Employees</button>
     <button role="tab" data-tab="attendance" aria-selected="false">Attendance</button>
     <button role="tab" data-tab="leave" aria-selected="false">Leave</button>
     <button role="tab" data-tab="import" aria-selected="false">Import</button>
-    <button role="tab" data-tab="data" aria-selected="false">Backup</button>
+    <button role="tab" data-tab="data" aria-selected="false">Settings</button>
   </nav>
 
   <div class="filters" id="filters">
@@ -112,6 +134,9 @@ th{background:#FFF0DF;white-space:nowrap}
     <select id="fStatus" aria-label="Filter by employment status"></select>
     <button class="btn alt" id="clearFilters" type="button">Clear</button>
   </div>
+
+  <!-- DASHBOARD -->
+  <section id="tab-dashboard"><div id="dash"></div></section>
 
   <!-- EMPLOYEES -->
   <section id="tab-employees">
@@ -126,10 +151,12 @@ th{background:#FFF0DF;white-space:nowrap}
         <div><label for="f_hired">Date hired</label><input id="f_hired" type="date"></div>
         <div><label for="f_status">Employment status</label><select id="f_status"></select></div>
         <div class="grid two" style="gap:10px">
-          <div><label for="f_vl">Vacation leave</label><input id="f_vl" type="number" min="0" step="0.5"></div>
-          <div><label for="f_sl">Sick leave</label><input id="f_sl" type="number" min="0" step="0.5"></div>
+          <div><label for="f_vladj">Vacation adjustment (+/-)</label><input id="f_vladj" type="number" step="0.25" placeholder="optional"></div>
+          <div><label for="f_sladj">Sick adjustment (+/-)</label><input id="f_sladj" type="number" step="0.25" placeholder="optional"></div>
         </div>
       </div>
+      <div id="f_balinfo" class="msg info"></div>
+      <p class="hint" style="margin-top:0">Leave is calculated automatically from the date hired. Use the adjustment boxes only to correct a balance, for example credits from before you used this system.</p>
       <div class="actions">
         <button class="btn" type="submit" id="empSubmit">Add employee</button>
         <button class="btn alt" type="button" id="empCancel" hidden>Cancel edit</button>
@@ -199,6 +226,19 @@ th{background:#FFF0DF;white-space:nowrap}
       <div id="impSheetWrap" hidden style="margin-top:10px"><label for="impSheet">This workbook has several sheets. Which one should I read?</label><select id="impSheet"></select></div>
     </div>
 
+    <div class="card">
+      <h2>Import from a SharePoint link</h2>
+      <p class="hint" style="margin-top:0" id="spNote"></p>
+      <label for="spUrl">Link to your Excel file</label>
+      <input type="url" id="spUrl" placeholder="https://yourcompany.sharepoint.com/:x:/..." autocomplete="off">
+      <div class="actions">
+        <button class="btn" type="button" id="spFetch" data-action="spFetch">Get file from link</button>
+        <button class="btn alt" type="button" id="spSign" data-action="spSignIn" hidden>Sign in to Microsoft</button>
+      </div>
+      <div id="spMsg" class="msg info" hidden></div>
+      <p class="hint">It uses the same "What are you importing?" choice as above. After the file is read you'll see the same column matching and preview, and nothing is saved until you confirm.</p>
+    </div>
+
     <div class="card" id="impStep2" hidden>
       <h2>Match your columns</h2>
       <div id="impSkipped" class="msg info" hidden></div>
@@ -206,12 +246,9 @@ th{background:#FFF0DF;white-space:nowrap}
       <div class="grid two" style="margin-top:12px">
         <div><label for="impDup">If a record already exists</label>
           <select id="impDup"><option value="skip">Skip it (keep what I have)</option><option value="update">Update the existing record</option></select></div>
-        <div id="impDefaults" class="grid two" style="gap:10px">
-          <div><label for="impVL">Default vacation days</label><input type="number" id="impVL" min="0" step="0.5" value="10"></div>
-          <div><label for="impSL">Default sick days</label><input type="number" id="impSL" min="0" step="0.5" value="5"></div>
-        </div>
+        <div id="impDefaults" class="hint" style="align-self:end">Leave balances in your file are used as today's balance. If your file has none, they are calculated from Date hired.</div>
       </div>
-      <p class="hint" id="impDefaultsHint">Defaults are used only when the file leaves the balance blank.</p>
+      <p class="hint" id="impDefaultsHint" hidden></p>
     </div>
 
     <div class="card" id="impStep3" hidden>
@@ -230,6 +267,16 @@ th{background:#FFF0DF;white-space:nowrap}
 
   <!-- DATA -->
   <section id="tab-data" hidden>
+    <div class="card">
+      <h2>Leave policy</h2>
+      <p class="hint" style="margin-top:0">Employees with 1 year of service or more get the yearly amount (it renews on each hire anniversary, with no carry-over). New hires earn a set amount for every completed month until their first anniversary.</p>
+      <div class="grid two">
+        <div><label for="p_annVL">Vacation days per year (after 1 year)</label><input type="number" id="p_annVL" min="0" step="0.25"></div>
+        <div><label for="p_annSL">Sick days per year (after 1 year)</label><input type="number" id="p_annSL" min="0" step="0.25"></div>
+        <div><label for="p_accVL">New hire: vacation days earned per month</label><input type="number" id="p_accVL" min="0" step="0.05"></div>
+        <div><label for="p_accSL">New hire: sick days earned per month</label><input type="number" id="p_accSL" min="0" step="0.05"></div>
+      </div>
+    </div>
     <div class="card">
       <h2>Backup &amp; restore</h2>
       <p class="hint" style="margin-top:0">Your data lives in this browser. If you clear your browser data it is gone, so download a backup now and then.</p>
@@ -264,7 +311,7 @@ th{background:#FFF0DF;white-space:nowrap}
 
 /* ---------- constants ---------- */
 var KEY = "cafe_hr_v1";
-var DEFAULT_VL = 10, DEFAULT_SL = 5;
+var POLICY0 = { annVL:15, annSL:15, accVL:1.25, accSL:1.25 };
 var STATUSES = ["Probationary","Regular","Contractual","Resigned"];
 var LEAVE_TYPES = ["Vacation","Sick","Emergency"];
 var MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
@@ -272,7 +319,7 @@ var MONTH_LABELS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct",
 var MAX_FILE = 10 * 1024 * 1024, MAX_ROWS = 5000;
 
 var state = null;
-var ui = { tab:"employees", editId:null, q:"", dept:"", est:"" };
+var ui = { tab:"dashboard", editId:null, q:"", dept:"", est:"" };
 var imp = null;
 var lastDay = "";
 
@@ -349,13 +396,15 @@ function parseTime(v){
   return pad(h) + ":" + pad(mi);
 }
 function cleanState(o, keepUndo){
-  var s = { employees:[], attendance:[], leaves:[], settings:{ workStart:"08:00" }, undo:null };
+  var s = { employees:[], attendance:[], leaves:[], settings:{ workStart:"08:00", policy:clonePolicy(POLICY0), spUrl:"" }, undo:null };
   var ids = {}, empIds = {};
   function newId(v){ var id = str(v); if(!id || ids[id]) id = uid() + Object.keys(ids).length; ids[id] = 1; return id; }
   (Array.isArray(o.employees) ? o.employees : []).forEach(function(e){
     if(!e || !str(e.name)) return;
     var rec = { id:newId(e.id), name:str(e.name), position:str(e.position), dept:str(e.dept), phone:str(e.phone), email:str(e.email),
-      hired:parseDate(e.hired) || "", status:normStatus(e.status) || "Regular", vl:numOr(e.vl, DEFAULT_VL), sl:numOr(e.sl, DEFAULT_SL) };
+      hired:parseDate(e.hired) || "", status:normStatus(e.status) || "Regular", vlAdj:numAny(e.vlAdj), slAdj:numAny(e.slAdj) };
+    if(e.vlAdj === undefined && e.vl !== undefined) rec.legacyVl = numOr(e.vl, 0);   // data saved by an older version
+    if(e.slAdj === undefined && e.sl !== undefined) rec.legacySl = numOr(e.sl, 0);
     empIds[rec.id] = 1; s.employees.push(rec);
   });
   (Array.isArray(o.attendance) ? o.attendance : []).forEach(function(a){
@@ -369,6 +418,12 @@ function cleanState(o, keepUndo){
     s.leaves.push({ id:newId(l.id), empId:l.empId, type:LEAVE_TYPES.indexOf(l.type) >= 0 ? l.type : "Vacation", start:st, end:en,
       days:leaveDays(st, en), reason:str(l.reason), status:["Pending","Approved","Declined"].indexOf(l.status) >= 0 ? l.status : "Pending", filed:str(l.filed) });
   });
+  s.settings.policy = cleanPolicy(o.settings && o.settings.policy);
+  s.settings.spUrl = str(o.settings && o.settings.spUrl);
+  s.employees.forEach(function(e){
+    if(e.legacyVl !== undefined){ setBalance(e, "vl", e.legacyVl, s); delete e.legacyVl; }
+    if(e.legacySl !== undefined){ setBalance(e, "sl", e.legacySl, s); delete e.legacySl; }
+  });
   var ws = parseTime(o.settings && o.settings.workStart); if(ws) s.settings.workStart = ws;
   if(keepUndo && o.undo && Array.isArray(o.undo.employees)){
     var u = cleanState(o.undo, false); u.undo = undefined;
@@ -380,18 +435,17 @@ function cleanState(o, keepUndo){
 /* ---------- sample data ---------- */
 function sampleState(){
   var t = today();
-  var A = "Downtown Branch", B = "Riverside Branch";
-  function emp(i, name, pos, dept, status, hired, vl, sl){
-    return { id:"s" + i, name:name, position:pos, dept:dept, phone:"0917-000-000" + i, email:name.split(" ")[0].toLowerCase() + "@example.com", hired:hired, status:status, vl:vl, sl:sl };
+  function emp(i, name, pos, dept, status, hired){
+    return { id:"s" + i, name:name, position:pos, dept:dept, phone:"0917-000-000" + i, email:name.split(" ")[0].toLowerCase() + "@example.com", hired:hired, status:status, vlAdj:0, slAdj:0 };
   }
   var s = { employees:[
-    emp(1, "Lia Mercado", "Shift Supervisor", A, "Regular", "2022-03-14", 10, 5),
-    emp(2, "Paolo Navarro", "Barista", A, "Regular", "2023-06-01", 8, 4),
-    emp(3, "Bea Villanueva", "Cashier", B, "Probationary", "2026-08-17", 5, 5),
-    emp(4, "Carlo Mendoza", "Cook", B, "Regular", "2021-11-08", 7, 5),
-    emp(5, "Tessa Ramos", "Barista", B, "Contractual", "2026-02-02", 10, 3),
-    emp(6, "Miguel Aquino", "Cashier", A, "Resigned", "2022-09-19", 0, 2)
-  ], attendance:[], leaves:[], settings:{ workStart:"08:00" }, undo:null };
+    emp(1, "Lia Mercado", "HR Officer", "Human Resources", "Regular", "2022-03-14"),
+    emp(2, "Paolo Navarro", "Civil Engineer", "Engineering", "Regular", "2023-06-01"),
+    emp(3, "Bea Villanueva", "Admin Assistant", "Administration", "Probationary", addMonthsIso(t, -3)),
+    emp(4, "Carlo Mendoza", "Project Engineer", "Engineering", "Regular", "2021-11-08"),
+    emp(5, "Tessa Ramos", "Accountant", "Finance", "Contractual", addMonthsIso(t, -9)),
+    emp(6, "Miguel Aquino", "Draftsman", "Engineering", "Resigned", "2022-09-19")
+  ], attendance:[], leaves:[], settings:{ workStart:"08:00", policy:clonePolicy(POLICY0), spUrl:"" }, undo:null };
   function att(n, emp, d, ti, to, late){ s.attendance.push({ id:"sa" + n, empId:emp, date:d, timeIn:ti, timeOut:to, late:late }); }
   att(1, "s1", t, "07:52", "", false);
   att(2, "s2", t, "08:14", "", true);
@@ -400,6 +454,7 @@ function sampleState(){
   att(4, "s2", y, "08:20", "17:00", true);
   att(5, "s3", y, "07:59", "17:01", false);
   att(6, "s4", y, "08:05", "17:00", true);
+  for(var k = 2; k <= 6; k++){ var dd = addDays(t, -k - 1); att(10 + k, "s1", dd, "07:5" + k, "17:00", false); att(20 + k, "s2", dd, k % 2 ? "08:10" : "07:58", "17:00", k % 2 === 1); att(30 + k, "s3", dd, "07:5" + (k + 1), "17:00", false); }
   s.leaves.push({ id:"sl1", empId:"s4", type:"Vacation", start:addDays(t, -1), end:addDays(t, 1), days:3, reason:"Family trip", status:"Approved", filed:addDays(t, -6) });
   s.leaves.push({ id:"sl2", empId:"s3", type:"Sick", start:addDays(t, 1), end:addDays(t, 1), days:1, reason:"Dentist appointment", status:"Pending", filed:t });
   s.leaves.push({ id:"sl3", empId:"s5", type:"Vacation", start:addDays(t, -20), end:addDays(t, -18), days:3, reason:"Short break", status:"Declined", filed:addDays(t, -25) });
@@ -418,7 +473,28 @@ function statusToday(e){
   if(nowHM() <= state.settings.workStart) return { label:"Not in yet", cls:"wait", att:null };
   return { label:"Absent", cls:"absent", att:null };
 }
-function balOf(e, type){ return type === "Sick" ? e.sl : e.vl; }
+function clonePolicy(p){ return { annVL:p.annVL, annSL:p.annSL, accVL:p.accVL, accSL:p.accSL }; }
+function cleanPolicy(p){ p = p || {}; return { annVL:numOr(p.annVL, POLICY0.annVL), annSL:numOr(p.annSL, POLICY0.annSL), accVL:numOr(p.accVL, POLICY0.accVL), accSL:numOr(p.accSL, POLICY0.accSL) }; }
+function numAny(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
+function monthsBetween(a, b){ var x = a.split("-").map(Number), y = b.split("-").map(Number); var m = (y[0] - x[0]) * 12 + (y[1] - x[1]); if(y[2] < x[2]) m--; return m < 0 ? 0 : m; }
+function addMonthsIso(iso, n){ var p = iso.split("-").map(Number); var f = new Date(p[0], p[1] - 1 + n, 1); var dim = new Date(f.getFullYear(), f.getMonth() + 1, 0).getDate(); return isoOf(new Date(f.getFullYear(), f.getMonth(), Math.min(p[2], dim))); }
+// Leave rules: under 1 year of service = earn per completed month; 1 year or more = full yearly amount, renewed each anniversary.
+function leaveInfo(e, asOf, ctx){
+  asOf = asOf || today(); ctx = ctx || state;
+  var P = ctx.settings.policy, hired = validISO(e.hired) ? e.hired : null;
+  var months = null, start = "0000-01-01", end = "9999-12-31", eVL = P.annVL, eSL = P.annSL, first = false, next = null;
+  if(hired){
+    months = hired > asOf ? 0 : monthsBetween(hired, asOf);
+    if(months < 12){ first = true; start = hired; next = addMonthsIso(hired, 12); end = next; eVL = Math.min(P.annVL, P.accVL * months); eSL = Math.min(P.annSL, P.accSL * months); }
+    else { var yrs = Math.floor(months / 12); start = addMonthsIso(hired, yrs * 12); next = addMonthsIso(hired, (yrs + 1) * 12); end = next; }
+  }
+  var uVL = 0, uSL = 0;
+  ctx.leaves.forEach(function(l){ if(l.empId === e.id && l.status === "Approved" && l.start >= start && l.start < end){ if(l.type === "Sick") uSL += l.days; else uVL += l.days; } });
+  return { vl:eVL - uVL + (e.vlAdj || 0), sl:eSL - uSL + (e.slAdj || 0), earnedVL:eVL, earnedSL:eSL, usedVL:uVL, usedSL:uSL, first:first, months:months, next:next, hired:hired };
+}
+function balOf(e, type){ var i = leaveInfo(e, null, state); return type === "Sick" ? i.sl : i.vl; }
+// Make today's balance equal `val` by storing the difference as an adjustment.
+function setBalance(e, key, val, ctx){ var i = leaveInfo(e, null, ctx || state); e[key + "Adj"] = Math.round((val - (i[key] - (e[key + "Adj"] || 0))) * 100) / 100; }
 function balName(type){ return type === "Sick" ? "sick" : "vacation"; }
 function matches(e){
   if(ui.q){ var q = ui.q.toLowerCase(); if([e.name, e.position, e.dept, e.email, e.phone].join(" ").toLowerCase().indexOf(q) < 0) return false; }
@@ -469,7 +545,7 @@ function setOptions(sel, items, keep){
 function renderAll(){
   lastDay = today();
   $("#todayLabel").textContent = "Today: " + fmtDate(lastDay) + "  ·  uses this computer's date and time";
-  renderSummary(); renderFilters(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveForm(); renderLeaveList(); renderUndo();
+  renderSummary(); renderFilters(); renderDashboard(); renderEmployees(); renderBoard(); renderHistory(); renderLeaveForm(); renderLeaveList(); renderUndo(); fillPolicy();
   $("#workStart").value = state.settings.workStart;
 }
 function renderSummary(){
@@ -493,10 +569,14 @@ function renderEmployees(){
   var list = state.employees.filter(matches);
   $("#empCount").textContent = "Employees (" + list.length + (list.length !== state.employees.length ? " of " + state.employees.length : "") + ")";
   if(!list.length){ $("#empList").innerHTML = '<div class="empty" style="grid-column:1/-1">' + (state.employees.length ? "No employees match your search or filters." : "No employees yet. Add one above, or import your Excel file from the Import tab.") + "</div>"; return; }
+  var P = state.settings.policy;
   $("#empList").innerHTML = list.map(function(e){
-    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ") || "No position or branch") + "</div></div>" + statusBadge(e.status) + "</div>" +
+    var li = leaveInfo(e), note = "";
+    if(!li.hired) note = "Add the date hired so leave can be calculated.";
+    else if(li.first) note = "New hire: earns " + fmtNum(P.accVL) + " vacation + " + fmtNum(P.accSL) + " sick days per month. Full " + fmtNum(P.annVL) + " / " + fmtNum(P.annSL) + " days from " + fmtDate(li.next) + ".";
+    return '<div class="item"><div class="top"><div><div class="name">' + esc(e.name) + '</div><div class="meta">' + esc([e.position, e.dept].filter(Boolean).join(" · ") || "No position or department") + "</div></div>" + statusBadge(e.status) + "</div>" +
       '<div class="meta" style="margin-top:6px">' + (e.phone ? esc(e.phone) + "<br>" : "") + (e.email ? esc(e.email) + "<br>" : "") + (e.hired ? "Hired " + esc(fmtDate(e.hired)) + "<br>" : "") +
-      "Vacation leave: <b>" + fmtNum(e.vl) + "</b> · Sick leave: <b>" + fmtNum(e.sl) + "</b></div>" +
+      "Vacation leave: <b>" + fmtNum(li.vl) + "</b> · Sick leave: <b>" + fmtNum(li.sl) + "</b></div>" + (note ? '<div class="hint">' + esc(note) + "</div>" : "") +
       '<div class="actions"><button class="btn alt small" data-action="editEmp" data-id="' + esc(e.id) + '" type="button">Edit</button><button class="btn danger small" data-action="delEmp" data-id="' + esc(e.id) + '" type="button">Delete</button></div></div>';
   }).join("");
 }
@@ -553,13 +633,106 @@ function renderUndo(){
   box.innerHTML = "<h2>Last import</h2><p style=\"margin:0 0 8px\">" + esc(state.undo.label) + "</p><button class=\"btn danger\" data-action=\"undoImport\" type=\"button\">Undo last import</button>";
 }
 
+/* ---------- dashboard ---------- */
+function hbars(rows){
+  var max = Math.max.apply(null, rows.map(function(r){ return r[1]; }).concat([1]));
+  return rows.map(function(r){ return '<div class="hrow"><span class="lbl" title="' + esc(r[0]) + '">' + esc(r[0]) + '</span><span class="track"><span class="fill" style="width:' + (r[1] / max * 100) + '%"></span></span><span class="val">' + r[1] + "</span></div>"; }).join("");
+}
+function rangeText(l){ return fmtDate(l.start) + (l.end !== l.start ? " to " + fmtDate(l.end) : ""); }
+function renderDashboard(){
+  var box = $("#dash"), t = today(), act = activeEmps();
+  if(!state.employees.length){ box.innerHTML = '<div class="empty">No employees yet. Add some on the Employees tab, or import your Excel file from the Import tab.</div>'; return; }
+  var c = { "Present":0, "Late":0, "On leave":0, "Absent":0, "Not in yet":0 };
+  act.forEach(function(e){ c[statusToday(e).label]++; });
+  var worked = c.Present + c.Late, expected = act.length - c["On leave"];
+  var rate = expected > 0 ? Math.round(worked / expected * 100) + "%" : "—";
+  var month = t.slice(0, 7), lateMonth = state.attendance.filter(function(a){ return a.late && a.date.slice(0, 7) === month; }).length;
+  var segs = [["Present", "#1B7A3A"], ["Late", "#C77700"], ["On leave", "#1F5FA8"], ["Absent", "#B3261E"], ["Not in yet", "#8D9484"]];
+  var bar = act.length ? '<div class="stackbar" role="img" aria-label="Today: ' + segs.map(function(g){ return c[g[0]] + " " + g[0].toLowerCase(); }).join(", ") + '">' +
+    segs.filter(function(g){ return c[g[0]] > 0; }).map(function(g){ return '<span style="flex:' + c[g[0]] + ";background:" + g[1] + '"></span>'; }).join("") + "</div>" : '<div class="empty">No active employees.</div>';
+  var legend = '<ul class="legend">' + segs.map(function(g){ return '<li><span class="sw" style="background:' + g[1] + '"></span>' + g[0] + " <b>" + c[g[0]] + "</b></li>"; }).join("") + "</ul>";
+
+  // last 14 days
+  var days = []; for(var i = 13; i >= 0; i--) days.push(addDays(t, -i));
+  var rows = days.map(function(d){ var on = 0, late = 0; state.attendance.forEach(function(a){ if(a.date === d && empById(a.empId)){ if(a.late) late++; else on++; } }); return { d:d, on:on, late:late }; });
+  var W = 600, H = 210, ml = 30, mr = 8, mt = 12, mb = 40, pw = W - ml - mr, ph = H - mt - mb;
+  var maxV = Math.max(1, Math.max.apply(null, rows.map(function(r){ return r.on + r.late; })));
+  var band = pw / rows.length, bw = Math.min(26, band * 0.62), ticks = maxV > 1 ? [0, Math.round(maxV / 2), maxV] : [0, 1];
+  var svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="Attendance for the last 14 days, on time and late">';
+  ticks.forEach(function(v){ var y = mt + ph - v / maxV * ph; svg += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y + '" y2="' + y + '" stroke="#DDE0D4" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 3) + '" text-anchor="end" font-size="10" fill="#5d625a">' + v + "</text>"; });
+  rows.forEach(function(r, k){
+    var x = ml + band * k + (band - bw) / 2, hOn = r.on / maxV * ph, hLate = r.late / maxV * ph, yOn = mt + ph - hOn, yLate = yOn - hLate - (r.on && r.late ? 2 : 0);
+    var p = r.d.split("-").map(Number), wd = new Date(p[0], p[1] - 1, p[2]).getDay(), isT = r.d === t;
+    svg += "<g><title>" + esc(fmtDate(r.d)) + ": " + r.on + " on time, " + r.late + " late</title>" +
+      (r.on ? '<rect x="' + x + '" y="' + yOn + '" width="' + bw + '" height="' + hOn + '" rx="3" fill="#1B7A3A"/>' : "") +
+      (r.late ? '<rect x="' + x + '" y="' + yLate + '" width="' + bw + '" height="' + hLate + '" rx="3" fill="#C77700"/>' : "") +
+      '<rect x="' + (ml + band * k) + '" y="' + mt + '" width="' + band + '" height="' + ph + '" fill="transparent"/>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (H - 22) + '" text-anchor="middle" font-size="10" fill="#161616"' + (isT ? ' font-weight="700"' : "") + ">" + p[2] + "</text>" +
+      '<text x="' + (x + bw / 2) + '" y="' + (H - 9) + '" text-anchor="middle" font-size="9" fill="#5d625a">' + "SMTWTFS".charAt(wd) + "</text></g>";
+  });
+  svg += "</svg>";
+  var tbl = '<details><summary>View as a table</summary><div class="tablewrap"><table><thead><tr><th>Date</th><th>On time</th><th>Late</th></tr></thead><tbody>' +
+    rows.slice().reverse().map(function(r){ return "<tr><td>" + esc(fmtDate(r.d)) + "</td><td>" + r.on + "</td><td>" + r.late + "</td></tr>"; }).join("") + "</tbody></table></div></details>";
+
+  // headcount
+  var byDept = {}; act.forEach(function(e){ var k = e.dept || "Unassigned"; byDept[k] = (byDept[k] || 0) + 1; });
+  var deptRows = Object.keys(byDept).map(function(k){ return [k, byDept[k]]; }).sort(function(a, b){ return b[1] - a[1] || (a[0] < b[0] ? -1 : 1); });
+  var statRows = STATUSES.map(function(st){ return [st, state.employees.filter(function(e){ return e.status === st; }).length]; });
+
+  // leave lists
+  var pend = state.leaves.filter(function(l){ return l.status === "Pending"; }).sort(function(a, b){ return a.start < b.start ? -1 : 1; });
+  var pendHtml = pend.length ? '<ul class="dl">' + pend.slice(0, 6).map(function(l){ var e = empById(l.empId);
+    return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + " · " + l.days + ' day(s)</div></div><div class="actions" style="margin:0"><button class="btn small" type="button" data-action="approve" data-id="' + esc(l.id) + '">Approve</button><button class="btn danger small" type="button" data-action="decline" data-id="' + esc(l.id) + '">Decline</button></div></li>'; }).join("") + "</ul>" + (pend.length > 6 ? '<p class="hint">+ ' + (pend.length - 6) + " more on the Leave tab.</p>" : "") : '<div class="empty">No pending requests.</div>';
+  var end14 = addDays(t, 14);
+  var off = state.leaves.filter(function(l){ return l.status === "Approved" && l.end >= t && l.start <= end14 && empById(l.empId); }).sort(function(a, b){ return a.start < b.start ? -1 : 1; });
+  var offHtml = off.length ? '<ul class="dl">' + off.map(function(l){ var e = empById(l.empId); return "<li><div><b>" + esc(e.name) + '</b><div class="meta">' + esc(l.type) + " · " + esc(rangeText(l)) + "</div></div>" + (l.start <= t ? '<span class="badge b-leave">Off today</span>' : "") + "</li>"; }).join("") + "</ul>" : '<div class="empty">No one is scheduled to be off.</div>';
+  var lateBy = {}; state.attendance.forEach(function(a){ if(a.late && a.date.slice(0, 7) === month && empById(a.empId)) lateBy[a.empId] = (lateBy[a.empId] || 0) + 1; });
+  var lateRows = Object.keys(lateBy).map(function(id){ return [empById(id).name, lateBy[id]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5);
+  var low = [], soon = [];
+  act.forEach(function(e){ var li = leaveInfo(e);
+    if(li.first && li.next){ var dd = Math.round((utcMs(li.next) - utcMs(t)) / 864e5); if(dd <= 60) soon.push({ e:e, date:li.next, dd:dd }); }
+    else if(li.vl <= 2 || li.sl <= 2) low.push({ e:e, li:li }); });
+  soon.sort(function(a, b){ return a.dd - b.dd; });
+  var watch = "<h3 style=\"margin-top:0\">Low balance (2 days or less)</h3>" + (low.length ? '<ul class="dl">' + low.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">Vacation ' + fmtNum(x.li.vl) + " · Sick " + fmtNum(x.li.sl) + "</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>') +
+    "<h3>Reaching 1 year soon (next 60 days)</h3>" + (soon.length ? '<ul class="dl">' + soon.map(function(x){ return "<li><b>" + esc(x.e.name) + '</b><span class="meta">' + esc(fmtDate(x.date)) + " (in " + x.dd + " day" + (x.dd === 1 ? "" : "s") + ")</span></li>"; }).join("") + "</ul>" : '<p class="hint">No one.</p>');
+
+  box.innerHTML = '<div class="dgrid">' +
+    '<div class="card span2"><h2>Today at a glance</h2>' + bar + legend + '<div class="kpis"><div><b>' + rate + "</b><span>Attendance rate today (excluding people on leave)</span></div><div><b>" + lateMonth + "</b><span>Late arrivals this month</span></div></div></div>" +
+    '<div class="card span2"><h2>Attendance — last 14 days</h2>' + svg + '<ul class="legend"><li><span class="sw" style="background:#1B7A3A"></span>On time</li><li><span class="sw" style="background:#C77700"></span>Late</li></ul>' + tbl + "</div>" +
+    '<div class="card"><h2>Active employees by department</h2>' + (deptRows.length ? hbars(deptRows) : '<div class="empty">No active employees.</div>') + "</div>" +
+    '<div class="card"><h2>Employees by status</h2>' + hbars(statRows) + "</div>" +
+    '<div class="card"><h2>Pending leave requests</h2>' + pendHtml + "</div>" +
+    '<div class="card"><h2>Who is off (next 14 days)</h2>' + offHtml + "</div>" +
+    '<div class="card"><h2>Most late arrivals this month</h2>' + (lateRows.length ? hbars(lateRows) : '<div class="empty">No late arrivals this month.</div>') + "</div>" +
+    '<div class="card"><h2>Leave watch</h2>' + watch + "</div></div>";
+}
+function fillPolicy(){
+  var P = state.settings.policy;
+  [["p_annVL", "annVL"], ["p_annSL", "annSL"], ["p_accVL", "accVL"], ["p_accSL", "accSL"]].forEach(function(x){ var el = $("#" + x[0]); if(document.activeElement !== el) el.value = P[x[1]]; });
+}
+function savePolicy(){
+  var P = state.settings.policy;
+  P.annVL = numOr($("#p_annVL").value, P.annVL); P.annSL = numOr($("#p_annSL").value, P.annSL);
+  P.accVL = numOr($("#p_accVL").value, P.accVL); P.accSL = numOr($("#p_accSL").value, P.accSL);
+  save(); renderAll(); updateBalPreview(); toast("Leave policy updated.");
+}
+
 /* ---------- employees ---------- */
+function updateBalPreview(){
+  var box = $("#f_balinfo"), hired = $("#f_hired").value;
+  if(!hired){ box.textContent = "Leave balance: add the date hired and it will be calculated automatically."; return; }
+  var tmp = { id:ui.editId || "__new__", hired:hired, vlAdj:numAny($("#f_vladj").value), slAdj:numAny($("#f_sladj").value) };
+  var li = leaveInfo(tmp), P = state.settings.policy;
+  box.textContent = "Leave balance today — Vacation: " + fmtNum(li.vl) + ", Sick: " + fmtNum(li.sl) +
+    (li.first ? " (new hire: " + fmtNum(P.accVL) + " vacation + " + fmtNum(P.accSL) + " sick per month, full " + fmtNum(P.annVL) + " / " + fmtNum(P.annSL) + " after 1 year)." : " (" + fmtNum(P.annVL) + " vacation + " + fmtNum(P.annSL) + " sick per year).");
+}
 function resetEmpForm(){
   ui.editId = null;
-  ["f_name","f_position","f_dept","f_phone","f_email","f_hired"].forEach(function(id){ $("#" + id).value = ""; });
-  $("#f_status").value = "Regular"; $("#f_vl").value = DEFAULT_VL; $("#f_sl").value = DEFAULT_SL;
+  ["f_name","f_position","f_dept","f_phone","f_email","f_hired","f_vladj","f_sladj"].forEach(function(id){ $("#" + id).value = ""; });
+  $("#f_status").value = "Regular";
   $("#empFormTitle").textContent = "Add employee"; $("#empSubmit").textContent = "Add employee"; $("#empCancel").hidden = true;
   $("#f_name_err").hidden = $("#f_email_err").hidden = true;
+  updateBalPreview();
 }
 function submitEmp(ev){
   ev.preventDefault();
@@ -569,7 +742,7 @@ function submitEmp(ev){
   if(email && !/^\S+@\S+\.\S+$/.test(email)){ $("#f_email_err").textContent = "That email doesn't look right."; $("#f_email_err").hidden = false; ok = false; }
   if(!ok){ (name ? $("#f_email") : $("#f_name")).focus(); return; }
   var rec = { name:name, position:str($("#f_position").value), dept:str($("#f_dept").value), phone:str($("#f_phone").value), email:email,
-    hired:$("#f_hired").value || "", status:$("#f_status").value, vl:numOr($("#f_vl").value, 0), sl:numOr($("#f_sl").value, 0) };
+    hired:$("#f_hired").value || "", status:$("#f_status").value, vlAdj:numAny($("#f_vladj").value), slAdj:numAny($("#f_sladj").value) };
   if(ui.editId){ var e = empById(ui.editId); if(e) Object.keys(rec).forEach(function(k){ e[k] = rec[k]; }); toast("Saved changes to " + name + "."); }
   else { rec.id = uid(); state.employees.push(rec); toast(name + " was added."); }
   save(); resetEmpForm(); renderAll();
@@ -578,8 +751,9 @@ function editEmp(id){
   var e = empById(id); if(!e) return;
   ui.editId = id;
   $("#f_name").value = e.name; $("#f_position").value = e.position; $("#f_dept").value = e.dept; $("#f_phone").value = e.phone; $("#f_email").value = e.email;
-  $("#f_hired").value = e.hired; $("#f_status").value = e.status; $("#f_vl").value = e.vl; $("#f_sl").value = e.sl;
+  $("#f_hired").value = e.hired; $("#f_status").value = e.status; $("#f_vladj").value = e.vlAdj || ""; $("#f_sladj").value = e.slAdj || "";
   $("#empFormTitle").textContent = "Edit employee"; $("#empSubmit").textContent = "Save changes"; $("#empCancel").hidden = false;
+  updateBalPreview();
   $("#empForm").scrollIntoView({ behavior:"smooth", block:"start" }); $("#f_name").focus();
 }
 function delEmp(id){
@@ -632,7 +806,6 @@ function decide(id, approve){
   if(approve){
     var bal = balOf(e, l.type);
     if(l.days > bal){ toast("Can't approve: " + e.name + " only has " + fmtNum(bal) + " " + balName(l.type) + " day(s) left, but this request needs " + l.days + ".", "warn"); return; }
-    if(l.type === "Sick") e.sl = bal - l.days; else e.vl = bal - l.days;
     l.status = "Approved";
   } else l.status = "Declined";
   save(); renderAll(); toast("Request " + l.status.toLowerCase() + ".");
@@ -641,7 +814,7 @@ function decide(id, approve){
 /* ---------- exports ---------- */
 function exportEmployees(){
   download("employees-" + today() + ".csv", toCSV(["Name","Position","Department/Branch","Contact number","Email","Date hired","Employment status","Vacation leave balance","Sick leave balance"],
-    state.employees.map(function(e){ return [e.name, e.position, e.dept, e.phone, e.email, e.hired, e.status, e.vl, e.sl]; })));
+    state.employees.map(function(e){ var li = leaveInfo(e); return [e.name, e.position, e.dept, e.phone, e.email, e.hired, e.status, li.vl, li.sl]; })));
 }
 function exportAttendance(){
   download("attendance-" + today() + ".csv", toCSV(["Date","Employee","Department/Branch","Time in","Time out","Result"],
@@ -797,8 +970,8 @@ var EMP_FIELDS = [
   { key:"email", label:"Email", alias:["email","emailaddress","emailadd","mail"] },
   { key:"hired", label:"Date hired", alias:["datehired","hiredate","hired","dateofhire","datestarted","startdate","dateofhiring","datejoined"] },
   { key:"status", label:"Employment status", alias:["employmentstatus","status","employeestatus","employmenttype"] },
-  { key:"vl", label:"Vacation leave balance", alias:["vacationleavebalance","vacationleave","vlbalance","vl","vacationbalance","vacation","vacationleaves"] },
-  { key:"sl", label:"Sick leave balance", alias:["sickleavebalance","sickleave","slbalance","sl","sickbalance","sick","sickleaves"] }
+  { key:"vl", label:"Vacation leave balance (optional)", alias:["vacationleavebalance","vacationleave","vlbalance","vl","vacationbalance","vacation","vacationleaves"] },
+  { key:"sl", label:"Sick leave balance (optional)", alias:["sickleavebalance","sickleave","slbalance","sl","sickbalance","sick","sickleaves"] }
 ];
 var ATT_FIELDS = [
   { key:"name", label:"Employee name", req:true, alias:["name","employee","employeename","fullname","staffname","staff"] },
@@ -817,25 +990,31 @@ function impReset(keepResult){
 function loadImportFile(file){
   if(!file) return;
   impReset(false);
-  var name = file.name || "", lower = name.toLowerCase();
   if(file.size > MAX_FILE){ impError("That file is too big (over 10 MB). Please import a smaller file."); return; }
   if(file.size === 0){ impError("That file is empty."); return; }
-  file.arrayBuffer().then(function(buf){
-    var head = new Uint8Array(buf.slice(0, 4));
-    var isZip = head[0] === 0x50 && head[1] === 0x4B, isOle = head[0] === 0xD0 && head[1] === 0xCF && head[2] === 0x11 && head[3] === 0xE0;
-    if(isOle){ impError("This looks like an old Excel file (.xls) or a password-protected file. Please open it in Excel, remove any password, then use Save As > Excel Workbook (.xlsx) or CSV and upload that."); return; }
-    if(lower.slice(-4) === ".xls"){ impError("Old .xls files are not supported. Please open it in Excel and use Save As > Excel Workbook (.xlsx) or CSV."); return; }
-    if(isZip){
-      if(typeof DecompressionStream === "undefined"){ impError("This browser can't open .xlsx files. Please use the latest Chrome, or save the file as CSV in Excel and upload that."); return; }
-      return readXlsx(buf).then(function(sheets){ startImport(name, sheets); });
-    }
-    if(lower.slice(-5) === ".xlsx"){ impError("I couldn't read that .xlsx file. It may be damaged. Try opening it in Excel and saving it again, or save it as CSV."); return; }
-    var text = new TextDecoder("utf-8").decode(buf);
-    if(text.indexOf("\u0000") >= 0){ impError("I couldn't read that file. Please upload a .xlsx or .csv file."); return; }
-    startImport(name, [{ name:"CSV", rows:parseCSV(text) }]);
-  }).catch(function(e){
-    impError("I couldn't read that file. It may be damaged or password-protected. Try saving it again from Excel as .xlsx or CSV.");
-  });
+  file.arrayBuffer().then(function(buf){ return importBuffer(buf, file.name || ""); })
+    .catch(function(){ impError("I couldn't read that file. It may be damaged or password-protected. Try saving it again from Excel as .xlsx or CSV."); });
+}
+// Reads a spreadsheet from memory. Resolves "ok", "html" (a web page came back instead of a file) or "error".
+function importBuffer(buf, name){
+  var lower = (name || "").toLowerCase();
+  if(buf.byteLength > MAX_FILE){ impError("That file is too big (over 10 MB). Please import a smaller file."); return Promise.resolve("error"); }
+  if(!buf.byteLength){ impError("That file is empty."); return Promise.resolve("error"); }
+  var head = new Uint8Array(buf.slice(0, 4));
+  var isZip = head[0] === 0x50 && head[1] === 0x4B, isOle = head[0] === 0xD0 && head[1] === 0xCF && head[2] === 0x11 && head[3] === 0xE0;
+  if(isOle){ impError("This looks like an old Excel file (.xls) or a password-protected file. Please open it in Excel, remove any password, then use Save As > Excel Workbook (.xlsx) or CSV and upload that."); return Promise.resolve("error"); }
+  if(lower.slice(-4) === ".xls"){ impError("Old .xls files are not supported. Please open it in Excel and use Save As > Excel Workbook (.xlsx) or CSV."); return Promise.resolve("error"); }
+  if(isZip){
+    if(typeof DecompressionStream === "undefined"){ impError("This browser can't open .xlsx files. Please use the latest Chrome, or save the file as CSV in Excel and upload that."); return Promise.resolve("error"); }
+    return readXlsx(buf).then(function(sheets){ startImport(name, sheets); return "ok"; })
+      .catch(function(){ impError("I couldn't read that .xlsx file. It may be damaged or password-protected. Try opening it in Excel and saving it again, or save it as CSV."); return "error"; });
+  }
+  if(lower.slice(-5) === ".xlsx"){ impError("I couldn't read that .xlsx file. It may be damaged. Try opening it in Excel and saving it again, or save it as CSV."); return Promise.resolve("error"); }
+  var text = new TextDecoder("utf-8").decode(buf);
+  if(/^\s*<(!doctype|html)/i.test(text)){ impError("That is a web page, not a spreadsheet."); return Promise.resolve("html"); }
+  if(text.indexOf("\u0000") >= 0){ impError("I couldn't read that file. Please upload a .xlsx or .csv file."); return Promise.resolve("error"); }
+  startImport(name || "file", [{ name:"CSV", rows:parseCSV(text) }]);
+  return Promise.resolve("ok");
 }
 function startImport(name, sheets){
   var usable = sheets.filter(function(s){ return s.rows.some(function(r){ return r.some(function(c){ return str(c) !== ""; }); }); });
@@ -876,7 +1055,6 @@ function buildMapping(){
 function recompute(){
   if(!imp) return;
   var type = $("#impType").value, rows = imp.rows, res = [];
-  var defVL = numOr($("#impVL").value, DEFAULT_VL), defSL = numOr($("#impSL").value, DEFAULT_SL);
   function get(r, key){ var i = imp.map[key]; return i >= 0 && r[i] != null ? str(r[i]) : ""; }
   var seen = {};
   if(type === "employees"){
@@ -892,7 +1070,7 @@ function recompute(){
       if((v = get(r, "status"))){ rec.status = normStatus(v); if(!rec.status) errs.push('Employment status "' + v + '" not recognized (use Probationary, Regular, Contractual or Resigned)'); }
       if((v = get(r, "vl"))){ rec.vl = parseFloat(v); if(!(rec.vl >= 0)) errs.push('Vacation balance "' + v + '" is not a number'); }
       if((v = get(r, "sl"))){ rec.sl = parseFloat(v); if(!(rec.sl >= 0)) errs.push('Sick balance "' + v + '" is not a number'); }
-      var item = { n:i + 1, rec:rec, cells:[rec.name, rec.position, rec.dept, rec.email, rec.hired ? fmtDate(rec.hired) : "", rec.status || "Regular", rec.vl != null ? fmtNum(rec.vl) : fmtNum(defVL), rec.sl != null ? fmtNum(rec.sl) : fmtNum(defSL)] };
+      var item = { n:i + 1, rec:rec, cells:[rec.name, rec.position, rec.dept, rec.email, rec.hired ? fmtDate(rec.hired) : "", rec.status || "Regular", rec.vl != null ? fmtNum(rec.vl) : "auto", rec.sl != null ? fmtNum(rec.sl) : "auto"] };
       if(errs.length){ item.status = "error"; item.msg = errs.join("; "); }
       else {
         var key = rec.email ? "e:" + rec.email.toLowerCase() : "n:" + rec.name.toLowerCase();
@@ -905,7 +1083,7 @@ function recompute(){
       }
       res.push(item);
     }
-    imp.heads = ["Name","Position","Branch","Email","Date hired","Status","VL","SL"];
+    imp.heads = ["Name","Position","Department","Email","Date hired","Status","VL balance","SL balance"];
   } else {
     var byNm = {}, existing = {};
     state.employees.forEach(function(e){ var k = e.name.toLowerCase(); (byNm[k] = byNm[k] || []).push(e); });
@@ -955,7 +1133,7 @@ function renderPreview(){
 }
 function applyImport(){
   if(!imp) return;
-  var type = $("#impType").value, update = $("#impDup").value === "update", defVL = numOr($("#impVL").value, DEFAULT_VL), defSL = numOr($("#impSL").value, DEFAULT_SL);
+  var type = $("#impType").value, update = $("#impDup").value === "update";
   var todo = imp.results.filter(function(r){ return r.status === "ok" || (r.status === "dup" && !r.fileDup && update); });
   if(!todo.length){ toast("There is nothing to import.", "warn"); return; }
   var snap = JSON.parse(JSON.stringify({ employees:state.employees, attendance:state.attendance, leaves:state.leaves }));
@@ -965,10 +1143,16 @@ function applyImport(){
       var rec = r.rec;
       if(type === "employees"){
         if(r.status === "ok"){
-          state.employees.push({ id:uid(), name:rec.name, position:rec.position, dept:rec.dept, phone:rec.phone, email:rec.email, hired:rec.hired || "", status:rec.status || "Regular", vl:rec.vl != null ? rec.vl : defVL, sl:rec.sl != null ? rec.sl : defSL }); added++;
+          var ne = { id:uid(), name:rec.name, position:rec.position, dept:rec.dept, phone:rec.phone, email:rec.email, hired:rec.hired || "", status:rec.status || "Regular", vlAdj:0, slAdj:0 };
+          if(rec.vl != null) setBalance(ne, "vl", rec.vl);
+          if(rec.sl != null) setBalance(ne, "sl", rec.sl);
+          state.employees.push(ne); added++;
         } else {
           var e = empById(r.existingId); if(!e) return;
-          ["name","position","dept","phone","email","hired","status","vl","sl"].forEach(function(k){ if(rec[k] !== undefined && rec[k] !== "" && rec[k] !== null) e[k] = rec[k]; }); updated++;
+          ["name","position","dept","phone","email","hired","status"].forEach(function(k){ if(rec[k] !== undefined && rec[k] !== "" && rec[k] !== null) e[k] = rec[k]; });
+          if(rec.vl != null) setBalance(e, "vl", rec.vl);
+          if(rec.sl != null) setBalance(e, "sl", rec.sl);
+          updated++;
         }
       } else {
         var late = rec.timeIn > state.settings.workStart;
@@ -996,27 +1180,83 @@ function undoImport(){
 function template(){
   var t = $("#impType").value;
   if(t === "attendance") download("attendance-template.csv", toCSV(["Name","Date","Time in","Time out"], [["Juan Sample", today(), "07:55", "17:00"]]));
-  else download("employees-template.csv", toCSV(["Name","Position","Department/Branch","Contact number","Email","Date hired","Employment status","Vacation leave balance","Sick leave balance"], [["Juan Sample","Barista","Downtown Branch","09170000000","juan@example.com","2024-01-15","Regular","10","5"]]));
+  else download("employees-template.csv", toCSV(["Name","Position","Department/Branch","Contact number","Email","Date hired","Employment status","Vacation leave balance","Sick leave balance"], [["Juan Sample","Engineer","Engineering","09170000000","juan@example.com","2024-01-15","Regular","",""]]));
+}
+
+/* ---------- SharePoint link import ---------- */
+function toDirectUrl(raw){
+  var u; try { u = new URL(raw); } catch(e){ return null; }
+  var m = /^(.*)\/_layouts\/15\/(?:Doc|WopiFrame)\.aspx$/i.exec(u.pathname), sd = u.searchParams.get("sourcedoc");
+  if(m && sd) return u.origin + m[1] + "/_layouts/15/download.aspx?UniqueId=" + encodeURIComponent(sd.replace(/[{}]/g, ""));
+  u.searchParams.delete("web"); u.searchParams.set("download", "1");
+  return u.toString();
+}
+function nameFromUrl(raw){
+  try { var last = decodeURIComponent(new URL(raw).pathname.split("/").pop() || ""); return /\.(xlsx|csv|xls)$/i.test(last) ? last : "SharePoint file"; } catch(e){ return "SharePoint file"; }
+}
+function spMsg(text, kind){ var b = $("#spMsg"); b.textContent = text || ""; b.className = "msg " + (kind || "info"); b.hidden = !text; }
+function spNeedsSignIn(){
+  impError("");
+  if(window.egisBridge){ spMsg("SharePoint wants you to sign in first. Click \"Sign in to Microsoft\", sign in, close that window, then click \"Get file from link\" again.", "warn"); $("#spSign").hidden = false; }
+  else spMsg("SharePoint asked for a sign-in, and a normal browser tab can't do that for this page. Download the file from SharePoint and upload it above, or use the EGIS HR Windows app, which can sign in and read the link directly.", "warn");
+}
+function spFetch(){
+  var raw = str($("#spUrl").value);
+  $("#spSign").hidden = true; impReset(false);
+  if(!raw){ spMsg("Paste the link to your Excel file first.", "warn"); return; }
+  var direct = toDirectUrl(raw);
+  if(!direct || !/^https?:$/.test(new URL(direct).protocol)){ spMsg("That doesn't look like a valid link. It should start with https://", "warn"); return; }
+  spMsg("Getting the file...", "info"); $("#spFetch").disabled = true;
+  var p;
+  if(window.egisBridge){
+    p = window.egisBridge.fetchUrl(direct).then(function(r){
+      if(!r || r.error) throw new Error((r && r.error) || "no answer");
+      var u8 = r.data; return { buf:u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength), name:r.filename || nameFromUrl(raw), status:r.status, ok:r.ok };
+    });
+  } else {
+    p = fetch(direct, { credentials:"include" }).then(function(r){ return r.arrayBuffer().then(function(b){ return { buf:b, name:nameFromUrl(raw), status:r.status, ok:r.ok }; }); });
+  }
+  p.then(function(r){
+    if(!r.ok){
+      if(r.status === 401 || r.status === 403 || r.status === 302){ spNeedsSignIn(); return; }
+      spMsg("SharePoint answered with an error (code " + r.status + "). Check that the link is correct and shared with you.", "err"); return;
+    }
+    return importBuffer(r.buf, r.name).then(function(res){
+      if(res === "html"){ spNeedsSignIn(); return; }
+      if(res === "ok"){ spMsg("File received. Check the column matching and preview below, then confirm the import.", "good"); state.settings.spUrl = raw; save(); }
+      else spMsg("", "info");
+    });
+  }).catch(function(err){
+    if(window.egisBridge) spMsg("I couldn't reach that link (" + (err && err.message ? err.message : "no connection") + "). Check the link and your internet connection.", "err");
+    else spMsg("This browser blocked the request (a security rule on SharePoint). Download the file from SharePoint and upload it above, or use the EGIS HR Windows app, which can read the link directly.", "err");
+  }).then(function(){ $("#spFetch").disabled = false; });
+}
+function spSignIn(){
+  var raw = str($("#spUrl").value); if(!raw || !window.egisBridge) return;
+  window.egisBridge.signIn(raw).then(function(r){
+    if(r && r.error){ spMsg(r.error, "err"); return; }
+    spFetch();
+  });
 }
 
 /* ---------- data tab ---------- */
 function loadSample(){
   ask("Load the sample data? This replaces everything currently in the app.", "Yes, load sample").then(function(yes){
-    if(!yes) return; state = sampleState(); save(); resetEmpForm(); impReset(false); renderAll(); toast("Sample data loaded.");
+    if(!yes) return; var pol = state.settings.policy; state = sampleState(); state.settings.policy = pol; save(); resetEmpForm(); impReset(false); renderAll(); toast("Sample data loaded.");
   });
 }
 function clearAll(){
   ask("Clear ALL data (employees, attendance and leave)? Consider downloading a backup first. This can't be undone.", "Yes, clear everything").then(function(yes){
-    if(!yes) return; state = cleanState({ employees:[] }, false); save(); resetEmpForm(); impReset(false); renderAll(); toast("All data was cleared.");
+    if(!yes) return; state = cleanState({ employees:[], settings:{ policy:state.settings.policy } }, false); save(); resetEmpForm(); impReset(false); renderAll(); toast("All data was cleared.");
   });
 }
 
 /* ---------- tabs & events ---------- */
 function showTab(name){
   ui.tab = name;
-  ["employees","attendance","leave","import","data"].forEach(function(t){ $("#tab-" + t).hidden = t !== name; });
+  ["dashboard","employees","attendance","leave","import","data"].forEach(function(t){ $("#tab-" + t).hidden = t !== name; });
   Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.setAttribute("aria-selected", b.getAttribute("data-tab") === name ? "true" : "false"); });
-  $("#filters").hidden = name === "import" || name === "data";
+  $("#filters").hidden = name === "dashboard" || name === "import" || name === "data";
   renderAll();
 }
 var actions = {
@@ -1024,7 +1264,7 @@ var actions = {
   approve:function(id){ decide(id, true); }, decline:function(id){ decide(id, false); },
   delAtt:function(id){ ask("Remove this attendance record?", "Yes, remove").then(function(y){ if(y){ state.attendance = state.attendance.filter(function(a){ return a.id !== id; }); save(); renderAll(); } }); },
   exportEmployees:exportEmployees, exportAttendance:exportAttendance, exportLeave:exportLeave,
-  backup:backup, loadSample:loadSample, clearAll:clearAll, template:template, impConfirm:applyImport, impCancel:function(){ impReset(false); }, undoImport:undoImport
+  backup:backup, loadSample:loadSample, clearAll:clearAll, spFetch:spFetch, spSignIn:spSignIn, template:template, impConfirm:applyImport, impCancel:function(){ impReset(false); }, undoImport:undoImport
 };
 function init(){
   state = load();
@@ -1053,8 +1293,12 @@ function init(){
   $("#impSheet").addEventListener("change", function(){ if(imp){ imp.sheetIdx = +this.value; buildMapping(); } });
   $("#impMap").addEventListener("change", function(e){ var k = e.target.getAttribute("data-map"); if(k && imp){ imp.map[k] = +e.target.value; recompute(); } });
   $("#impDup").addEventListener("change", function(){ if(imp) renderPreview(); });
-  $("#impVL").addEventListener("input", function(){ if(imp) recompute(); });
-  $("#impSL").addEventListener("input", function(){ if(imp) recompute(); });
+  ["f_hired","f_vladj","f_sladj"].forEach(function(id){ $("#" + id).addEventListener("input", updateBalPreview); });
+  ["p_annVL","p_annSL","p_accVL","p_accSL"].forEach(function(id){ $("#" + id).addEventListener("change", savePolicy); });
+  $("#spUrl").value = state.settings.spUrl || "";
+  $("#spNote").textContent = window.egisBridge
+    ? "Paste the sharing link of your Excel file on SharePoint. If SharePoint asks you to sign in, a Microsoft sign-in window will open and the app remembers it for next time."
+    : "Paste the sharing link of your Excel file. Note: a normal browser tab is blocked from reading SharePoint links by a browser security rule. The EGIS HR Windows app can do it. In a browser, download the file from SharePoint and upload it above instead.";
   var drop = $("#drop");
   ["dragenter","dragover"].forEach(function(n){ drop.addEventListener(n, function(e){ e.preventDefault(); drop.classList.add("over"); }); });
   ["dragleave","drop"].forEach(function(n){ drop.addEventListener(n, function(e){ e.preventDefault(); drop.classList.remove("over"); }); });
@@ -1063,7 +1307,7 @@ function init(){
   // stop the browser from opening a file dropped outside the drop zone
   ["dragover","drop"].forEach(function(n){ window.addEventListener(n, function(e){ if(!e.target.closest || !e.target.closest("#drop")) e.preventDefault(); }); });
 
-  showTab("employees");
+  showTab("dashboard");
   setInterval(function(){ if(today() !== lastDay) renderAll(); else if(ui.tab === "attendance") { renderBoard(); renderSummary(); } }, 30000);
 }
 init();

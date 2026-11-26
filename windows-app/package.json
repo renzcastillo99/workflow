@@ -1,9 +1,9 @@
 {
-  "name": "cafe-hr",
+  "name": "egis-hr",
   "version": "1.0.0",
-  "description": "Cafe HR - employees, attendance and leave",
+  "description": "EGIS HR - employees, attendance and leave",
   "main": "main.js",
-  "author": "Cafe HR",
+  "author": "EGIS",
   "private": true,
   "scripts": {
     "sync": "node scripts/sync.js",
@@ -11,13 +11,30 @@
     "dist": "npm run sync && electron-builder --win --x64 --publish never"
   },
   "build": {
-    "appId": "com.cafehr.app",
-    "productName": "Cafe HR",
-    "artifactName": "CafeHR-${version}-${target}.${ext}",
-    "directories": { "output": "dist" },
-    "files": ["main.js", "app/**", "icon.png"],
-    "win": { "target": ["nsis", "portable"], "icon": "icon.png" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+    "appId": "com.egis.hr",
+    "productName": "EGIS HR",
+    "artifactName": "EGISHR-${version}-${target}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**",
+      "icon.png"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
   },
   "devDependencies": {
     "electron": "^33.2.0",
