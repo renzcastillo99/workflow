@@ -1,0 +1,19 @@
+# Shared synthetic "client source" database. READ-ONLY role is what BI engines use.
+name: if-data
+services:
+  data-pg:
+    image: postgres:16-alpine
+    container_name: if-data-pg
+    environment:
+      POSTGRES_USER: insightflow_admin
+      POSTGRES_PASSWORD: ${DATA_PG_ADMIN_PASSWORD:?run scripts/init_env.sh}
+      POSTGRES_DB: clientdata
+    command: ["postgres","-c","shared_buffers=1GB","-c","work_mem=64MB","-c","max_connections=200"]
+    ports: ["127.0.0.1:15432:5432"]   # loopback only
+    networks: [ifnet]
+    volumes: [datapg:/var/lib/postgresql/data]
+volumes: { datapg: {} }
+networks:
+  ifnet:
+    name: ifnet
+    external: true

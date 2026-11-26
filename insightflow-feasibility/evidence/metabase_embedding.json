@@ -1,0 +1,200 @@
+[
+  {
+    "tc": "TC-07",
+    "check": "portal-signed token opens ASSIGNED dashboard with no Metabase session",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:36+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "embedded KPI card returns independent value (fixture revenue 300.00)",
+    "expected": "[[300.00]]",
+    "observed": "[[Decimal('300.00')]]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:36+00:00"
+  },
+  {
+    "tc": "TC-08",
+    "check": "editable branch filter via embed (branch=Makati) -> 100.00",
+    "expected": "[[100.00]]",
+    "observed": "[[Decimal('100.00')]]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "LOCKED branch param: table shows ONLY Makati rows (server-enforced scoping)",
+    "expected": "{'Makati'}",
+    "observed": "{'Makati'}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "locked-scope revenue equals independent Makati total (1M dataset)",
+    "expected": "2084071063.77",
+    "observed": "2084071063.77",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "viewer tries to override LOCKED branch via URL (?branch=Cebu)",
+    "expected": "rejected (4xx) or still Makati",
+    "observed": "400 b'You can only specify a value for branch in the JWT.'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: wrong secret",
+    "expected": "4xx",
+    "observed": "400 b'Message seems corrupt or manipulated'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: alg=none",
+    "expected": "4xx",
+    "observed": "400 b'JWT `alg` cannot be `none`.'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: expired (exp 1h in past)",
+    "expected": "4xx",
+    "observed": "400 b'Token is expired (1795646737)'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: no exp claim",
+    "expected": "4xx",
+    "observed": "200 {'description': None, 'dashcards': [{'size_x': 6, 'dashboard_tab_id': ",
+    "status": "LIMITATION",
+    "note": "Tokens without exp are accepted (never expire). Portal must always set exp. Also: exp in milliseconds accepted as far-future; 60 s leeway measured.",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: dashboard not embedding-enabled",
+    "expected": "4xx",
+    "observed": "400 b'Embedding is not enabled for this object.'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial token rejected: tampered payload (re-signed w/o secret)",
+    "expected": "4xx",
+    "observed": "400 b'Message seems corrupt or manipulated'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token for dashboard A cannot read dashcard/card of dashboard B (cross-resource)",
+    "expected": "4xx",
+    "observed": "400 b'Not found.'",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:45:37+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "token 2s TTL: valid at t=0, STILL valid at t=8s (60s clock-skew leeway), rejected at t=68s",
+    "expected": "200, 200, 4xx",
+    "observed": "200, 200, 400",
+    "status": "PASS",
+    "note": "effective revocation window = TTL + 60s leeway (measured, evidence/mb_embed_exp_leeway.json)",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "portal pitfall: exp in MILLISECONDS (common JS mistake)",
+    "expected": "informational",
+    "observed": "200",
+    "status": "LIMITATION",
+    "note": "ms timestamp = year ~58000 => effectively never expires; portal code MUST use epoch seconds + unit test",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "portal pitfall: exp as numeric string",
+    "expected": "informational",
+    "observed": "400",
+    "status": "PASS",
+    "note": "rejected",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "export path via embed token: /csv",
+    "expected": "informational (portal must block at proxy)",
+    "observed": "200",
+    "status": "LIMITATION",
+    "note": "OSS has no per-embed switch to disable downloads; block at reverse proxy",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "export path via embed token: /xlsx",
+    "expected": "informational (portal must block at proxy)",
+    "observed": "200",
+    "status": "LIMITATION",
+    "note": "OSS has no per-embed switch to disable downloads; block at reverse proxy",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "export path via embed token: /json",
+    "expected": "informational (portal must block at proxy)",
+    "observed": "200",
+    "status": "LIMITATION",
+    "note": "OSS has no per-embed switch to disable downloads; block at reverse proxy",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "no session, no token: direct /api/dashboard/<id>",
+    "expected": "401",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "no session: /api/database",
+    "expected": "401",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:46:45+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "no session: /api/search",
+    "expected": "401",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:46:45+00:00"
+  }
+]

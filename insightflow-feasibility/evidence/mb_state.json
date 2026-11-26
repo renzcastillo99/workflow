@@ -1,0 +1,198 @@
+{
+ "db_id": 2,
+ "tables": {
+  "bench_100k": 9,
+  "bench_1m": 10,
+  "bench_500k": 11,
+  "bench_5m": 12,
+  "fixture": 13,
+  "fixture_zero": 14
+ },
+ "content": {
+  "fixture": {
+   "dashboard": 2,
+   "cards": {
+    "Revenue": 41,
+    "Gross profit": 42,
+    "Margin": 43,
+    "Transactions": 44,
+    "Trend": 45,
+    "Branch": 46,
+    "Table": 47
+   },
+   "dashcards": {
+    "Revenue": 37,
+    "Gross profit": 38,
+    "Margin": 39,
+    "Transactions": 40,
+    "Trend": 41,
+    "Branch": 42,
+    "Table": 43
+   },
+   "fields": {
+    "transaction_id": 92,
+    "date": 93,
+    "branch": 94,
+    "revenue": 95,
+    "cost": 96
+   },
+   "collection": "Sales Reports"
+  },
+  "fixture_zero": {
+   "dashboard": 3,
+   "cards": {
+    "Revenue": 48,
+    "Gross profit": 49,
+    "Margin": 50,
+    "Transactions": 51,
+    "Trend": 52,
+    "Branch": 53,
+    "Table": 54
+   },
+   "dashcards": {
+    "Revenue": 44,
+    "Gross profit": 45,
+    "Margin": 46,
+    "Transactions": 47,
+    "Trend": 48,
+    "Branch": 49,
+    "Table": 50
+   },
+   "fields": {
+    "transaction_id": 97,
+    "date": 98,
+    "branch": 99,
+    "revenue": 100,
+    "cost": 101
+   },
+   "collection": "Finance Reports"
+  },
+  "bench_100k": {
+   "dashboard": 4,
+   "cards": {
+    "Revenue": 55,
+    "Gross profit": 56,
+    "Margin": 57,
+    "Transactions": 58,
+    "Trend": 59,
+    "Branch": 60,
+    "Table": 61
+   },
+   "dashcards": {
+    "Revenue": 51,
+    "Gross profit": 52,
+    "Margin": 53,
+    "Transactions": 54,
+    "Trend": 55,
+    "Branch": 56,
+    "Table": 57
+   },
+   "fields": {
+    "transaction_id": 72,
+    "date": 73,
+    "branch": 74,
+    "revenue": 75,
+    "cost": 76
+   },
+   "collection": "Benchmarks"
+  },
+  "bench_500k": {
+   "dashboard": 5,
+   "cards": {
+    "Revenue": 62,
+    "Gross profit": 63,
+    "Margin": 64,
+    "Transactions": 65,
+    "Trend": 66,
+    "Branch": 67,
+    "Table": 68
+   },
+   "dashcards": {
+    "Revenue": 58,
+    "Gross profit": 59,
+    "Margin": 60,
+    "Transactions": 61,
+    "Trend": 62,
+    "Branch": 63,
+    "Table": 64
+   },
+   "fields": {
+    "transaction_id": 82,
+    "date": 83,
+    "branch": 84,
+    "revenue": 85,
+    "cost": 86
+   },
+   "collection": "Benchmarks"
+  },
+  "bench_1m": {
+   "dashboard": 6,
+   "cards": {
+    "Revenue": 69,
+    "Gross profit": 70,
+    "Margin": 71,
+    "Transactions": 72,
+    "Trend": 73,
+    "Branch": 74,
+    "Table": 75
+   },
+   "dashcards": {
+    "Revenue": 65,
+    "Gross profit": 66,
+    "Margin": 67,
+    "Transactions": 68,
+    "Trend": 69,
+    "Branch": 70,
+    "Table": 71
+   },
+   "fields": {
+    "transaction_id": 77,
+    "date": 78,
+    "branch": 79,
+    "revenue": 80,
+    "cost": 81
+   },
+   "collection": "Benchmarks"
+  },
+  "bench_5m": {
+   "dashboard": 7,
+   "cards": {
+    "Revenue": 76,
+    "Gross profit": 77,
+    "Margin": 78,
+    "Transactions": 79,
+    "Trend": 80,
+    "Branch": 81,
+    "Table": 82
+   },
+   "dashcards": {
+    "Revenue": 72,
+    "Gross profit": 73,
+    "Margin": 74,
+    "Transactions": 75,
+    "Trend": 76,
+    "Branch": 77,
+    "Table": 78
+   },
+   "fields": {
+    "transaction_id": 87,
+    "date": 88,
+    "branch": 89,
+    "revenue": 90,
+    "cost": 91
+   },
+   "collection": "Benchmarks"
+  }
+ },
+ "collections": {
+  "Sales Reports": 5,
+  "Finance Reports": 6,
+  "Benchmarks": 7
+ },
+ "groups": {
+  "Administrators": 2,
+  "All Users": 1,
+  "Sales Viewers": 5,
+  "Finance Viewers": 6
+ }
+}

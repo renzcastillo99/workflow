@@ -1,0 +1,119 @@
+[
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] chart data on UNASSIGNED dataset (fixture_zero) via API",
+    "expected": "denied",
+    "observed": "403 {\"errors\": [{\"message\": \"This endpoint requires the datasource 2, data",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET unassigned finance dashboard (direct API)",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET unassigned dashboard charts",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET unassigned chart",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] arbitrary SQL via SQL Lab API",
+    "expected": "denied",
+    "observed": "403 {'message': 'Forbidden'}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] ad-hoc query on unassigned raw dataset (bench_5m)",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] dashboard list leaks unassigned titles",
+    "expected": "no unassigned titles",
+    "observed": "200 0 listed; unassigned=[]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET /database/ (data source list)",
+    "expected": "none listed/denied",
+    "observed": "200 []",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET /dataset/ lists unassigned datasets",
+    "expected": "none unassigned",
+    "observed": "200 []",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:15+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] GET admin endpoint /security/users/",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:16+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA, no grants] POST admin endpoint /security/users/ (create user)",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:16+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA] viewer can create chart (can_write on Chart)",
+    "expected": "informational",
+    "observed": "201",
+    "status": "PASS",
+    "note": "Gamma carries can_write on Chart/Dashboard; blocked only by lack of datasource access",
+    "ts": "2026-11-26T00:00:16+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[STOCK-GAMMA] viewer can read permission catalogue",
+    "expected": "informational",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:16+00:00"
+  }
+]

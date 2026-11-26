@@ -1,0 +1,38 @@
+[
+  {
+    "tc": "TC-06",
+    "check": "invalid credentials rejected (15 attempts)",
+    "expected": "only 401, never 200",
+    "observed": "{401}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:16+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "brute-force lockout engages (message 'Too many attempts', HTTP stays 401)",
+    "expected": "lockout before attempt 15",
+    "observed": "first lockout at attempt #11: {'errors': {'username': 'Too many attempts! You must wait 15 seconds before trying again.'}}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:16+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "lockout is per-account (admin unaffected by probe on another username)",
+    "expected": "admin login works",
+    "observed": "True",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:16+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "(observed earlier) correct password refused while account locked",
+    "expected": "refused",
+    "observed": "viewer.finance: 'Too many attempts! You must wait 220 seconds before trying again.'",
+    "status": "PASS",
+    "note": "from first run of this test, recorded manually from tool output",
+    "ts": "2026-11-25T23:40:16+00:00"
+  }
+]

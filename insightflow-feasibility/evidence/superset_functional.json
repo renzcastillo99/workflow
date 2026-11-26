@@ -1,0 +1,92 @@
+[
+  {
+    "tc": "TC-05",
+    "check": "fixture 2 rows -> 300/120/40%/2",
+    "expected": "{'revenue': '300.00', 'gross_profit': '120.00', 'margin': '0.400000', 'transaction_count': 2}",
+    "observed": "{'revenue': Decimal('300.00'), 'gross_profit': Decimal('120.00'), 'margin': Decimal('0.40000000000000000000'), 'transactions': 2}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-08",
+    "check": "fixture filter branch=Makati -> 100/40/40%/1",
+    "expected": "{'revenue': '100.00', 'gross_profit': '40.00', 'margin': '0.400000', 'transaction_count': 1}",
+    "observed": "{'revenue': Decimal('100.00'), 'gross_profit': Decimal('40.00'), 'margin': Decimal('0.40000000000000000000'), 'transactions': 1}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-08",
+    "check": "fixture filter date=2025-01-10 -> first row only",
+    "expected": "{'revenue': '100.00', 'gross_profit': '40.00', 'margin': '0.400000', 'transaction_count': 1}",
+    "observed": "{'revenue': Decimal('100.00'), 'gross_profit': Decimal('40.00'), 'margin': Decimal('0.40000000000000000000'), 'transactions': 1}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "fixture_zero: margin undefined (NOT 0, NOT error)",
+    "expected": "{'revenue': '0.00', 'gross_profit': '0.00', 'margin': None, 'transaction_count': 2}",
+    "observed": "{'revenue': Decimal('0.00'), 'gross_profit': Decimal('0.00'), 'margin': None, 'transactions': 2}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "bench_100k unfiltered vs independent Decimal totals",
+    "expected": "{'revenue': '2505504514.45', 'gross_profit': '816942059.09', 'margin': '0.326059', 'transaction_count': 100000}",
+    "observed": "{'revenue': Decimal('2505504514.45'), 'gross_profit': Decimal('816942059.09'), 'margin': Decimal('0.32605890525379172900'), 'transactions': 100000}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "bench_500k unfiltered vs independent Decimal totals",
+    "expected": "{'revenue': '12531175839.84', 'gross_profit': '4080070433.63', 'margin': '0.325594', 'transaction_count': 500000}",
+    "observed": "{'revenue': Decimal('12531175839.84'), 'gross_profit': Decimal('4080070433.63'), 'margin': Decimal('0.32559358242012307228'), 'transactions': 500000}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:42+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "bench_1m unfiltered vs independent Decimal totals",
+    "expected": "{'revenue': '25061435094.67', 'gross_profit': '8148175644.91', 'margin': '0.325128', 'transaction_count': 1000000}",
+    "observed": "{'revenue': Decimal('25061435094.67'), 'gross_profit': Decimal('8148175644.91'), 'margin': Decimal('0.32512805488313526517'), 'transactions': 1000000}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:43+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "bench_5m unfiltered vs independent Decimal totals",
+    "expected": "{'revenue': '125281389937.69', 'gross_profit': '40730934224.77', 'margin': '0.325116', 'transaction_count': 5000000}",
+    "observed": "{'revenue': Decimal('125281389937.69'), 'gross_profit': Decimal('40730934224.77'), 'margin': Decimal('0.32511559973135637320'), 'transactions': 5000000}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:45+00:00"
+  },
+  {
+    "tc": "TC-08",
+    "check": "bench_1m branch+date range filter vs independent Decimal",
+    "expected": "{'revenue': '88394458.97', 'gross_profit': '28889290.35', 'margin': '0.326822', 'transaction_count': 3523}",
+    "observed": "{'revenue': Decimal('88394458.97'), 'gross_profit': Decimal('28889290.35'), 'margin': Decimal('0.32682241270128337322'), 'transactions': 3523}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:45+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "bench_1m branch-table: all 12 branches revenue+count exact",
+    "expected": "12 match",
+    "observed": "12 rows, match=True",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:58:47+00:00"
+  }
+]

@@ -1,0 +1,145 @@
+{
+ "engine": "superset 6.1.0 (gunicorn 4 workers x 8 threads, Redis cache)",
+ "environment": {
+  "host": "4 vCPU, 15 GiB RAM (shared by engine + engine DB + source Postgres + load generator on ONE VM)",
+  "kernel": "6.18.44-fc-v880",
+  "network": "loopback / docker bridge (no real network latency)",
+  "source_pg": "postgres:16-alpine, shared_buffers=1GB, work_mem=64MB, PK + btree(date) + btree(branch)",
+  "targets": "initial dashboard <=3000 ms, filters <=2000 ms, 20 concurrent viewers (p95)"
+ },
+ "results": {
+  "bench_100k": {
+   "first_load_ms (cache bypassed)": 411,
+   "initial_dashboard_unfiltered (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 447,
+    "p95_ms": 477,
+    "max_ms": 499,
+    "failures": 0
+   },
+   "filter_change_branch+month (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 245,
+    "p95_ms": 327,
+    "max_ms": 359,
+    "failures": 0
+   }
+  },
+  "bench_500k": {
+   "first_load_ms (cache bypassed)": 1708,
+   "initial_dashboard_unfiltered (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 1593,
+    "p95_ms": 1776,
+    "max_ms": 1975,
+    "failures": 0
+   },
+   "filter_change_branch+month (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 258,
+    "p95_ms": 281,
+    "max_ms": 289,
+    "failures": 0
+   }
+  },
+  "bench_1m": {
+   "first_load_ms (cache bypassed)": 3348,
+   "initial_dashboard_unfiltered (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 3132,
+    "p95_ms": 3414,
+    "max_ms": 3570,
+    "failures": 0
+   },
+   "filter_change_branch+month (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 263,
+    "p95_ms": 345,
+    "max_ms": 404,
+    "failures": 0
+   },
+   "concurrency_20_users_x3_loads_filtered (cache bypassed)": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 3925,
+    "p95_ms": 5319,
+    "max_ms": 5887,
+    "failures": 0,
+    "wall_s": 13.5
+   },
+   "WARM CACHE initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 154,
+    "p95_ms": 201,
+    "max_ms": 203,
+    "failures": 0
+   },
+   "WARM CACHE filter_change (same filter sequence as primed)": {
+    "n": 15,
+    "p50_ms": 141,
+    "p95_ms": 187,
+    "max_ms": 204,
+    "failures": 0
+   },
+   "WARM CACHE concurrency_20_users_x3_loads_filtered (2nd pass; app rate-limit raised to 2000/s)": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 1916,
+    "p95_ms": 3973,
+    "max_ms": 4142,
+    "failures": 0,
+    "wall_s": 7.5
+   }
+  },
+  "bench_5m": {
+   "first_load_ms (cache bypassed)": 15108,
+   "initial_dashboard_unfiltered (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 15039,
+    "p95_ms": 15618,
+    "max_ms": 16058,
+    "failures": 0
+   },
+   "filter_change_branch+month (cache bypassed)": {
+    "n": 15,
+    "p50_ms": 348,
+    "p95_ms": 391,
+    "max_ms": 416,
+    "failures": 0
+   },
+   "concurrency_20_users_x3_loads_filtered (cache bypassed)": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 5422,
+    "p95_ms": 7825,
+    "max_ms": 8654,
+    "failures": 0,
+    "wall_s": 19.1
+   },
+   "WARM CACHE initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 158,
+    "p95_ms": 224,
+    "max_ms": 286,
+    "failures": 0
+   },
+   "WARM CACHE filter_change (same filter sequence as primed)": {
+    "n": 15,
+    "p50_ms": 152,
+    "p95_ms": 182,
+    "max_ms": 208,
+    "failures": 0
+   },
+   "WARM CACHE concurrency_20_users_x3_loads_filtered (2nd pass; app rate-limit raised to 2000/s)": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 2432,
+    "p95_ms": 3167,
+    "max_ms": 3303,
+    "failures": 0,
+    "wall_s": 8.3
+   }
+  }
+ },
+ "notes": "Superset global rate limit defaults to 50 requests/second per IP; a single-IP load generator sending 140 simultaneous cached requests got HTTP 429 (verified), so the warm-cache concurrency run used RATELIMIT_APPLICATION='2000 per second'. The cold (cache-bypassed) concurrency runs had 0 failures at the default 50/s because queries were slow enough."
+}

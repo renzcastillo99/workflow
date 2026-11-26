@@ -1,0 +1,200 @@
+[
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] chart data on UNASSIGNED dataset (fixture_zero) via API",
+    "expected": "denied",
+    "observed": "403 {\"errors\": [{\"message\": \"This endpoint requires the datasource 2, data",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET unassigned finance dashboard (direct API)",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET unassigned dashboard charts",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET unassigned chart",
+    "expected": "denied",
+    "observed": "404",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] arbitrary SQL via SQL Lab API",
+    "expected": "denied",
+    "observed": "403 {'message': 'Forbidden'}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] ad-hoc query on unassigned raw dataset (bench_5m)",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:39+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] dashboard list leaks unassigned titles",
+    "expected": "no unassigned titles",
+    "observed": "200 1 listed; unassigned=[]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET /database/ (data source list)",
+    "expected": "none listed/denied",
+    "observed": "403 []",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET /dataset/ lists unassigned datasets",
+    "expected": "none unassigned",
+    "observed": "200 ['transactions@fixture']",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] GET admin endpoint /security/users/",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] POST admin endpoint /security/users/ (create user)",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer chart data on ASSIGNED dataset",
+    "expected": "300.00",
+    "observed": "{'revenue': Decimal('300.00')}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer GET ASSIGNED dashboard",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer GET ASSIGNED dashboard charts",
+    "expected": "200 with 7",
+    "observed": "200 7",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer attempts: create chart",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer attempts: create dashboard",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer attempts: export dashboard",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer attempts: explore_json (raw ad-hoc)",
+    "expected": "denied",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer CSV export of assigned data (result_format=csv)",
+    "expected": "denied (report export disabled by default)",
+    "observed": "403 {\"message\":\"Forbidden\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[RLS] Makati-only viewer totals == independent Makati total (server-side row filter)",
+    "expected": "2084071063.77 / 83040",
+    "observed": "{'revenue': Decimal('2084071063.77'), 'transactions': 83040}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[RLS] Makati-only viewer tries filter branch=Cebu (bypass attempt)",
+    "expected": "no Cebu data",
+    "observed": "{'revenue': None}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:40+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[RLS] Makati viewer on other (unassigned) dataset",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:00:41+00:00"
+  }
+]

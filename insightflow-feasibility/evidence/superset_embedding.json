@@ -1,0 +1,236 @@
+[
+  {
+    "tc": "FUNC-18",
+    "check": "enable embedding on fixture dashboard",
+    "expected": "201/200 + uuid",
+    "observed": "200 a372298a-c9b3-42ad-92f7-036650f622c4",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "FUNC-18",
+    "check": "enable embedding on bench_1m dashboard",
+    "expected": "201/200 + uuid",
+    "observed": "200 7178cd91-f342-4817-8c73-b8800d5e8c51",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "portal-issued guest token claims (ttl = exp-iat)",
+    "expected": "ttl 300s, type guest, resources=[embedded dashboard]",
+    "observed": "{'ttl': 300.0, 'type': 'guest', 'res': [{'type': 'dashboard', 'id': 'a372298a-c9b3-42ad-92f7-036650f622c4'}], 'aud': 'http://0.0.0.0:8080/'}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-05",
+    "check": "guest token (no session) reads assigned embedded dashboard data: 300/120/0.4/2",
+    "expected": "300.00/120.00/0.4/2",
+    "observed": "{'revenue': Decimal('300.00'), 'gross_profit': Decimal('120.00'), 'margin': Decimal('0.40000000000000000000'), 'transactions': 2}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-08",
+    "check": "guest filter branch=Makati -> 100.00",
+    "expected": "100.00",
+    "observed": "{'revenue': Decimal('100.00')}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "per-token RLS (branch='Makati'): totals == independent Makati total",
+    "expected": "2084071063.77/83040",
+    "observed": "{'revenue': Decimal('2084071063.77'), 'transactions': 83040}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "RLS bypass attempt: guest adds filter branch=Cebu",
+    "expected": "no Cebu data",
+    "observed": "{'revenue': None}",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-16",
+    "check": "token for dashboard A: dataset of unassigned dashboard B (dashboardId=A)",
+    "expected": "403",
+    "observed": "403 {\"errors\": [{\"message\": \"This endpoint requires the datasource 2, data",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "token for A claims dashboardId=B (not in token resources)",
+    "expected": "403",
+    "observed": "403 {\"errors\": [{\"message\": \"This endpoint requires the datasource 2, data",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest ad-hoc query on arbitrary raw dataset (bench_5m)",
+    "expected": "403",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest token calls admin /security/users/",
+    "expected": "denied (or only own dashboard)",
+    "observed": "403 {\"message\":\"Forbidden\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest token calls DB list",
+    "expected": "denied (or only own dashboard)",
+    "observed": "403 {\"message\":\"Forbidden\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest token calls SQL Lab execute",
+    "expected": "denied (or only own dashboard)",
+    "observed": "400 {\"errors\": [{\"message\": \"400 Bad Request: The CSRF token is ",
+    "status": "INCONCLUSIVE",
+    "note": "HTTP 400 CSRF failure masks the authorization decision - see role-permission inspection check",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest token calls dashboard list (other dashboards)",
+    "expected": "denied (or only own dashboard)",
+    "observed": "200 {\"count\":1,\"description_columns\":{},\"ids\":[1],\"label_columns",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest token calls create chart",
+    "expected": "denied (or only own dashboard)",
+    "observed": "400 {\"errors\": [{\"message\": \"400 Bad Request: The CSRF token is ",
+    "status": "INCONCLUSIVE",
+    "note": "HTTP 400 CSRF failure masks the authorization decision - see role-permission inspection check",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest role permission inspection: no write/export/SQL/explore/datasource grants",
+    "expected": "no risky permissions",
+    "observed": "{'total': 11, 'risky': [], 'accepted_ui_state_writes': ['can_write@DashboardFilterStateRestApi', 'can_write@DashboardPermalinkRestApi'], 'all': ['can_get@MenuApi', 'can_read@AdvancedDataType', 'can_read@AvailableDomains', 'can_read@Chart', 'can_read@CurrentUserRestApi', 'can_read@Dashboard', 'can_read@DashboardFilterStateRestApi', 'can_read@DashboardPermalinkRestApi', 'can_read@Dataset', 'can_writ",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "guest CSV export (result_format=csv)",
+    "expected": "denied by role (export off by default)",
+    "observed": "403 {\"message\":\"Forbidden\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial guest token rejected: wrong secret",
+    "expected": "401/403/422",
+    "observed": "401 {\"msg\":\"Missing Authorization Header\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:42+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial guest token rejected: alg=none",
+    "expected": "401/403/422",
+    "observed": "401 {\"msg\":\"Missing Authorization Header\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial guest token rejected: expired 1h",
+    "expected": "401/403/422",
+    "observed": "401 {\"msg\":\"Missing Authorization Header\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial guest token rejected: tampered resources (other dashboard uuid)",
+    "expected": "401/403/422",
+    "observed": "401 {\"msg\":\"Missing Authorization Header\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "adversarial guest token rejected: RLS stripped by re-signing w/o secret",
+    "expected": "401/403/422",
+    "observed": "401 {\"msg\":\"Missing Authorization Header\"}\n",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "CONTROL: token re-signed with the real secret is accepted (proves forge() is valid)",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "validates that the rejected tokens above fail for the right reason",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "expiry leeway: seconds past exp -> HTTP",
+    "expected": "rejects immediately or small leeway",
+    "observed": "{1: 401, 10: 401, 30: 401, 70: 401, 130: 401}",
+    "status": "INFO",
+    "note": "revocation window = ttl(300s) + leeway",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "headers on /embedded/<uuid>",
+    "expected": "informational",
+    "observed": "{'code': 200, 'X-Frame-Options': 'SAMEORIGIN', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': \"base-uri 'self'; default-src 'self'; img-src 'self' blob: data: https://apachesuperset.gateway.scarf.sh https://static.scarf.sh/ ows.terrestris.de https://cdn.document360.io; worker-src 'self' blob:; connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://tile.openstr",
+    "status": "INFO",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "headers on /login/ (clickjacking protection of normal UI)",
+    "expected": "informational",
+    "observed": "{'X-Frame-Options': 'SAMEORIGIN', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': \"base-uri 'self'; default-src 'self'; img-src 'self' blob: data: https://apachesuperset.gateway.scarf.sh https://static.scarf.sh/ ows.terrestris.de https://cdn.document360.io; worker-src 'self' blob:; connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://tile.openstreetmap.org ht",
+    "status": "INFO",
+    "note": "",
+    "ts": "2026-11-26T00:03:43+00:00"
+  }
+]

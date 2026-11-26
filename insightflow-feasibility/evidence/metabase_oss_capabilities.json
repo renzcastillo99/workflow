@@ -1,0 +1,137 @@
+[
+  {
+    "tc": "THEME",
+    "check": "set brand colour #2563EB (application-colors)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 402 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Setting application-colors is not enabled because feature :whitelabel is not available\", \"data\": {\"status\": \"e",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "THEME",
+    "check": "set custom font (application-font)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 402 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Setting application-font is not enabled because feature :whitelabel is not available\", \"data\": {\"status\": \"err",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "THEME",
+    "check": "hide Metabase branding / 'Powered by' (hide-embed-branding)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 500 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Unknown setting: :hide-embed-branding\", \"at\": [\"metabase.settings.models.setting$fn__53464\", \"invokeStatic\", \"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "THEME",
+    "check": "custom logo (application-logo-url)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 402 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Setting application-logo-url is not enabled because feature :whitelabel is not available\", \"data\": {\"status\": ",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "enable SAML SSO",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 500 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Unknown setting: :saml-enabled\", \"at\": [\"metabase.settings.models.setting$fn__53464\", \"invokeStatic\", \"setting",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "enable JWT SSO",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 500 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Unknown setting: :jwt-enabled\", \"at\": [\"metabase.settings.models.setting$fn__53464\", \"invokeStatic\", \"setting.",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "configure LDAP",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 500 {\"errors\": {\"ldap-host\": \"Wrong host or port\", \"ldap-port\": \"Wrong host or port\"}}",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "enable Google sign-in",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 200 true",
+    "status": "INFO",
+    "note": "My prediction (blocked) was WRONG: setting accepted in OSS. enable-sso-google? flag still False; end-to-end Google login NOT VERIFIED (needs a real OAuth client). Setting reverted.",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "enforce MFA (mfa-enforcement)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 400 \"Invalid value for mfa-enforcement: :all. Allowed values are :off, :optional, and :required.\"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "session timeout setting (session-timeout)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 204 null",
+    "status": "LIMITATION",
+    "note": "Setting accepted+persisted but NOT enforced server-side (idle 75s with 1-min timeout -> still 200). Use MAX_SESSION_AGE env (verified enforced).",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "disable password login",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 402 {\"via\": [{\"type\": \"clojure.lang.ExceptionInfo\", \"message\": \"Setting enable-password-login is not enabled because feature :disable-password-login is not available\", \"data\"",
+    "status": "LIMITATION",
+    "note": "check below - this one is risky to leave on, reverted if it worked | feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "row-level sandbox (POST /api/mt/gtap)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 404 \"API endpoint does not exist.\"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "audit app (/api/ee/audit-app/user/audit-info)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 404 \"API endpoint does not exist.\"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "audit log (/api/ee/audit-app/...)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 404 \"API endpoint does not exist.\"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "impersonation / advanced perms (db details)",
+    "expected": "blocked in OSS",
+    "observed": "HTTP 404 \"API endpoint does not exist.\"",
+    "status": "LIMITATION",
+    "note": "feature confirmed NOT available in OSS",
+    "ts": "2026-11-25T23:40:30+00:00"
+  }
+]

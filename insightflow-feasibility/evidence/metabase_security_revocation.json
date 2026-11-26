@@ -1,0 +1,65 @@
+[
+  {
+    "tc": "TC-11",
+    "check": "viewer works before revocation",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "admin deactivates user",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "revoked user's existing session token on assigned dashboard",
+    "expected": "401/403",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "revoked token: data query",
+    "expected": "401/403",
+    "observed": "401",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "revoked user cannot log in again",
+    "expected": "no session",
+    "observed": "None",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "reactivated viewer regains assigned access",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  },
+  {
+    "tc": "TC-11",
+    "check": "assignment revoked (group removed) -> same live session denied",
+    "expected": "403",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:40:02+00:00"
+  }
+]

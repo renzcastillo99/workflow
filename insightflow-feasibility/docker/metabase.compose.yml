@@ -1,0 +1,35 @@
+# Metabase OPEN SOURCE edition (AGPL image: metabase/metabase). Not the enterprise image.
+name: if-metabase
+services:
+  mb-pg:
+    image: postgres:16-alpine
+    container_name: if-mb-pg
+    environment:
+      POSTGRES_USER: metabase
+      POSTGRES_PASSWORD: ${MB_DB_PASSWORD:?run scripts/init_env.sh}
+      POSTGRES_DB: metabase
+    networks: [ifnet]
+    volumes: [mbpg:/var/lib/postgresql/data]
+  metabase:
+    image: metabase/metabase:latest
+    container_name: if-metabase
+    depends_on: [mb-pg]
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: mb-pg
+      MB_DB_PORT: "5432"
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${MB_DB_PASSWORD}
+      MB_ENCRYPTION_SECRET_KEY: ${MB_EMBED_SECRET}   # encrypts stored DB connection details at rest
+      MB_EMBEDDING_SECRET_KEY: ${MB_EMBED_SECRET}
+      MB_ENABLE_EMBEDDING: "true"                    # static (signed) embedding only; evaluated below
+      MB_SESSION_SECRET_KEY: ${MB_SESSION_SECRET}      # signs session tokens (Metabase warns if unset)
+      MAX_SESSION_AGE: "${MB_MAX_SESSION_AGE:-480}"      # minutes; absolute session lifetime (default 8h here; Metabase default is 14 days)
+      MB_SITE_URL: http://localhost:3000
+      JAVA_OPTS: "-Xmx3g"
+    ports: ["127.0.0.1:3000:3000"]                   # loopback only; never publish to the internet
+    networks: [ifnet]
+volumes: { mbpg: {} }
+networks:
+  ifnet: { name: ifnet, external: true }

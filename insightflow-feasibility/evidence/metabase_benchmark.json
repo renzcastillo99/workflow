@@ -1,0 +1,98 @@
+{
+ "engine": "metabase v0.65.7.2 OSS",
+ "environment": {
+  "host": "4 vCPU, 15 GiB RAM (shared by engine + engine DB + source Postgres + load generator on ONE VM)",
+  "kernel": "6.18.44-fc-v880",
+  "network": "loopback / docker bridge (no real network latency)",
+  "source_pg": "postgres:16-alpine, shared_buffers=1GB, work_mem=64MB, PK + btree(date) + btree(branch)",
+  "targets": "initial dashboard <=3000 ms, filters <=2000 ms, 20 concurrent viewers (p95)"
+ },
+ "results": {
+  "bench_100k": {
+   "first_load_ms (cold-ish: first touch since benchmark start)": 364,
+   "initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 324,
+    "p95_ms": 364,
+    "max_ms": 366,
+    "failures": 0
+   },
+   "filter_change_branch+month": {
+    "n": 15,
+    "p50_ms": 113,
+    "p95_ms": 147,
+    "max_ms": 163,
+    "failures": 0
+   }
+  },
+  "bench_500k": {
+   "first_load_ms (cold-ish: first touch since benchmark start)": 1371,
+   "initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 1381,
+    "p95_ms": 1478,
+    "max_ms": 1528,
+    "failures": 0
+   },
+   "filter_change_branch+month": {
+    "n": 15,
+    "p50_ms": 109,
+    "p95_ms": 120,
+    "max_ms": 123,
+    "failures": 0
+   }
+  },
+  "bench_1m": {
+   "first_load_ms (cold-ish: first touch since benchmark start)": 2877,
+   "initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 2878,
+    "p95_ms": 3040,
+    "max_ms": 3046,
+    "failures": 0
+   },
+   "filter_change_branch+month": {
+    "n": 15,
+    "p50_ms": 107,
+    "p95_ms": 127,
+    "max_ms": 143,
+    "failures": 0
+   },
+   "concurrency_20_users_x3_loads_filtered": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 1786,
+    "p95_ms": 2543,
+    "max_ms": 2567,
+    "failures": 0,
+    "wall_s": 5.6
+   }
+  },
+  "bench_5m": {
+   "first_load_ms (cold-ish: first touch since benchmark start)": 15033,
+   "initial_dashboard_unfiltered": {
+    "n": 15,
+    "p50_ms": 14845,
+    "p95_ms": 15581,
+    "max_ms": 15702,
+    "failures": 0
+   },
+   "filter_change_branch+month": {
+    "n": 15,
+    "p50_ms": 175,
+    "p95_ms": 205,
+    "max_ms": 206,
+    "failures": 0
+   },
+   "concurrency_20_users_x3_loads_filtered": {
+    "users": 20,
+    "dashboard_loads": 60,
+    "p50_ms": 2979,
+    "p95_ms": 3865,
+    "max_ms": 4036,
+    "failures": 0,
+    "wall_s": 10.1
+   }
+  }
+ }
+}

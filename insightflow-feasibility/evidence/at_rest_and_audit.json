@@ -1,0 +1,155 @@
+[
+  {
+    "tc": "TC-12",
+    "check": "Metabase app DB: source password NOT plaintext (MB_ENCRYPTION_SECRET_KEY set)",
+    "expected": "not found plaintext",
+    "observed": "plaintext found=False; stored value starts: N0l1s1dNjbGcXCsTPLz9yVGEundf+m92W3zHk7ykiNfgThrURsHyo0n12hiu",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Superset metadata DB: source password NOT plaintext",
+    "expected": "not found plaintext",
+    "observed": "plaintext found=False; row: postgresql+psycopg2://insightflow_ro:XXXXXXXXXX@if-data-pg:5432/clientdata|\\x765732724732614e646c5234644659724",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Superset user passwords hashed",
+    "expected": "hash prefix",
+    "observed": "scrypt:32768:8:1$2",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase user passwords hashed",
+    "expected": "hash",
+    "observed": "core_user.password is empty in v0.65; credentials live in auth_identity.credentials (opaque, e.g. 'qTV0Y95D...'), not plaintext",
+    "status": "PASS",
+    "note": "my first query read the wrong table",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase OSS app DB table query_execution: rows",
+    "expected": ">0 if audit data exists",
+    "observed": "1789",
+    "status": "PASS",
+    "note": "data exists in DB but there is NO audit UI in OSS (audit_app paid); must be read via SQL",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase OSS app DB table view_log: rows",
+    "expected": ">0 if audit data exists",
+    "observed": "0",
+    "status": "INFO",
+    "note": "0 rows: not populated by API/embed access in this test; no audit UI in OSS",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase OSS app DB table login_history: rows",
+    "expected": ">0 if audit data exists",
+    "observed": "23",
+    "status": "PASS",
+    "note": "data exists in DB but there is NO audit UI in OSS (audit_app paid); must be read via SQL",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase OSS app DB table audit_log: rows",
+    "expected": ">0 if audit data exists",
+    "observed": "0",
+    "status": "INFO",
+    "note": "0 rows: not populated by API/embed access in this test; no audit UI in OSS",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase query_execution records WHO ran each query",
+    "expected": "executor_id populated",
+    "observed": "46",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase login_history records logins (incl. failed?)",
+    "expected": "logins recorded",
+    "observed": "23",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase container logs do not contain 'data_ro_pw'",
+    "expected": "not found",
+    "observed": "not found",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:02+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase container logs do not contain 'viewer_pw'",
+    "expected": "not found",
+    "observed": "not found",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:02+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase container logs do not contain 'admin_pw'",
+    "expected": "not found",
+    "observed": "not found",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:02+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase container logs do not contain 'embed_secret'",
+    "expected": "not found",
+    "observed": "not found",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:02+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase container logs do not contain 'session_secret'",
+    "expected": "not found",
+    "observed": "not found",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-26T00:10:02+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase attributes embedded-dashboard query executions to a user",
+    "expected": "executor_id populated",
+    "observed": "query_execution: embedded-dashboard 1737 rows, ALL executor_id NULL (embedded-csv/xlsx/json-download also NULL); only direct logged-in API use is attributed",
+    "status": "LIMITATION",
+    "note": "With static embedding every viewer is anonymous to Metabase; the portal must write the 'who viewed what' audit trail",
+    "ts": "2026-11-26T00:10:01+00:00"
+  },
+  {
+    "tc": "TC-12",
+    "check": "Metabase attributes embedded-dashboard query executions to a user",
+    "expected": "executor_id populated",
+    "observed": "query_execution: embedded-dashboard 1737 rows, ALL executor_id NULL (embedded-csv/xlsx/json-download also NULL); only direct logged-in API use is attributed",
+    "status": "LIMITATION",
+    "note": "With static embedding every viewer is anonymous to Metabase; the portal must write the 'who viewed what' audit trail",
+    "ts": "2026-11-26T00:10:01+00:00"
+  }
+]

@@ -1,0 +1,381 @@
+{
+  "fixture": {
+    "all": {
+      "revenue": "300.00",
+      "gross_profit": "120.00",
+      "margin": "0.400000",
+      "transaction_count": 2
+    },
+    "first_row_only": {
+      "revenue": "100.00",
+      "gross_profit": "40.00",
+      "margin": "0.400000",
+      "transaction_count": 1
+    }
+  },
+  "fixture_zero": {
+    "all": {
+      "revenue": "0.00",
+      "gross_profit": "0.00",
+      "margin": null,
+      "transaction_count": 2
+    }
+  },
+  "bench_100k": {
+    "all": {
+      "revenue": "2505504514.45",
+      "gross_profit": "816942059.09",
+      "margin": "0.326059",
+      "transaction_count": 100000
+    },
+    "filter": {
+      "revenue": "9421589.04",
+      "gross_profit": "2983194.16",
+      "margin": "0.316634",
+      "transaction_count": 379
+    },
+    "per_branch": {
+      "Makati": {
+        "revenue": "211022476.10",
+        "gross_profit": "68098365.95",
+        "margin": "0.322707",
+        "transaction_count": 8362
+      },
+      "Cebu": {
+        "revenue": "204023033.72",
+        "gross_profit": "66788114.72",
+        "margin": "0.327356",
+        "transaction_count": 8149
+      },
+      "Davao": {
+        "revenue": "211111041.02",
+        "gross_profit": "68946902.97",
+        "margin": "0.326591",
+        "transaction_count": 8486
+      },
+      "Quezon City": {
+        "revenue": "208876250.77",
+        "gross_profit": "67945667.62",
+        "margin": "0.325291",
+        "transaction_count": 8331
+      },
+      "Pasig": {
+        "revenue": "206672235.79",
+        "gross_profit": "67257217.65",
+        "margin": "0.325429",
+        "transaction_count": 8225
+      },
+      "Taguig": {
+        "revenue": "210465159.19",
+        "gross_profit": "68254701.03",
+        "margin": "0.324304",
+        "transaction_count": 8362
+      },
+      "Iloilo": {
+        "revenue": "206991145.20",
+        "gross_profit": "67905316.61",
+        "margin": "0.328059",
+        "transaction_count": 8298
+      },
+      "Baguio": {
+        "revenue": "214008836.43",
+        "gross_profit": "70372256.19",
+        "margin": "0.328829",
+        "transaction_count": 8504
+      },
+      "Cagayan de Oro": {
+        "revenue": "209016544.86",
+        "gross_profit": "68538176.10",
+        "margin": "0.327908",
+        "transaction_count": 8394
+      },
+      "Bacolod": {
+        "revenue": "206099379.74",
+        "gross_profit": "67260620.18",
+        "margin": "0.326350",
+        "transaction_count": 8252
+      },
+      "Zamboanga": {
+        "revenue": "208756775.14",
+        "gross_profit": "67539750.90",
+        "margin": "0.323533",
+        "transaction_count": 8362
+      },
+      "Clark": {
+        "revenue": "208461636.49",
+        "gross_profit": "68034969.17",
+        "margin": "0.326367",
+        "transaction_count": 8275
+      }
+    }
+  },
+  "bench_500k": {
+    "all": {
+      "revenue": "12531175839.84",
+      "gross_profit": "4080070433.63",
+      "margin": "0.325594",
+      "transaction_count": 500000
+    },
+    "filter": {
+      "revenue": "43728279.71",
+      "gross_profit": "14223247.75",
+      "margin": "0.325264",
+      "transaction_count": 1763
+    },
+    "per_branch": {
+      "Makati": {
+        "revenue": "1038093389.83",
+        "gross_profit": "337116826.84",
+        "margin": "0.324746",
+        "transaction_count": 41419
+      },
+      "Cebu": {
+        "revenue": "1038766717.14",
+        "gross_profit": "337202227.80",
+        "margin": "0.324618",
+        "transaction_count": 41443
+      },
+      "Davao": {
+        "revenue": "1045076422.15",
+        "gross_profit": "339953759.86",
+        "margin": "0.325291",
+        "transaction_count": 41793
+      },
+      "Quezon City": {
+        "revenue": "1051600727.21",
+        "gross_profit": "344196878.41",
+        "margin": "0.327308",
+        "transaction_count": 41930
+      },
+      "Pasig": {
+        "revenue": "1051882408.48",
+        "gross_profit": "342689626.18",
+        "margin": "0.325787",
+        "transaction_count": 41826
+      },
+      "Taguig": {
+        "revenue": "1049567913.56",
+        "gross_profit": "341033598.04",
+        "margin": "0.324928",
+        "transaction_count": 41539
+      },
+      "Iloilo": {
+        "revenue": "1045905501.81",
+        "gross_profit": "341117155.30",
+        "margin": "0.326145",
+        "transaction_count": 41770
+      },
+      "Baguio": {
+        "revenue": "1051383379.29",
+        "gross_profit": "342281323.25",
+        "margin": "0.325553",
+        "transaction_count": 41962
+      },
+      "Cagayan de Oro": {
+        "revenue": "1038465990.45",
+        "gross_profit": "338971672.53",
+        "margin": "0.326416",
+        "transaction_count": 41585
+      },
+      "Bacolod": {
+        "revenue": "1042243532.73",
+        "gross_profit": "339566837.55",
+        "margin": "0.325804",
+        "transaction_count": 41630
+      },
+      "Zamboanga": {
+        "revenue": "1041450610.42",
+        "gross_profit": "338289431.53",
+        "margin": "0.324825",
+        "transaction_count": 41709
+      },
+      "Clark": {
+        "revenue": "1036739246.77",
+        "gross_profit": "337651096.34",
+        "margin": "0.325686",
+        "transaction_count": 41394
+      }
+    }
+  },
+  "bench_1m": {
+    "all": {
+      "revenue": "25061435094.67",
+      "gross_profit": "8148175644.91",
+      "margin": "0.325128",
+      "transaction_count": 1000000
+    },
+    "filter": {
+      "revenue": "88394458.97",
+      "gross_profit": "28889290.35",
+      "margin": "0.326822",
+      "transaction_count": 3523
+    },
+    "per_branch": {
+      "Makati": {
+        "revenue": "2084071063.77",
+        "gross_profit": "677927593.59",
+        "margin": "0.325290",
+        "transaction_count": 83040
+      },
+      "Cebu": {
+        "revenue": "2077791451.64",
+        "gross_profit": "674956661.06",
+        "margin": "0.324843",
+        "transaction_count": 82766
+      },
+      "Davao": {
+        "revenue": "2094270337.66",
+        "gross_profit": "680720682.51",
+        "margin": "0.325040",
+        "transaction_count": 83674
+      },
+      "Quezon City": {
+        "revenue": "2092356955.92",
+        "gross_profit": "681234154.28",
+        "margin": "0.325582",
+        "transaction_count": 83457
+      },
+      "Pasig": {
+        "revenue": "2104379640.03",
+        "gross_profit": "683432106.81",
+        "margin": "0.324767",
+        "transaction_count": 83706
+      },
+      "Taguig": {
+        "revenue": "2088564158.50",
+        "gross_profit": "677973596.46",
+        "margin": "0.324612",
+        "transaction_count": 83168
+      },
+      "Iloilo": {
+        "revenue": "2090292199.13",
+        "gross_profit": "679123133.24",
+        "margin": "0.324894",
+        "transaction_count": 83426
+      },
+      "Baguio": {
+        "revenue": "2093687190.72",
+        "gross_profit": "680945083.01",
+        "margin": "0.325237",
+        "transaction_count": 83614
+      },
+      "Cagayan de Oro": {
+        "revenue": "2075734165.29",
+        "gross_profit": "675663449.02",
+        "margin": "0.325506",
+        "transaction_count": 83112
+      },
+      "Bacolod": {
+        "revenue": "2089203729.36",
+        "gross_profit": "680637571.81",
+        "margin": "0.325788",
+        "transaction_count": 83457
+      },
+      "Zamboanga": {
+        "revenue": "2091399646.65",
+        "gross_profit": "679092502.93",
+        "margin": "0.324707",
+        "transaction_count": 83631
+      },
+      "Clark": {
+        "revenue": "2079684556.00",
+        "gross_profit": "676469110.19",
+        "margin": "0.325275",
+        "transaction_count": 82949
+      }
+    }
+  },
+  "bench_5m": {
+    "all": {
+      "revenue": "125281389937.69",
+      "gross_profit": "40730934224.77",
+      "margin": "0.325116",
+      "transaction_count": 5000000
+    },
+    "filter": {
+      "revenue": "444484906.10",
+      "gross_profit": "144933854.30",
+      "margin": "0.326071",
+      "transaction_count": 17728
+    },
+    "per_branch": {
+      "Makati": {
+        "revenue": "10429589091.22",
+        "gross_profit": "3387919021.25",
+        "margin": "0.324837",
+        "transaction_count": 416126
+      },
+      "Cebu": {
+        "revenue": "10442305333.62",
+        "gross_profit": "3390396440.08",
+        "margin": "0.324679",
+        "transaction_count": 416616
+      },
+      "Davao": {
+        "revenue": "10451621020.05",
+        "gross_profit": "3396087729.55",
+        "margin": "0.324934",
+        "transaction_count": 416980
+      },
+      "Quezon City": {
+        "revenue": "10448456048.08",
+        "gross_profit": "3396885830.73",
+        "margin": "0.325109",
+        "transaction_count": 416786
+      },
+      "Pasig": {
+        "revenue": "10443305523.88",
+        "gross_profit": "3396657267.71",
+        "margin": "0.325247",
+        "transaction_count": 416757
+      },
+      "Taguig": {
+        "revenue": "10480586964.60",
+        "gross_profit": "3410520208.81",
+        "margin": "0.325413",
+        "transaction_count": 417571
+      },
+      "Iloilo": {
+        "revenue": "10448455255.01",
+        "gross_profit": "3397002916.42",
+        "margin": "0.325120",
+        "transaction_count": 417221
+      },
+      "Baguio": {
+        "revenue": "10413901419.90",
+        "gross_profit": "3385594338.57",
+        "margin": "0.325103",
+        "transaction_count": 415825
+      },
+      "Cagayan de Oro": {
+        "revenue": "10419811436.29",
+        "gross_profit": "3387095675.22",
+        "margin": "0.325063",
+        "transaction_count": 416036
+      },
+      "Bacolod": {
+        "revenue": "10447944253.37",
+        "gross_profit": "3398333004.43",
+        "margin": "0.325263",
+        "transaction_count": 416766
+      },
+      "Zamboanga": {
+        "revenue": "10430473150.81",
+        "gross_profit": "3390646063.41",
+        "margin": "0.325071",
+        "transaction_count": 416853
+      },
+      "Clark": {
+        "revenue": "10424940440.86",
+        "gross_profit": "3393795728.59",
+        "margin": "0.325546",
+        "transaction_count": 416463
+      }
+    }
+  },
+  "_filter_definition": {
+    "branch": "Makati",
+    "date_from": "2025-03-01",
+    "date_to": "2025-03-31"
+  }
+}

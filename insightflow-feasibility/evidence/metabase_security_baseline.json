@@ -1,0 +1,137 @@
+[
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer GET unassigned finance dashboard (direct URL/API)",
+    "expected": "open(200)",
+    "observed": "200",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:35+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer GET unassigned card",
+    "expected": "open(200)",
+    "observed": "200",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:35+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer run unassigned card query",
+    "expected": "open",
+    "observed": "202",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:35+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer run unassigned dashcard query",
+    "expected": "open",
+    "observed": "202",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:35+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer arbitrary native SQL via /api/dataset",
+    "expected": "open",
+    "observed": "202 {'data': {'rows': [['Z-001', '2025-01-10T00:00:00Z', 'Makati', Decimal('0.00'), ",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer ad-hoc query-builder query on raw table",
+    "expected": "open",
+    "observed": "202 {'data': {'rows': [[5000000]], 'cols': [{'database_type': 'int8', 'semantic_type",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer GET ASSIGNED sales dashboard",
+    "expected": "200 (assigned must work)",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer run ASSIGNED dashcard query",
+    "expected": "200/202 revenue 300.00",
+    "observed": "202 [[Decimal('300.00')]]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] sales viewer create card in assigned collection",
+    "expected": "open(200)",
+    "observed": "200",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] search results leak unassigned titles/metadata",
+    "expected": "leak present",
+    "observed": "8 results, unassigned visible: ['Sales report - fixture_zero']",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] collection list shows unassigned collection",
+    "expected": "visible",
+    "observed": "['Our analytics', 'Benchmarks', 'Examples', 'Finance Reports', 'Sales Reports', \"Sales Viewer's Personal Collection\"]",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] viewer GET admin endpoint /api/user",
+    "expected": "n/a-baseline",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] viewer GET admin endpoint /api/permissions/group",
+    "expected": "n/a-baseline",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] viewer GET admin endpoint /api/setting",
+    "expected": "n/a-baseline",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:36+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[BASELINE-DEFAULTS] viewer GET /api/database (lists data sources)",
+    "expected": "visible",
+    "observed": "200 ['clientdata_ro']",
+    "status": "LEAK-REPRODUCED",
+    "note": "default Metabase config is open: this row documents the vulnerability, it is not a success",
+    "ts": "2026-11-25T23:39:36+00:00"
+  }
+]

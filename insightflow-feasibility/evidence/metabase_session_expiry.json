@@ -1,0 +1,29 @@
+[
+  {
+    "tc": "TC-06",
+    "check": "valid session works immediately",
+    "expected": "200",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:44:15+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "expired session (MAX_SESSION_AGE=1 min) rejected server-side after 75s",
+    "expected": "401",
+    "observed": "401",
+    "status": "PASS",
+    "note": "MAX_SESSION_AGE env var, not the UI session-timeout setting",
+    "ts": "2026-11-25T23:44:15+00:00"
+  },
+  {
+    "tc": "TC-06",
+    "check": "UI/API 'session-timeout' idle setting enforced server-side in OSS (probe: 1 min, idle 75s)",
+    "expected": "401 if enforced",
+    "observed": "200 - not enforced (see mb_session_timeout_probe.json)",
+    "status": "LIMITATION",
+    "note": "setting accepted + persisted but not enforced by backend; cannot rely on it",
+    "ts": "2026-11-25T23:44:15+00:00"
+  }
+]

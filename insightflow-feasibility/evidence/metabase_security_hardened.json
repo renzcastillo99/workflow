@@ -1,0 +1,137 @@
+[
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer GET unassigned finance dashboard (direct URL/API)",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer GET unassigned card",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer run unassigned card query",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer run unassigned dashcard query",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer arbitrary native SQL via /api/dataset",
+    "expected": "denied",
+    "observed": "403 {'database_id': 2, 'parameterized': False, 'started_at': '2026-11-25T23:39:47.80",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer ad-hoc query-builder query on raw table",
+    "expected": "denied",
+    "observed": "403 {'database_id': 2, 'parameterized': False, 'started_at': '2026-11-25T23:39:47.86",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer GET ASSIGNED sales dashboard",
+    "expected": "200 (assigned must work)",
+    "observed": "200",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:47+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer run ASSIGNED dashcard query",
+    "expected": "200/202 revenue 300.00",
+    "observed": "202 [[Decimal('300.00')]]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] sales viewer create card in assigned collection",
+    "expected": "denied",
+    "observed": "403",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] search results leak unassigned titles/metadata",
+    "expected": "no unassigned titles",
+    "observed": "2 results, unassigned visible: []",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] collection list shows unassigned collection",
+    "expected": "hidden",
+    "observed": "['Sales Reports', \"Sales Viewer's Personal Collection\"]",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer GET admin endpoint /api/user",
+    "expected": "denied(403)",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer GET admin endpoint /api/permissions/group",
+    "expected": "denied(403)",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer GET admin endpoint /api/setting",
+    "expected": "denied(403)",
+    "observed": "403 \"You don't have permissions to do that.\"",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  },
+  {
+    "tc": "TC-07",
+    "check": "[HARDENED] viewer GET /api/database (lists data sources)",
+    "expected": "no sources listed",
+    "observed": "200 []",
+    "status": "PASS",
+    "note": "",
+    "ts": "2026-11-25T23:39:48+00:00"
+  }
+]

@@ -1,0 +1,11 @@
+# Never commit secrets, generated data or vendor wheels
+.env
+*.env
+data/*.csv
+data/*.sql
+docker/wheels/
+docker/superset/superset_home/
+__pycache__/
+*.pyc
+.venv/
+scripts/portal_proto/sdk.js

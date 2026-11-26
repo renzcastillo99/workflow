@@ -1,0 +1,4 @@
+{"note":"Single KPI query direct on source Postgres (sum, sum(rev-cost), count distinct) incl. ~100-150ms docker-exec overhead",
+ "bench_1m_ms":[576,506,411,405,495],"bench_5m_ms":[2000,1750,1649,1940,2028],
+ "explain_analyze_1m":"Index Scan using transactions_pkey ... Execution Time: 415.244 ms (shared hit=14107, i.e. fully cached)",
+ "conclusion":"Unfiltered full-table dashboards are bounded by the source DB (7 parallel scans on 4 vCPU), not by the BI engine. Mitigate with default date filter and/or pre-aggregated rollup table."}

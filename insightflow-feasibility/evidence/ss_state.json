@@ -1,0 +1,79 @@
+{
+ "datasets": {
+  "fixture": 1,
+  "fixture_zero": 2,
+  "bench_100k": 3,
+  "bench_500k": 4,
+  "bench_1m": 5,
+  "bench_5m": 6
+ },
+ "charts": {
+  "fixture": {
+   "Revenue": 1,
+   "Gross profit": 2,
+   "Margin": 3,
+   "Transactions": 4,
+   "Trend": 5,
+   "Branch": 6,
+   "Table": 7
+  },
+  "fixture_zero": {
+   "Revenue": 8,
+   "Gross profit": 9,
+   "Margin": 10,
+   "Transactions": 11,
+   "Trend": 12,
+   "Branch": 13,
+   "Table": 14
+  },
+  "bench_100k": {
+   "Revenue": 15,
+   "Gross profit": 16,
+   "Margin": 17,
+   "Transactions": 18,
+   "Trend": 19,
+   "Branch": 20,
+   "Table": 21
+  },
+  "bench_500k": {
+   "Revenue": 22,
+   "Gross profit": 23,
+   "Margin": 24,
+   "Transactions": 25,
+   "Trend": 26,
+   "Branch": 27,
+   "Table": 28
+  },
+  "bench_1m": {
+   "Revenue": 29,
+   "Gross profit": 30,
+   "Margin": 31,
+   "Transactions": 32,
+   "Trend": 33,
+   "Branch": 34,
+   "Table": 35
+  },
+  "bench_5m": {
+   "Revenue": 36,
+   "Gross profit": 37,
+   "Margin": 38,
+   "Transactions": 39,
+   "Trend": 40,
+   "Branch": 41,
+   "Table": 42
+  }
+ },
+ "dashboards": {
+  "fixture": 1,
+  "fixture_zero": 2,
+  "bench_100k": 3,
+  "bench_500k": 4,
+  "bench_1m": 5,
+  "bench_5m": 6
+ },
+ "roles": {
+  "IF_SalesViewer": 6,
+  "IF_FinanceViewer": 7,
+  "IF_MakatiOnly": 8
+ }
+}
